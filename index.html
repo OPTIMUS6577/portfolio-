@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALCHEMIST_DIR | Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="glow-overlay"></div>
+
+    <header>
+        <nav id="main-nav">
+            <div class="logo"></div>
+            <ul class="nav-links">
+                <li><a href="#work">WORK</a></li>
+                <li><a href="contact.html">LET'S CONNECT</a></li>
+            </ul>
+            <button class="inquiry-btn" id="inquiry-trigger" onclick="window.location.href='contact.html'">CONTACT</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div class="profile-image-container">
+                        <img src="assets/profile.png" alt="Profile Portfolio" id="profile-img">
+                    </div>
+                    <a href="#" class="resume-download">
+                        <span>RESUME_2026.PDF</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="mastery-section">
+            <p class="section-label">MASTERY</p>
+            <div class="tags-container">
+                <span class="tag">INTERFACE DESIGN</span>
+                <span class="tag">3D MOTION</span>
+                <span class="tag">CREATIVE CODING</span>
+                <span class="tag">VISUAL IDENTITY</span>
+                <span class="tag">WEBGL STRATEGY</span>
+                <span class="tag">UX ALCHEMY</span>
+            </div>
+        </section>
+
+        <section class="career-section" id="work">
+            <div class="career-grid">
+                <div class="career-left">
+                    <h2 class="career-title">WORK</h2>
+
+                </div>
+                <div class="career-timeline" id="career-timeline"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-content">
+
+            <div class="footer-bottom">
+                <div class="social-links">
+                    <a href="#">INSTAGRAM</a>
+                    <a href="#">BEHANCE</a>
+                    <a href="#">ARE.NA</a>
+                    <a href="#">LINKEDIN</a>
+                </div>
+                <div class="copyright">
+                    <p>©2024 DIGITAL ALCHEMY. BEYOND THE VOID.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
