@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.innerHTML = 'TRANSMUTING...';
         submitBtn.disabled = true;
 
-        const message = `🧪 *ALCHEMISTIC LABS: NEW INQUIRY*\n\n👤 *Ism:* ${name}\n📞 *Tel:* ${phone}\n🛠️ *Xizmat:* ${service}\n\n_Sent via Alchemistic Labs Hub_`;
+        const message = `💼 *WORK HUB: NEW INQUIRY*\n\n👤 *Ism:* ${name}\n📞 *Tel:* ${phone}\n🛠️ *Xizmat:* ${service}\n\n_Sent via Work Hub_`;
 
         try {
             const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
