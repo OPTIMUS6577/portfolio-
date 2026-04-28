@@ -5,6 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const BOT_TOKEN = '8469015792:AAHer6z93IlMyN_hF-1LPJdmMTcD3Zw77p4';
     const CHAT_ID = '1198878759';
 
+    const serviceSelect = document.getElementById('service');
+    const otherMsgGroup = document.getElementById('other-msg-group');
+
+    // Show/Hide other message field
+    serviceSelect.addEventListener('change', (e) => {
+        if (e.target.value === 'other') {
+            otherMsgGroup.style.display = 'block';
+        } else {
+            otherMsgGroup.style.display = 'none';
+        }
+    });
+
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -14,13 +26,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // Get form data
         const name = document.getElementById('name').value;
         const phone = document.getElementById('phone').value;
-        const service = document.getElementById('service').value;
+        const service = serviceSelect.value;
+        const otherMsg = document.getElementById('other-message').value;
 
         // Visual Feedback
         submitBtn.innerHTML = 'REGISTERING...';
         submitBtn.disabled = true;
 
-        const message = `💼 *WORK HUB: NEW INQUIRY*\n\n👤 *Ism:* ${name}\n📞 *Tel:* ${phone}\n🛠️ *Xizmat:* ${service}\n\n_Sent via Work Hub_`;
+        let finalService = service;
+        if (service === 'other') {
+            finalService = `Boshqa: ${otherMsg}`;
+        }
+
+        const message = `💼 *WORK HUB: NEW INQUIRY*\n\n👤 *Ism:* ${name}\n📞 *Tel:* ${phone}\n🛠️ *Xizmat:* ${finalService}\n\n_Sent via Work Hub_`;
 
         try {
             const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {

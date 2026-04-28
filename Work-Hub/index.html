@@ -155,8 +155,19 @@
                         <input type="tel" id="phone" value="+998 " placeholder="+998 XX XXX XX XX" required>
                     </div>
                     <div class="input-group">
-                        <label>XIZMAT TURI / XABAR</label>
-                        <textarea id="service" placeholder="Qanday xizmat kerakligi haqida qisqacha yozing..." required></textarea>
+                        <label>XIZMAT TURI</label>
+                        <select id="service">
+                            <option value="site">Sayt yaratish</option>
+                            <option value="bot">Telegram Bot</option>
+                            <option value="app">Mobil Ilova</option>
+                            <option value="game">O'yin yaratish</option>
+                            <option value="ai">Sun'iy Intelekt</option>
+                            <option value="other">Boshqa...</option>
+                        </select>
+                    </div>
+                    <div class="input-group" id="other-msg-group" style="display: none;">
+                        <label>XABARINGIZNI YOZING</label>
+                        <textarea id="other-message" placeholder="Qanday xizmat kerakligi haqida yozing..."></textarea>
                     </div>
                     <button type="submit">REGISTER <span>→</span></button>
                 </form>
