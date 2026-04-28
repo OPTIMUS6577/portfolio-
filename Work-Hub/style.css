@@ -263,7 +263,7 @@ form {
     display: block;
 }
 
-input, select {
+input, select, textarea {
     width: 100%;
     background: transparent;
     border: none;
@@ -272,6 +272,11 @@ input, select {
     color: white;
     font-family: var(--font-m);
     transition: 0.3s;
+    resize: none;
+}
+
+textarea {
+    height: 80px;
 }
 
 input:focus, select:focus {
