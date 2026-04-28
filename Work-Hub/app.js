@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const service = document.getElementById('service').value;
 
         // Visual Feedback
-        submitBtn.innerHTML = 'TRANSMUTING...';
+        submitBtn.innerHTML = 'REGISTERING...';
         submitBtn.disabled = true;
 
         const message = `💼 *WORK HUB: NEW INQUIRY*\n\n👤 *Ism:* ${name}\n📞 *Tel:* ${phone}\n🛠️ *Xizmat:* ${service}\n\n_Sent via Work Hub_`;
