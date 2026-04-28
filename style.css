@@ -440,7 +440,7 @@ footer {
 
 .form-group input:focus, .form-group textarea:focus {
     outline: none;
-    border-color: var(--accent-color);
+    border-color: #4e9ddd;
 }
 
 .form-group textarea {
@@ -451,12 +451,18 @@ footer {
 .transmit-btn {
     width: 100%;
     background: var(--accent-color);
-    color: white;
+    color: #000 !important;
     border: none;
     padding: 1.2rem;
     border-radius: 12px;
     font-weight: 700;
+    font-size: 1rem;
+    line-height: 1;
     letter-spacing: 2px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 1rem;
@@ -465,6 +471,13 @@ footer {
 .transmit-btn:hover {
     box-shadow: 0 0 30px var(--accent-glow);
     transform: translateY(-2px);
+}
+
+.transmit-btn .btn-label {
+    color: #000 !important;
+    font-weight: 800;
+    font-size: 1rem;
+    line-height: 1;
 }
 
 /* Location Card */
