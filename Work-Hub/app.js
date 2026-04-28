@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+            .then(() => console.log('Work Hub Service Worker Registered'))
+            .catch(err => console.log('SW Registration Failed:', err));
+    }
+
     const contactForm = document.getElementById('lab-contact-form');
 
     // Telegram Bot Config (Using your existing bot)
