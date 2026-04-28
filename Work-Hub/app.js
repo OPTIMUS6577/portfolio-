@@ -17,6 +17,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Make service cards clickable
+    document.querySelectorAll('.s-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const serviceTitle = card.querySelector('h4').innerText.toLowerCase();
+            const contactSection = document.getElementById('contact');
+            
+            // Scroll to contact
+            contactSection.scrollIntoView({ behavior: 'smooth' });
+
+            // Auto-select service in dropdown
+            let optionValue = 'other';
+            if (serviceTitle.includes('sayt')) optionValue = 'site';
+            else if (serviceTitle.includes('bot')) optionValue = 'bot';
+            else if (serviceTitle.includes('ilova')) optionValue = 'app';
+            else if (serviceTitle.includes('o\'yin')) optionValue = 'game';
+            else if (serviceTitle.includes('intelekt') || serviceTitle.includes('ai')) optionValue = 'ai';
+
+            serviceSelect.value = optionValue;
+            
+            // Trigger change event to show/hide "other" field
+            serviceSelect.dispatchEvent(new Event('change'));
+            
+            // If other was selected, put the service name in the message box
+            if (optionValue === 'other') {
+                document.getElementById('other-message').value = card.querySelector('h4').innerText;
+            }
+        });
+    });
+
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
