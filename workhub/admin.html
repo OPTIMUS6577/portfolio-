@@ -109,24 +109,12 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-box">
-    <h1>WORK<span>HUB</span></h1>
-    <p>Admin Panel — Kirish</p>
-    <input type="password" id="pwd-input" placeholder="Parolni kiriting..." onkeydown="if(event.key==='Enter')doLogin()">
-    <button onclick="doLogin()">KIRISH →</button>
-    <p class="login-error" id="login-error">❌ Parol noto'g'ri!</p>
-  </div>
-</div>
-
 <!-- DASHBOARD -->
-<div id="dashboard">
+<div id="dashboard" style="display: block;">
   <div class="topbar">
     <div class="topbar-logo">WORK<span>HUB</span> <span style="color:var(--muted);font-size:0.7rem;font-weight:400;margin-left:8px">ADMIN</span></div>
     <div class="topbar-actions">
       <a href="index.html">← Saytga qaytish</a>
-      <button class="logout-btn" onclick="doLogout()">CHIQISH</button>
     </div>
   </div>
 
@@ -188,8 +176,7 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
       <div class="settings-card">
         <h3>TELEGRAM BOT</h3>
         <div class="setting-row">
-          <div class="setting-info"><h4>Bot Token</h4><p id="show-token">••••••••••••••••</p></div>
-          <button class="del-btn" onclick="toggleToken()">Ko'rish</button>
+          <div class="setting-info"><h4>Bot Token</h4><p id="show-token">8469015792:AAHer6z93IlMyN_hF-1LPJdmMTcD3Zw77p4</p></div>
         </div>
         <div class="setting-row">
           <div class="setting-info"><h4>Chat ID</h4><p>1198878759</p></div>
@@ -217,29 +204,8 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 </div>
 
 <script>
-const ADMIN_PASS = 'workhub2026';
 const DB_KEY = 'workhub_orders';
 const TOKEN = '8469015792:AAHer6z93IlMyN_hF-1LPJdmMTcD3Zw77p4';
-let tokenVisible = false;
-
-function doLogin() {
-  const val = document.getElementById('pwd-input').value;
-  if (val === ADMIN_PASS) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    localStorage.setItem('wh_admin_auth', '1');
-    initDashboard();
-  } else {
-    const err = document.getElementById('login-error');
-    err.style.display = 'block';
-    setTimeout(() => err.style.display = 'none', 3000);
-  }
-}
-
-function doLogout() {
-  localStorage.removeItem('wh_admin_auth');
-  location.reload();
-}
 
 function getOrders() {
   return JSON.parse(localStorage.getItem(DB_KEY) || '[]');
@@ -384,12 +350,8 @@ function addDemoData() {
   alert('5 ta demo so\'rov qo\'shildi!');
 }
 
-// Auto-login check
-if (localStorage.getItem('wh_admin_auth') === '1') {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('dashboard').style.display = 'block';
-  initDashboard();
-}
+// Start Dashboard
+initDashboard();
 </script>
 </body>
 </html>
