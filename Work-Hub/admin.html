@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel | Work Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#060612;--card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);--accent:#bc13fe;--accent2:#4e9ddd;--text:#fff;--muted:#888}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh}
+
+/* LOGIN */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(circle at 50% 30%,rgba(188,19,254,0.15) 0%,transparent 60%)}
+.login-box{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:24px;padding:3rem;width:100%;max-width:420px;text-align:center}
+.login-box h1{font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;margin-bottom:0.5rem}
+.login-box h1 span{color:var(--accent)}
+.login-box p{color:var(--muted);font-size:0.9rem;margin-bottom:2rem}
+.login-box input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;padding:1rem 1.5rem;color:#fff;font-size:1rem;font-family:'Space Grotesk',sans-serif;margin-bottom:1rem;outline:none;transition:border-color 0.3s}
+.login-box input:focus{border-color:var(--accent)}
+.login-box button{width:100%;background:var(--accent);color:#fff;border:none;border-radius:12px;padding:1rem;font-size:1rem;font-weight:700;font-family:'Outfit',sans-serif;letter-spacing:2px;cursor:pointer;transition:all 0.3s}
+.login-box button:hover{box-shadow:0 0 30px rgba(188,19,254,0.4)}
+.login-error{color:#ff4d4d;font-size:0.85rem;margin-top:0.5rem;display:none}
+
+/* DASHBOARD */
+#dashboard{display:none;min-height:100vh}
+.topbar{background:rgba(6,6,18,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-logo{font-family:'Outfit',sans-serif;font-weight:800;font-size:1.2rem}
+.topbar-logo span{color:var(--accent)}
+.topbar-actions{display:flex;gap:1rem;align-items:center}
+.topbar-actions a{color:var(--muted);text-decoration:none;font-size:0.8rem;font-weight:600;letter-spacing:1px;transition:color 0.3s}
+.topbar-actions a:hover{color:#fff}
+.logout-btn{background:rgba(255,77,77,0.15);border:1px solid rgba(255,77,77,0.3);color:#ff4d4d;border-radius:8px;padding:0.5rem 1rem;font-size:0.75rem;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all 0.3s}
+.logout-btn:hover{background:rgba(255,77,77,0.25)}
+
+.dashboard-content{padding:2rem;max-width:1300px;margin:0 auto}
+.page-title{font-family:'Outfit',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:0.3rem}
+.page-title span{color:var(--accent)}
+.page-sub{color:var(--muted);font-size:0.85rem;margin-bottom:2rem}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-bottom:2rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem 2rem;transition:all 0.3s}
+.stat-card:hover{border-color:rgba(188,19,254,0.3);transform:translateY(-2px)}
+.stat-label{font-size:0.7rem;font-weight:700;letter-spacing:2px;color:var(--muted);margin-bottom:0.5rem}
+.stat-value{font-family:'Outfit',sans-serif;font-size:2.5rem;font-weight:800}
+.stat-value.purple{color:var(--accent)}
+.stat-value.blue{color:var(--accent2)}
+.stat-value.green{color:#13fe8e}
+.stat-value.orange{color:#fe8e13}
+.stat-sub{font-size:0.75rem;color:var(--muted);margin-top:0.3rem}
+
+/* TABS */
+.tabs{display:flex;gap:0.5rem;margin-bottom:2rem;border-bottom:1px solid var(--border);padding-bottom:0}
+.tab-btn{background:none;border:none;color:var(--muted);font-size:0.8rem;font-weight:700;letter-spacing:1px;padding:0.8rem 1.5rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.3s;font-family:'Space Grotesk',sans-serif}
+.tab-btn.active{color:#fff;border-bottom-color:var(--accent)}
+.tab-btn:hover{color:#fff}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ORDERS TABLE */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.section-header h2{font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700}
+.clear-btn{background:rgba(255,77,77,0.1);border:1px solid rgba(255,77,77,0.25);color:#ff4d4d;border-radius:8px;padding:0.5rem 1rem;font-size:0.75rem;font-weight:700;cursor:pointer;transition:all 0.3s;letter-spacing:1px}
+.clear-btn:hover{background:rgba(255,77,77,0.2)}
+
+.search-bar{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:0.8rem 1.5rem;color:#fff;font-size:0.9rem;font-family:'Space Grotesk',sans-serif;width:100%;max-width:400px;outline:none;margin-bottom:1.5rem;transition:border-color 0.3s}
+.search-bar:focus{border-color:var(--accent)}
+
+.orders-table{width:100%;border-collapse:collapse}
+.orders-table th{text-align:left;font-size:0.7rem;font-weight:700;letter-spacing:2px;color:var(--muted);padding:0 1.5rem 1rem;border-bottom:1px solid var(--border)}
+.orders-table td{padding:1.2rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.9rem;vertical-align:middle}
+.orders-table tr:hover td{background:rgba(255,255,255,0.02)}
+.badge{display:inline-block;padding:0.3rem 0.8rem;border-radius:100px;font-size:0.7rem;font-weight:700;letter-spacing:1px}
+.badge-site{background:rgba(78,157,221,0.15);color:var(--accent2)}
+.badge-bot{background:rgba(188,19,254,0.15);color:var(--accent)}
+.badge-app{background:rgba(19,254,142,0.15);color:#13fe8e}
+.badge-game{background:rgba(254,142,19,0.15);color:#fe8e13}
+.badge-ai{background:rgba(254,19,19,0.15);color:#ff6b6b}
+.badge-other{background:rgba(255,255,255,0.08);color:#fff}
+.del-btn{background:none;border:1px solid rgba(255,77,77,0.2);color:#ff4d4d;border-radius:6px;padding:0.3rem 0.7rem;font-size:0.7rem;cursor:pointer;transition:all 0.3s}
+.del-btn:hover{background:rgba(255,77,77,0.15)}
+.empty-state{text-align:center;padding:4rem;color:var(--muted)}
+.empty-state .icon{font-size:3rem;margin-bottom:1rem}
+.empty-state p{font-size:0.9rem}
+
+/* SERVICE STATS */
+.service-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.service-bar-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem}
+.service-bar-name{font-size:0.75rem;font-weight:700;letter-spacing:1px;margin-bottom:0.8rem;display:flex;justify-content:space-between}
+.service-bar-track{background:rgba(255,255,255,0.06);border-radius:100px;height:6px;overflow:hidden}
+.service-bar-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1s ease}
+
+/* SETTINGS */
+.settings-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:1.5rem}
+.settings-card h3{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;margin-bottom:1.5rem;color:var(--muted);letter-spacing:1px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-info h4{font-size:0.9rem;font-weight:600;margin-bottom:0.2rem}
+.setting-info p{font-size:0.8rem;color:var(--muted)}
+.toggle{width:44px;height:24px;background:rgba(255,255,255,0.1);border-radius:100px;cursor:pointer;position:relative;transition:background 0.3s;border:none}
+.toggle.on{background:var(--accent)}
+.toggle::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform 0.3s}
+.toggle.on::after{transform:translateX(20px)}
+
+@media(max-width:900px){.stats-grid{grid-template-columns:1fr 1fr}.service-stats{grid-template-columns:1fr}}
+@media(max-width:600px){.stats-grid{grid-template-columns:1fr}.dashboard-content{padding:1rem}.topbar{padding:1rem}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>WORK<span>HUB</span></h1>
+    <p>Admin Panel — Kirish</p>
+    <input type="password" id="pwd-input" placeholder="Parolni kiriting..." onkeydown="if(event.key==='Enter')doLogin()">
+    <button onclick="doLogin()">KIRISH →</button>
+    <p class="login-error" id="login-error">❌ Parol noto'g'ri!</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="topbar">
+    <div class="topbar-logo">WORK<span>HUB</span> <span style="color:var(--muted);font-size:0.7rem;font-weight:400;margin-left:8px">ADMIN</span></div>
+    <div class="topbar-actions">
+      <a href="index.html">← Saytga qaytish</a>
+      <button class="logout-btn" onclick="doLogout()">CHIQISH</button>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+    <div class="page-title">Dashboard <span>↗</span></div>
+    <div class="page-sub" id="current-time"></div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">JAMI SO'ROVLAR</div>
+        <div class="stat-value purple" id="total-count">0</div>
+        <div class="stat-sub">barcha vaqt uchun</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">BUGUNGI</div>
+        <div class="stat-value blue" id="today-count">0</div>
+        <div class="stat-sub" id="today-date">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">ENG KO'P XIZMAT</div>
+        <div class="stat-value green" style="font-size:1.3rem" id="top-service">—</div>
+        <div class="stat-sub">eng mashhur</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">OXIRGI SO'ROV</div>
+        <div class="stat-value orange" style="font-size:1rem;padding-top:0.5rem" id="last-entry">—</div>
+        <div class="stat-sub" id="last-date">hali yo'q</div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('orders',this)">SO'ROVLAR</button>
+      <button class="tab-btn" onclick="switchTab('analytics',this)">STATISTIKA</button>
+      <button class="tab-btn" onclick="switchTab('settings',this)">SOZLAMALAR</button>
+    </div>
+
+    <!-- ORDERS TAB -->
+    <div class="tab-panel active" id="tab-orders">
+      <div class="section-header">
+        <h2>Barcha so'rovlar</h2>
+        <button class="clear-btn" onclick="clearAll()">🗑 Hammasini o'chirish</button>
+      </div>
+      <input class="search-bar" type="text" id="search-input" placeholder="Ism yoki telefon bo'yicha qidirish..." oninput="renderOrders()">
+      <div id="orders-container">
+        <div class="empty-state"><div class="icon">📭</div><p>Hali hech qanday so'rov yo'q</p></div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS TAB -->
+    <div class="tab-panel" id="tab-analytics">
+      <h2 style="font-family:'Outfit',sans-serif;margin-bottom:1.5rem">Xizmat bo'yicha statistika</h2>
+      <div class="service-stats" id="service-stats"></div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="tab-panel" id="tab-settings">
+      <div class="settings-card">
+        <h3>TELEGRAM BOT</h3>
+        <div class="setting-row">
+          <div class="setting-info"><h4>Bot Token</h4><p id="show-token">••••••••••••••••</p></div>
+          <button class="del-btn" onclick="toggleToken()">Ko'rish</button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><h4>Chat ID</h4><p>1198878759</p></div>
+        </div>
+      </div>
+      <div class="settings-card">
+        <h3>MA'LUMOTLAR BAZASI</h3>
+        <div class="setting-row">
+          <div class="setting-info"><h4>LocalStorage hajmi</h4><p id="storage-size">hisoblanmoqda...</p></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><h4>Barcha ma'lumotlarni tozalash</h4><p>Bu amalni ortga qaytarib bo'lmaydi</p></div>
+          <button class="clear-btn" onclick="clearAll()">O'chirish</button>
+        </div>
+      </div>
+      <div class="settings-card">
+        <h3>DEMO MA'LUMOT QO'SHISH</h3>
+        <div class="setting-row">
+          <div class="setting-info"><h4>Test so'rovlar qo'shish</h4><p>Panel ko'rinishini sinab ko'rish uchun</p></div>
+          <button class="del-btn" style="border-color:rgba(78,157,221,0.3);color:var(--accent2)" onclick="addDemoData()">Demo qo'sh</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_PASS = 'workhub2026';
+const DB_KEY = 'workhub_orders';
+const TOKEN = '8469015792:AAHer6z93IlMyN_hF-1LPJdmMTcD3Zw77p4';
+let tokenVisible = false;
+
+function doLogin() {
+  const val = document.getElementById('pwd-input').value;
+  if (val === ADMIN_PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    localStorage.setItem('wh_admin_auth', '1');
+    initDashboard();
+  } else {
+    const err = document.getElementById('login-error');
+    err.style.display = 'block';
+    setTimeout(() => err.style.display = 'none', 3000);
+  }
+}
+
+function doLogout() {
+  localStorage.removeItem('wh_admin_auth');
+  location.reload();
+}
+
+function getOrders() {
+  return JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+}
+
+function initDashboard() {
+  updateTime();
+  setInterval(updateTime, 1000);
+  renderStats();
+  renderOrders();
+  renderAnalytics();
+  updateStorageSize();
+}
+
+function updateTime() {
+  const now = new Date();
+  document.getElementById('current-time').textContent = now.toLocaleString('uz-UZ');
+  document.getElementById('today-date').textContent = now.toLocaleDateString('uz-UZ');
+}
+
+function renderStats() {
+  const orders = getOrders();
+  const today = new Date().toLocaleDateString('uz-UZ');
+
+  document.getElementById('total-count').textContent = orders.length;
+
+  const todayOrders = orders.filter(o => new Date(o.date).toLocaleDateString('uz-UZ') === today);
+  document.getElementById('today-count').textContent = todayOrders.length;
+
+  if (orders.length > 0) {
+    const last = orders[orders.length - 1];
+    document.getElementById('last-entry').textContent = last.name;
+    document.getElementById('last-date').textContent = new Date(last.date).toLocaleString('uz-UZ');
+
+    const serviceCounts = {};
+    orders.forEach(o => { serviceCounts[o.service] = (serviceCounts[o.service] || 0) + 1; });
+    const top = Object.entries(serviceCounts).sort((a,b) => b[1]-a[1])[0];
+    const labels = {site:'Sayt',bot:'Telegram Bot',app:'Ilova',game:"O'yin",ai:'AI',other:'Boshqa'};
+    document.getElementById('top-service').textContent = labels[top[0]] || top[0];
+  }
+}
+
+const SERVICE_LABELS = {site:'Sayt yaratish',bot:'Telegram Bot',app:'Mobil Ilova',game:"O'yin",ai:'Sun\'iy Intelekt',other:'Boshqa'};
+const SERVICE_BADGE = {site:'badge-site',bot:'badge-bot',app:'badge-app',game:'badge-game',ai:'badge-ai',other:'badge-other'};
+
+function renderOrders() {
+  const orders = getOrders();
+  const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+  const filtered = orders.filter(o => o.name.toLowerCase().includes(q) || o.phone.includes(q));
+  const container = document.getElementById('orders-container');
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>${q ? 'Natija topilmadi' : 'Hali hech qanday so\'rov yo\'q'}</p></div>`;
+    return;
+  }
+
+  const rows = [...filtered].reverse().map((o, i) => `
+    <tr>
+      <td style="color:var(--muted);font-size:0.75rem">#${filtered.length - i}</td>
+      <td><strong>${o.name}</strong></td>
+      <td style="color:var(--accent2)">${o.phone}</td>
+      <td><span class="badge ${SERVICE_BADGE[o.service] || 'badge-other'}">${SERVICE_LABELS[o.service] || o.service}</span></td>
+      <td style="color:var(--muted);font-size:0.8rem">${new Date(o.date).toLocaleString('uz-UZ')}</td>
+      <td><button class="del-btn" onclick="deleteOrder(${o.id})">O'chirish</button></td>
+    </tr>
+  `).join('');
+
+  container.innerHTML = `
+    <table class="orders-table">
+      <thead><tr>
+        <th>#</th><th>ISM</th><th>TELEFON</th><th>XIZMAT</th><th>SANA</th><th></th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function deleteOrder(id) {
+  if (!confirm('Bu so\'rovni o\'chirasizmi?')) return;
+  const orders = getOrders().filter(o => o.id !== id);
+  localStorage.setItem(DB_KEY, JSON.stringify(orders));
+  renderStats(); renderOrders(); renderAnalytics();
+}
+
+function clearAll() {
+  if (!confirm('Barcha ma\'lumotlarni o\'chirasizmi?')) return;
+  localStorage.setItem(DB_KEY, '[]');
+  renderStats(); renderOrders(); renderAnalytics(); updateStorageSize();
+}
+
+function renderAnalytics() {
+  const orders = getOrders();
+  const counts = {};
+  orders.forEach(o => { counts[o.service] = (counts[o.service] || 0) + 1; });
+  const max = Math.max(...Object.values(counts), 1);
+
+  const container = document.getElementById('service-stats');
+  const allServices = ['site','bot','app','game','ai','other'];
+  container.innerHTML = allServices.map(s => {
+    const count = counts[s] || 0;
+    const pct = Math.round((count / max) * 100);
+    return `<div class="service-bar-card">
+      <div class="service-bar-name"><span>${SERVICE_LABELS[s]}</span><span style="color:var(--accent)">${count}</span></div>
+      <div class="service-bar-track"><div class="service-bar-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function updateStorageSize() {
+  const data = localStorage.getItem(DB_KEY) || '';
+  const bytes = new Blob([data]).size;
+  document.getElementById('storage-size').textContent = bytes < 1024 ? `${bytes} bytes` : `${(bytes/1024).toFixed(1)} KB`;
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleToken() {
+  tokenVisible = !tokenVisible;
+  document.getElementById('show-token').textContent = tokenVisible ? TOKEN : '••••••••••••••••';
+}
+
+function addDemoData() {
+  const names = ['Bobur Toshmatov','Dilnoza Yusupova','Jasur Karimov','Malika Rahimova','Sardor Nazarov'];
+  const phones = ['+998901234567','+998911234567','+998921234567','+998931234567','+998941234567'];
+  const services = ['site','bot','app','game','ai','other'];
+  const orders = getOrders();
+  for (let i = 0; i < 5; i++) {
+    orders.push({
+      id: Date.now() + i,
+      name: names[i],
+      phone: phones[i],
+      service: services[Math.floor(Math.random() * services.length)],
+      date: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
+    });
+  }
+  localStorage.setItem(DB_KEY, JSON.stringify(orders));
+  renderStats(); renderOrders(); renderAnalytics(); updateStorageSize();
+  alert('5 ta demo so\'rov qo\'shildi!');
+}
+
+// Auto-login check
+if (localStorage.getItem('wh_admin_auth') === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  initDashboard();
+}
+</script>
+</body>
+</html>

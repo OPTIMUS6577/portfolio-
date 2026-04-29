@@ -89,8 +89,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 }),
             });
 
-            if (response.ok) {
-                alert('Muvaffaqiyatli! Xabar laboratoriyaga yuborildi. 🧪');
+        if (response.ok) {
+                // LocalStorage ga saqlash (admin panel uchun)
+                const orders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
+                orders.push({
+                    id: Date.now(),
+                    name: name,
+                    phone: phone,
+                    service: finalService === `Boshqa: ${otherMsg}` ? 'other' : service,
+                    date: new Date().toISOString()
+                });
+                localStorage.setItem('workhub_orders', JSON.stringify(orders));
+
+                // Success notification
+                const note = document.createElement('div');
+                note.style.cssText = 'position:fixed;bottom:30px;right:30px;background:rgba(6,6,18,0.95);border:1px solid #bc13fe;color:#fff;padding:20px 25px;border-radius:16px;box-shadow:0 0 30px rgba(188,19,254,0.3);z-index:1000;font-family:Outfit,sans-serif;transform:translateY(100px);opacity:0;transition:all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55)';
+                note.innerHTML = '<div style="display:flex;align-items:center;gap:12px"><div style="background:#bc13fe;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold">✓</div><div><b style="font-size:1rem">Muvaffaqiyatli!</b><p style="font-size:0.8rem;color:#888;margin-top:4px">So\'rovingiz qabul qilindi.</p></div></div>';
+                document.body.appendChild(note);
+                requestAnimationFrame(() => { note.style.transform='translateY(0)'; note.style.opacity='1'; });
+                setTimeout(() => { note.style.transform='translateY(100px)'; note.style.opacity='0'; setTimeout(()=>note.remove(),400); }, 4000);
                 contactForm.reset();
             } else {
                 throw new Error('Telegram API Error');
