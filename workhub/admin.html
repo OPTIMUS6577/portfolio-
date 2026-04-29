@@ -299,16 +299,21 @@ function renderAnalytics() {
   const orders = getOrders();
   const counts = {};
   orders.forEach(o => { counts[o.service] = (counts[o.service] || 0) + 1; });
-  const max = Math.max(...Object.values(counts), 1);
 
   const container = document.getElementById('service-stats');
+  container.style.display = 'grid';
+  container.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+  container.style.gap = '1.5rem';
+
   const allServices = ['site','bot','app','game','ai','other'];
+  const colors = {site:'blue', bot:'purple', app:'green', game:'orange', ai:'purple', other:'muted'};
+  
   container.innerHTML = allServices.map(s => {
     const count = counts[s] || 0;
-    const pct = Math.round((count / max) * 100);
-    return `<div class="service-bar-card">
-      <div class="service-bar-name"><span>${SERVICE_LABELS[s]}</span><span style="color:var(--accent)">${count}</span></div>
-      <div class="service-bar-track"><div class="service-bar-fill" style="width:${pct}%"></div></div>
+    return `<div class="stat-card" style="text-align: center; padding: 2.5rem 1.5rem;">
+      <div class="stat-label">${SERVICE_LABELS[s].toUpperCase()}</div>
+      <div class="stat-value ${colors[s] || 'purple'}">${count}</div>
+      <div class="stat-sub">jami buyurtmalar</div>
     </div>`;
   }).join('');
 }
