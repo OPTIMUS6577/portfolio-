@@ -111,8 +111,19 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 </head>
 <body>
 
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>WORK<span>HUB</span></h1>
+    <p>Admin panelga kirish</p>
+    <input type="password" id="admin-password" placeholder="Parolni kiriting...">
+    <button onclick="checkLogin()">KIRISH</button>
+    <div id="login-err" class="login-error">Parol noto'g'ri!</div>
+  </div>
+</div>
+
 <!-- DASHBOARD -->
-<div id="dashboard" style="display: block;">
+<div id="dashboard" style="display: none;">
   <div class="topbar">
     <div class="topbar-logo">WORK<span>HUB</span> <span style="color:var(--muted);font-size:0.7rem;font-weight:400;margin-left:8px">ADMIN</span></div>
     <div class="topbar-actions">
@@ -215,6 +226,18 @@ const SUPABASE_KEY = 'your-anon-key';
 const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 let globalOrders = [];
+
+function checkLogin() {
+  const pass = document.getElementById('admin-password').value;
+  if (pass === '7777') {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    initDashboard();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+  }
+}
+
 
 async function getOrdersFromDB() {
   if (!supabase) return JSON.parse(localStorage.getItem(DB_KEY) || '[]');
@@ -381,7 +404,7 @@ function addDemoData() {
   const names = ['Bobur Toshmatov','Dilnoza Yusupova','Jasur Karimov','Malika Rahimova','Sardor Nazarov'];
   const phones = ['+998901234567','+998911234567','+998921234567','+998931234567','+998941234567'];
   const services = ['site','bot','app','game','ai','other'];
-  const orders = getOrders();
+  const orders = globalOrders;
   for (let i = 0; i < 5; i++) {
     orders.push({
       id: Date.now() + i,
@@ -397,7 +420,8 @@ function addDemoData() {
 }
 
 // Start Dashboard
-initDashboard();
+// initDashboard(); // Remove automatic start, will be called after login
+
 </script>
 </body>
 </html>
