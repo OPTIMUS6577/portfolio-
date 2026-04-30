@@ -178,6 +178,14 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
       </div>
     </div>
 
+    <!-- SERVICE DETAIL MODAL -->
+    <div id="service-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(15px); z-index:2000; align-items:center; justify-content:center; padding:2rem">
+      <div style="background:var(--bg); border:1px solid var(--border); border-radius:32px; width:100%; max-width:900px; max-height:90vh; overflow-y:auto; position:relative; padding:3rem">
+        <button onclick="closeServiceModal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer">✕</button>
+        <div id="modal-content"></div>
+      </div>
+    </div>
+
     <!-- ANALYTICS TAB -->
     <div class="tab-panel" id="tab-analytics">
       <h2 style="font-family:'Outfit',sans-serif;margin-bottom:1.5rem">Xizmat bo'yicha statistika</h2>
@@ -376,11 +384,11 @@ function renderAnalytics() {
   container.innerHTML = allServices.map(s => {
     const count = counts[s] || 0;
     const percent = Math.round((count / total) * 100);
-    return `<div class="stat-card" style="padding: 2rem;">
+    return `<div class="stat-card" onclick="showServiceDetail('${s}')" style="padding: 2rem; cursor:pointer; transition:0.3s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
       <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem">
         <div>
           <div class="stat-label">${SERVICE_LABELS[s].toUpperCase()}</div>
-          <div class="stat-value" style="color:${colors[s]}; font-size:2rem">${count} <span style="font-size:0.9rem; color:var(--muted); font-weight:400">ta buyurtma</span></div>
+          <div class="stat-value" style="color:${colors[s]}; font-size:2rem">${count} <span style="font-size:0.9rem; color:var(--muted); font-weight:400">ta</span></div>
         </div>
         <div style="background:${colors[s]}20; color:${colors[s]}; padding:0.5rem; border-radius:10px; font-weight:800; font-size:0.8rem">${percent}%</div>
       </div>
@@ -388,11 +396,56 @@ function renderAnalytics() {
         <div class="service-bar-fill" style="width:${percent}%; background:${colors[s]}; height:100%"></div>
       </div>
       <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--muted)">
-        <span>Ulushi</span>
+        <span>Batafsil ko'rish ↗</span>
         <span>${count} / ${orders.length}</span>
       </div>
     </div>`;
   }).join('');
+}
+
+function showServiceDetail(type) {
+  const orders = globalOrders.filter(o => o.service === type);
+  const color = {site:'#4e9ddd', bot:'#bc13fe', app:'#13fe8e', game:'#fe8e13', ai:'#ff4d4d', other:'#888'}[type];
+  const modal = document.getElementById('service-modal');
+  const content = document.getElementById('modal-content');
+
+  content.innerHTML = `
+    <div style="margin-bottom:2rem">
+      <div style="color:var(--muted); font-size:0.8rem; letter-spacing:2px; font-weight:700">${SERVICE_LABELS[type].toUpperCase()} DASHBOARD</div>
+      <h1 style="font-family:'Outfit',sans-serif; font-size:2.5rem; color:${color}">${SERVICE_LABELS[type]}</h1>
+    </div>
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:3rem">
+      <div class="stat-card" style="padding:1.5rem; border-color:${color}40">
+        <div class="stat-label">MIJOZLAR SONI</div>
+        <div class="stat-value" style="color:${color}">${orders.length}</div>
+      </div>
+      <div class="stat-card" style="padding:1.5rem; border-color:${color}40">
+        <div class="stat-label">SO'NGGI BUYURTMA</div>
+        <div class="stat-value" style="font-size:1.2rem; margin-top:0.5rem">${orders.length > 0 ? orders[0].name : '—'}</div>
+      </div>
+    </div>
+
+    <h2 style="font-family:'Outfit',sans-serif; margin-bottom:1.5rem">Mijozlar ro'yxati</h2>
+    <table class="orders-table">
+      <thead><tr><th>ISM</th><th>TELEFON</th><th>SANA</th></tr></thead>
+      <tbody>
+        ${orders.map(o => `
+          <tr>
+            <td><strong>${o.name}</strong></td>
+            <td style="color:var(--accent2)">${o.phone}</td>
+            <td style="color:var(--muted)">${new Date(o.date).toLocaleDateString('uz-UZ')}</td>
+          </tr>
+        `).join('') || '<tr><td colspan="3" style="text-align:center; padding:2rem; color:var(--muted)">Hali ma\'lumot yo\'q</td></tr>'}
+      </tbody>
+    </table>
+  `;
+
+  modal.style.display = 'flex';
+}
+
+function closeServiceModal() {
+  document.getElementById('service-modal').style.display = 'none';
 }
 
 function updateStorageSize() {
