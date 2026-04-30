@@ -363,21 +363,34 @@ function renderAnalytics() {
   const orders = globalOrders;
   const counts = {};
   orders.forEach(o => { counts[o.service] = (counts[o.service] || 0) + 1; });
+  const total = orders.length || 1;
 
   const container = document.getElementById('service-stats');
   container.style.display = 'grid';
-  container.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+  container.style.gridTemplateColumns = 'repeat(auto-fill, minmax(320px, 1fr))';
   container.style.gap = '1.5rem';
 
   const allServices = ['site','bot','app','game','ai','other'];
-  const colors = {site:'blue', bot:'purple', app:'green', game:'orange', ai:'purple', other:'muted'};
+  const colors = {site:'#4e9ddd', bot:'#bc13fe', app:'#13fe8e', game:'#fe8e13', ai:'#ff4d4d', other:'#888'};
   
   container.innerHTML = allServices.map(s => {
     const count = counts[s] || 0;
-    return `<div class="stat-card" style="text-align: center; padding: 2.5rem 1.5rem;">
-      <div class="stat-label">${SERVICE_LABELS[s].toUpperCase()}</div>
-      <div class="stat-value ${colors[s] || 'purple'}">${count}</div>
-      <div class="stat-sub">jami buyurtmalar</div>
+    const percent = Math.round((count / total) * 100);
+    return `<div class="stat-card" style="padding: 2rem;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem">
+        <div>
+          <div class="stat-label">${SERVICE_LABELS[s].toUpperCase()}</div>
+          <div class="stat-value" style="color:${colors[s]}; font-size:2rem">${count} <span style="font-size:0.9rem; color:var(--muted); font-weight:400">ta buyurtma</span></div>
+        </div>
+        <div style="background:${colors[s]}20; color:${colors[s]}; padding:0.5rem; border-radius:10px; font-weight:800; font-size:0.8rem">${percent}%</div>
+      </div>
+      <div class="service-bar-track" style="height:8px; background:rgba(255,255,255,0.05); margin-bottom:1rem">
+        <div class="service-bar-fill" style="width:${percent}%; background:${colors[s]}; height:100%"></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--muted)">
+        <span>Ulushi</span>
+        <span>${count} / ${orders.length}</span>
+      </div>
     </div>`;
   }).join('');
 }

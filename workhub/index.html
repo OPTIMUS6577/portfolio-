@@ -191,6 +191,30 @@
     <!-- Floating Admin Link -->
     <a href="admin.html" style="position: fixed; bottom: 20px; right: 20px; width: 40px; height: 40px; background: rgba(188,19,254,0.1); border: 1px solid rgba(188,19,254,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--accent); font-size: 1.2rem; z-index: 9999; backdrop-filter: blur(10px); transition: 0.3s;" onmouseover="this.style.background='rgba(188,19,254,0.2)'" onmouseout="this.style.background='rgba(188,19,254,0.1)'">⚙️</a>
 
+    <script>
+        // Make cards clickable
+        document.querySelectorAll('.s-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const serviceName = card.querySelector('h4').textContent.toLowerCase();
+                const select = document.getElementById('service');
+                
+                // Map text to select values
+                if (serviceName.includes('sayt')) select.value = 'site';
+                else if (serviceName.includes('bot')) select.value = 'bot';
+                else if (serviceName.includes('ilova')) select.value = 'app';
+                else if (serviceName.includes('o\'yin')) select.value = 'game';
+                else if (serviceName.includes('intelekt')) select.value = 'ai';
+                else select.value = 'other';
+                
+                // Scroll to form
+                document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+                
+                // Highlight select
+                select.style.borderBottomColor = 'var(--accent)';
+                setTimeout(() => { select.style.borderBottomColor = ''; }, 2000);
+            });
+        });
+    </script>
     <script src="app.js"></script>
 </body>
 </html>
