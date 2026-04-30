@@ -1,12 +1,12 @@
 :root {
-    --bg: #030305;
-    --card-bg: rgba(255, 255, 255, 0.03);
-    --border: rgba(255, 255, 255, 0.1);
-    --accent: #00f2ff; /* Neon Cyan */
-    --accent-2: #7000ff; /* Electric Purple */
+    --bg: #0c0c0d;
+    --card-bg: rgba(255, 255, 255, 0.02);
+    --border: rgba(255, 255, 255, 0.08);
+    --accent: #ffffff; /* Reverted to White */
+    --accent-2: #4e9ddd; /* Indigo Blue */
     --text: #ffffff;
     --text-dim: #a0a0a0;
-    --font-main: 'Outfit', sans-serif;
+    --font-main: 'Inter', sans-serif;
     --gradient: linear-gradient(135deg, var(--accent), var(--accent-2));
 }
 
