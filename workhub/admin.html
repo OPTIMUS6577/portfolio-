@@ -178,13 +178,6 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
       </div>
     </div>
 
-    <!-- SERVICE DETAIL MODAL -->
-    <div id="service-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(15px); z-index:2000; align-items:center; justify-content:center; padding:2rem">
-      <div style="background:var(--bg); border:1px solid var(--border); border-radius:32px; width:100%; max-width:900px; max-height:90vh; overflow-y:auto; position:relative; padding:3rem">
-        <button onclick="closeServiceModal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer">✕</button>
-        <div id="modal-content"></div>
-      </div>
-    </div>
 
     <!-- ANALYTICS TAB -->
     <div class="tab-panel" id="tab-analytics">
@@ -384,7 +377,7 @@ function renderAnalytics() {
   container.innerHTML = allServices.map(s => {
     const count = counts[s] || 0;
     const percent = Math.round((count / total) * 100);
-    return `<div class="stat-card" onclick="showServiceDetail('${s}')" style="padding: 2rem; cursor:pointer; transition:0.3s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+    return `<div class="stat-card" onclick="window.showServiceDetail('${s}')" style="padding: 2rem; cursor:pointer; transition:0.3s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
       <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem">
         <div>
           <div class="stat-label">${SERVICE_LABELS[s].toUpperCase()}</div>
@@ -403,11 +396,17 @@ function renderAnalytics() {
   }).join('');
 }
 
-function showServiceDetail(type) {
+window.showServiceDetail = function(type) {
+  console.log('Opening dashboard for:', type);
   const orders = globalOrders.filter(o => o.service === type);
   const color = {site:'#4e9ddd', bot:'#bc13fe', app:'#13fe8e', game:'#fe8e13', ai:'#ff4d4d', other:'#888'}[type];
   const modal = document.getElementById('service-modal');
   const content = document.getElementById('modal-content');
+
+  if (!modal || !content) {
+    console.error('Modal elements not found!');
+    return;
+  }
 
   content.innerHTML = `
     <div style="margin-bottom:2rem">
@@ -444,7 +443,7 @@ function showServiceDetail(type) {
   modal.style.display = 'flex';
 }
 
-function closeServiceModal() {
+window.closeServiceModal = function() {
   document.getElementById('service-modal').style.display = 'none';
 }
 
@@ -489,5 +488,13 @@ function addDemoData() {
 // initDashboard(); // Remove automatic start, will be called after login
 
 </script>
+
+<!-- SERVICE DETAIL MODAL -->
+<div id="service-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(15px); z-index:9999; align-items:center; justify-content:center; padding:2rem">
+  <div style="background:var(--bg); border:1px solid var(--border); border-radius:32px; width:100%; max-width:900px; max-height:90vh; overflow-y:auto; position:relative; padding:3rem">
+    <button onclick="window.closeServiceModal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
 </body>
 </html>
