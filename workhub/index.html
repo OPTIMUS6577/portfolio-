@@ -4,300 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Work Hub | Digital Innovation Hub</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#bc13fe">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #060612;
-            --card: rgba(255, 255, 255, 0.04);
-            --border: rgba(255, 255, 255, 0.08);
-            --accent: #bc13fe;
-            --accent-2: #4e9ddd;
-            --text: #ffffff;
-            --muted: #888;
-            --gradient: linear-gradient(135deg, var(--accent), var(--accent-2));
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: 'Space Grotesk', sans-serif; 
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(188, 19, 254, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(78, 157, 221, 0.05) 0%, transparent 40%);
-            min-height: 100vh;
-        }
-
-        header {
-            padding: 1.5rem 2rem;
-            position: fixed;
-            top: 0; width: 100%; z-index: 1000;
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        nav {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 800;
-            font-size: 1.5rem;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
-        }
-
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { 
-            text-decoration: none; 
-            color: var(--muted); 
-            font-size: 0.8rem; 
-            font-weight: 700; 
-            letter-spacing: 2px;
-            transition: 0.3s;
-        }
-        .nav-links a:hover { color: var(--accent); }
-
-        .hero {
-            height: 70vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0 1rem;
-        }
-
-        .glitch {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(3.5rem, 12vw, 8rem);
-            font-weight: 800;
-            letter-spacing: -3px;
-            color: #fff;
-            margin-bottom: 1rem;
-            filter: drop-shadow(0 0 30px rgba(188, 19, 254, 0.2));
-        }
-
-        .hero-subtitle {
-            color: var(--muted);
-            font-size: 1.2rem;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            font-weight: 300;
-        }
-
-        .services-section { padding: 5rem 2rem; max-width: 1300px; margin: 0 auto; }
-        .category-title { 
-            margin-bottom: 3rem; 
-            margin-top: 5rem;
-            border-left: 4px solid var(--accent); 
-            padding-left: 1.5rem; 
-            font-family: 'Outfit', sans-serif; 
-            font-size: 2rem; 
-            font-weight: 800;
-        }
-        
-        .s-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .s-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            cursor: pointer;
-            transition: all 0.4s;
-            backdrop-filter: blur(10px);
-        }
-
-        .s-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
-            box-shadow: 0 20px 40px rgba(188, 19, 254, 0.1);
-            background: rgba(188, 19, 254, 0.02);
-        }
-
-        .s-icon { font-size: 2.5rem; margin-bottom: 1.5rem; display: block; }
-        .s-card h4 { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; }
-        .s-card p { color: var(--muted); line-height: 1.6; font-size: 0.9rem; }
-
-        .contact-section { padding: 8rem 2rem; background: rgba(188, 19, 254, 0.02); }
-        .contact-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            background: var(--card);
-            padding: 4rem;
-            border-radius: 40px;
-            border: 1px solid var(--border);
-            backdrop-filter: blur(20px);
-        }
-
-        .contact-info h2 { font-family: 'Outfit', sans-serif; font-size: 3rem; font-weight: 800; margin-bottom: 1rem; }
-        .input-group { margin-bottom: 2rem; }
-        .input-group label { display: block; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 2px; margin-bottom: 0.8rem; }
-        .input-group input, .input-group select, .input-group textarea {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 0;
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-            transition: 0.3s;
-        }
-        .input-group input:focus, .input-group select:focus { border-color: var(--accent); }
-
-        .submit-btn {
-            width: 100%;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 1.5rem;
-            border-radius: 20px;
-            font-weight: 800;
-            font-size: 1rem;
-            letter-spacing: 4px;
-            cursor: pointer;
-            transition: 0.4s;
-        }
-        .submit-btn:hover { background: #fff; color: #000; transform: translateY(-5px); }
-
-        #service-info-modal {
-            display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-            background:rgba(0,0,0,0.85); backdrop-filter:blur(25px); z-index:9999; 
-            align-items:center; justify-content:center; padding:1.5rem;
-        }
-        .modal-card {
-            background: rgba(255,255,255,0.03); border:1px solid var(--border); 
-            border-radius:32px; width:100%; max-width:600px; padding:3.5rem; 
-            position:relative;
-        }
-
-        footer { padding: 4rem 2rem; text-align: center; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.8rem; }
-        .floating-admin {
-            position: fixed; bottom: 25px; right: 25px; width: 45px; height: 45px;
-            background: var(--card); border: 1px solid var(--border); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            text-decoration: none; font-size: 1.2rem; z-index: 1000;
-        }
-    </style>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon-512.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+    <div class="stars-overlay"></div>
+    <div class="glow-sphere"></div>
 
     <header>
         <nav>
-            <div class="logo">WORK HUB</div>
+            <div class="logo">WORK<span>HUB</span></div>
             <ul class="nav-links">
                 <li><a href="#services">SERVICES</a></li>
+                <li><a href="#about">ABOUT</a></li>
                 <li><a href="#contact">CONTACT</a></li>
-                <li><a href="admin.html" style="color: var(--accent);">ADMIN</a></li>
+                <li><a href="admin.html" style="color: var(--accent); font-weight: 800;">ADMIN</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
         <section class="hero">
-            <h1 class="glitch">WORK HUB</h1>
-            <p class="hero-subtitle">Digital Engineering & Creative Alchemy</p>
+            <h1 class="glitch" data-text="WORK HUB">WORK HUB</h1>
+            <p class="hero-subtitle">Future-proof digital engineering & creative alchemy.</p>
+            <div class="scroll-indicator">
+                <span>SCROLL TO DISCOVER</span>
+                <div class="mouse"></div>
+            </div>
         </section>
 
         <section id="services" class="services-section">
-            
-            <h3 class="category-title">Digital Engineering</h3>
-            <div class="s-grid">
-                <div class="s-card" onclick="showInfoModal('site')">
-                    <span class="s-icon">🌐</span>
-                    <h4>Sayt yaratish</h4>
-                    <p>Professional darajadagi zamonaviy veb-saytlar.</p>
-                </div>
-                <div class="s-card" onclick="showInfoModal('bot')">
-                    <span class="s-icon">🤖</span>
-                    <h4>Telegram bot</h4>
-                    <p>Biznesingiz uchun aqlli avtomatizatsiya.</p>
-                </div>
-                <div class="s-card" onclick="showInfoModal('app')">
-                    <span class="s-icon">📱</span>
-                    <h4>Ilova yaratish</h4>
-                    <p>iOS va Android uchun mobil ilovalar.</p>
-                </div>
-                <div class="s-card" onclick="showInfoModal('game')">
-                    <span class="s-icon">🎮</span>
-                    <h4>O'yin yaratish</h4>
-                    <p>Interaktiv 2D va 3D o'yin olamlari.</p>
-                </div>
+            <div class="section-header">
+                <span class="tag">OUR EXPERTISE</span>
+                <h2>CORE CAPABILITIES</h2>
             </div>
 
-            <h3 class="category-title">Kreativ Markaz</h3>
-            <div class="s-grid">
-                <div class="s-card" onclick="showInfoModal('video')">
-                    <span class="s-icon">🎬</span>
-                    <h4>Video yaratish</h4>
-                    <p>Yuqori sifatli motion va promo videolar.</p>
+            <div class="services-grid">
+                <!-- Group 1: Development -->
+                <div class="service-category">
+                    <h3>Digital Engineering</h3>
+                    <div class="service-items">
+                        <div class="s-card">
+                            <div class="icon">🌐</div>
+                            <h4>Sayt yaratish</h4>
+                            <p>Professional darajadagi zamonaviy veb-saytlar.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">🤖</div>
+                            <h4>Telegram bot</h4>
+                            <p>Biznesingiz uchun aqlli avtomatizatsiya.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">📱</div>
+                            <h4>Ilova yaratish</h4>
+                            <p>iOS va Android uchun mobil ilovalar.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">🎮</div>
+                            <h4>3D/2D O'yinlar</h4>
+                            <p>Interaktiv o'yin olamlari.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">⚡</div>
+                            <h4>MVP Yaratish</h4>
+                            <p>Startaplar uchun tezkor prototip.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="s-card" onclick="showInfoModal('logo')">
-                    <span class="s-icon">🖋️</span>
-                    <h4>Logotip dizayn</h4>
-                    <p>Brendingiz uchun unikal identifikatsiya.</p>
-                </div>
-                <div class="s-card" onclick="showInfoModal('banner')">
-                    <span class="s-icon">🖼️</span>
-                    <h4>Banner xizmati</h4>
-                    <p>Reklama va ijtimoiy tarmoqlar uchun dizayn.</p>
-                </div>
-                <div class="s-card" onclick="showInfoModal('prez')">
-                    <span class="s-icon">📊</span>
-                    <h4>Prezentatsiya</h4>
-                    <p>Investitsiya va biznes uchun taqdimotlar.</p>
-                </div>
-            </div>
 
-            <h3 class="category-title">Smart Analytics</h3>
-            <div class="s-grid">
-                <div class="s-card" onclick="showInfoModal('ai')">
-                    <span class="s-icon">🧠</span>
-                    <h4>Sun'iy Intelekt</h4>
-                    <p>AI yordamida aqlli algoritmlar yaratish.</p>
+                <!-- Group 2: Creative -->
+                <div class="service-category">
+                    <h3>Kreativ Markaz</h3>
+                    <div class="service-items">
+                        <div class="s-card">
+                            <div class="icon">🎬</div>
+                            <h4>Video yaratish</h4>
+                            <p>Yuqori sifatli motion va promo videolar.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">🖋️</div>
+                            <h4>Logotip dizayn</h4>
+                            <p>Brendingiz uchun unikal identifikatsiya.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">🖼️</div>
+                            <h4>Banner xizmati</h4>
+                            <p>Reklama va ijtimoiy tarmoqlar uchun dizayn.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">📊</div>
+                            <h4>Prezentatsiya</h4>
+                            <p>Investitsiya va biznes uchun taqdimotlar.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="s-card" onclick="showInfoModal('data')">
-                    <span class="s-icon">📈</span>
-                    <h4>Data Science</h4>
-                    <p>Ma'lumotlar tahlili va bashoratlash.</p>
-                </div>
-                <div class="s-card" onclick="showInfoModal('cyber')">
-                    <span class="s-icon">🛡️</span>
-                    <h4>Kiberxavfsizlik</h4>
-                    <p>Audit va xavfsizlik tizimlari.</p>
-                </div>
-            </div>
 
-            <h3 class="category-title">Nexus Network</h3>
-            <div class="s-grid">
-                <div class="s-card" onclick="showInfoModal('job')">
-                    <span class="s-icon">💼</span>
-                    <h4>Ish topish</h4>
-                    <p>IT mutaxassislar uchun ish topish ko'prigi.</p>
+                <!-- Group 3: Intelligence -->
+                <div class="service-category">
+                    <h3>Smart Analytics</h3>
+                    <div class="service-items">
+                        <div class="s-card">
+                            <div class="icon">🧠</div>
+                            <h4>Sun'iy Intelekt</h4>
+                            <p>AI yordamida aqlli algoritmlar yaratish.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">📈</div>
+                            <h4>Data Science</h4>
+                            <p>Ma'lumotlar tahlili va prognozlash.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">🛡️</div>
+                            <h4>Kiberxavfsizlik</h4>
+                            <p>Audit va xavfsizlik tizimlari.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="s-card" onclick="showInfoModal('mentor')">
-                    <span class="s-icon">👨‍🏫</span>
-                    <h4>O'qituvchi topish</h4>
-                    <p>Eng yaxshi mentorlar va darslar.</p>
+
+                <!-- Group 4: Network -->
+                <div class="service-category">
+                    <h3>Nexus Network</h3>
+                    <div class="service-items">
+                        <div class="s-card">
+                            <div class="icon">💼</div>
+                            <h4>Ish topish</h4>
+                            <p>IT mutaxassislar uchun ish topish ko'prigi.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">👨‍🏫</div>
+                            <h4>O'qituvchi topish</h4>
+                            <p>Eng yaxshi mentorlar va darslar.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -310,90 +155,66 @@
                 </div>
                 <form id="lab-contact-form" name="workhub-inquiry" method="POST" data-netlify="true">
                     <div class="input-group">
-                        <label>ISMINGIZ</label>
-                        <input type="text" name="name" required>
+                        <label>ISM</label>
+                        <input type="text" id="name" name="name" placeholder="Sizning ismingiz" required>
                     </div>
                     <div class="input-group">
-                        <label>TELEFONINGIZ</label>
-                        <input type="tel" name="phone" value="+998 " required>
+                        <label>TELEFON</label>
+                        <input type="tel" id="phone" name="phone" value="+998 " placeholder="+998 XX XXX XX XX" required>
                     </div>
                     <div class="input-group">
                         <label>XIZMAT TURI</label>
-                        <select id="service-select" name="service">
+                        <select id="service" name="service">
                             <option value="site">Sayt yaratish</option>
                             <option value="bot">Telegram Bot</option>
                             <option value="app">Mobil Ilova</option>
-                            <option value="video">Video xizmati</option>
-                            <option value="design">Dizayn xizmati</option>
+                            <option value="game">O'yin yaratish</option>
                             <option value="ai">Sun'iy Intelekt</option>
                             <option value="other">Boshqa...</option>
                         </select>
                     </div>
-                    <button type="submit" class="submit-btn">SEND <span>→</span></button>
+                    <div class="input-group" id="other-msg-group" style="display: none;">
+                        <label>XABARINGIZNI YOZING</label>
+                        <textarea id="other-message" name="message" placeholder="Qanday xizmat kerakligi haqida yozing..."></textarea>
+                    </div>
+                    <button type="submit">REGISTER <span>→</span></button>
                 </form>
             </div>
         </section>
     </main>
 
-    <div id="service-info-modal">
-        <div class="modal-card">
-            <button onclick="closeInfoModal()" style="position:absolute; top:25px; right:25px; background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer; opacity:0.4">✕</button>
-            <div id="modal-body"></div>
-        </div>
-    </div>
-
     <footer>
         <p>&copy; 2026 WORK HUB. ALL RIGHTS RESERVED.</p>
+        <p style="margin-top: 10px;"><a href="admin.html" style="color: var(--muted); text-decoration: none; font-size: 0.7rem;">ADMIN PANEL</a></p>
     </footer>
 
-    <a href="admin.html" class="floating-admin">⚙️</a>
+    <!-- Floating Admin Link -->
+    <a href="admin.html" style="position: fixed; bottom: 20px; right: 20px; width: 40px; height: 40px; background: rgba(188,19,254,0.1); border: 1px solid rgba(188,19,254,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--accent); font-size: 1.2rem; z-index: 9999; backdrop-filter: blur(10px); transition: 0.3s;" onmouseover="this.style.background='rgba(188,19,254,0.2)'" onmouseout="this.style.background='rgba(188,19,254,0.1)'">⚙️</a>
 
     <script>
-        const SERVICE_DETAILS = {
-            'site': { title: 'SAYT YARATISH', desc: 'Premium dizayn va SEO optimizatsiyalangan professional veb-saytlar.', features: ['UX/UI Dizayn', 'SEO Optimizatsiya', 'Responsive', 'Admin Panel'], icon: '🌐' },
-            'bot': { title: 'TELEGRAM BOT', desc: 'Biznesingizni avtomatlashtirish uchun aqlli va tezkor Telegram botlar.', features: ['CRM Integratsiya', 'To\'lovlar', 'Statistika', 'API Integratsiya'], icon: '🤖' },
-            'app': { title: 'MOBIL ILOVA', desc: 'iOS va Android uchun zamonaviy va qulay mobil ilovalar yaratish.', features: ['Cross-platform', 'Push bildirishnoma', 'Offline rejim', 'App Store'], icon: '📱' },
-            'game': { title: 'O\'YINLAR', desc: 'Sizning g\'oyangiz asosida interaktiv 2D va 3D o\'yinlar yaratish.', features: ['Unity/UE Engine', 'Geympley', 'Multiplayer', 'Grafika'], icon: '🎮' },
-            'ai': { title: 'SUN\'IY INTELEKT', desc: 'AI va Machine Learning yordamida biznesingizni aqlli qiling.', features: ['Chatbot AI', 'Data Analysis', 'Neyron tarmoqlar', 'Bashoratlash'], icon: '🧠' },
-            'video': { title: 'VIDEO YARATISH', desc: 'Yuqori sifatli motion graphics va professional promo videolar.', features: ['Motion Design', 'Montaj', 'Sound Design', '4K Sifat'], icon: '🎬' },
-            'logo': { title: 'LOGOTIP DIZAYN', desc: 'Brendingiz uchun unikal va yodda qolarli vizual identifikatsiya.', features: ['Unikal Dizayn', 'Vektor Format', 'Brandbook', 'Modern Style'], icon: '🖋️' },
-            'banner': { title: 'BANNER XIZMATI', desc: 'Reklama va ijtimoiy tarmoqlar uchun jozibali bannerlar.', features: ['SMM Dizayn', 'Reklama', 'Tezkor tayyorlash', 'Creative'], icon: '🖼️' },
-            'prez': { title: 'PREZENTATSIYA', desc: 'Investitsiya va biznes uchun mukammal taqdimotlar yaratish.', features: ['Pitch Deck', 'Infografika', 'Business Design', 'Struktura'], icon: '📊' },
-            'data': { title: 'DATA SCIENCE', desc: 'Ma\'lumotlar tahlili va bashoratlash orqali to\'g\'ri qarorlar qabul qiling.', features: ['Big Data', 'Analysis', 'Visualization', 'ML Models'], icon: '📈' },
-            'cyber': { title: 'KIBERXAVFSIZLIK', desc: 'Tizimlaringizni kiberhujumlardan ishonchli himoya qiling.', features: ['Security Audit', 'Protection', 'Ethical Hacking', 'Monitoring'], icon: '🛡️' },
-            'job': { title: 'ISH TOPISH', desc: 'IT mutaxassislar uchun eng yaxshi vakansiyalar va martaba o\'sishi.', features: ['Resume Review', 'Interview Prep', 'Direct Contact', 'HR Support'], icon: '💼' },
-            'mentor': { title: 'MENTOR TOPISH', desc: 'Tajribali mutaxassislardan individual darslar va maslahatlar oling.', features: ['1:1 Mentorlik', 'Roadmap', 'Amaliyot', 'Support'], icon: '👨‍🏫' }
-        };
-
-        function showInfoModal(type) {
-            const detail = SERVICE_DETAILS[type];
-            const body = document.getElementById('modal-body');
-            body.innerHTML = `
-                <div style="font-size:3.5rem; margin-bottom:1.5rem">${detail.icon}</div>
-                <h2 style="font-family:'Outfit',sans-serif; font-size:2.5rem; font-weight:800; margin-bottom:1rem; color:var(--accent)">${detail.title}</h2>
-                <p style="color:var(--muted); margin-bottom:2rem; font-size:1rem; line-height:1.7">${detail.desc}</p>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:3rem">
-                    ${detail.features.map(f => `<div style="font-size:0.8rem; color:var(--accent); font-weight:700">✓ ${f}</div>`).join('')}
-                </div>
-                <button onclick="scrollToForm('${type}')" style="width:100%; background:var(--accent); color:#fff; border:none; padding:1.2rem; border-radius:15px; font-weight:800; letter-spacing:2px; cursor:pointer;">LOYIHA BOSHLASH</button>
-            `;
-            document.getElementById('service-info-modal').style.display = 'flex';
-        }
-
-        function closeInfoModal() { document.getElementById('service-info-modal').style.display = 'none'; }
-        
-        function scrollToForm(type) {
-            closeInfoModal();
-            const select = document.getElementById('service-select');
-            if(type === 'site' || type === 'bot' || type === 'app' || type === 'video' || type === 'ai') {
-                select.value = type;
-            } else if(type === 'logo' || type === 'banner' || type === 'prez') {
-                select.value = 'design';
-            } else {
-                select.value = 'other';
-            }
-            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-        }
+        // Make cards clickable
+        document.querySelectorAll('.s-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const serviceName = card.querySelector('h4').textContent.toLowerCase();
+                const select = document.getElementById('service');
+                
+                // Map text to select values
+                if (serviceName.includes('sayt')) select.value = 'site';
+                else if (serviceName.includes('bot')) select.value = 'bot';
+                else if (serviceName.includes('ilova')) select.value = 'app';
+                else if (serviceName.includes('o\'yin')) select.value = 'game';
+                else if (serviceName.includes('intelekt')) select.value = 'ai';
+                else select.value = 'other';
+                
+                // Scroll to form
+                document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+                
+                // Highlight select
+                select.style.borderBottomColor = 'var(--accent)';
+                setTimeout(() => { select.style.borderBottomColor = ''; }, 2000);
+            });
+        });
     </script>
+    <script src="app.js"></script>
 </body>
 </html>

@@ -11,66 +11,55 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Glow Background Effects -->
-    <div class="glow-overlay">
-        <div class="glow-sphere glow-1"></div>
-        <div class="glow-sphere glow-2"></div>
-    </div>
+    <div class="glow-overlay"></div>
 
-    <nav class="glass">
-        <div class="nav-container">
-            <div class="logo gradient-text">SUXROB.</div>
-            <div class="nav-links">
-                <a href="#hero" class="active">BIOGRAPHY</a>
-                <a href="#mastery">MASTERY</a>
-                <a href="#career">CAREER</a>
-                <a href="workhub/index.html">WORK HUB</a>
-            </div>
-            <button class="inquiry-btn" onclick="document.querySelector('#contact').scrollIntoView({behavior:'smooth'})">GET IN TOUCH</button>
-        </div>
-    </nav>
+    <header>
+        <nav id="main-nav">
+            <div class="logo">ALCHEMIST<span>DIR</span></div>
+            <ul class="nav-links">
+                <li><a href="#work">WORK</a></li>
+                <li><a href="contact.html">LET'S CONNECT</a></li>
+            </ul>
+            <button class="inquiry-btn" id="inquiry-trigger" onclick="window.location.href='contact.html'">CONTACT</button>
+        </nav>
+    </header>
 
-    <main id="hero">
+    <main>
         <section class="hero-section">
             <div class="hero-content">
-                <div class="profile-image-container glass">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=1000" alt="Yusupov Suxrob">
-                    <div class="profile-label">
-                        <h1 class="gradient-text">SUXROB<br>YUSUPOV</h1>
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div class="profile-image-container">
+                        <img src="assets/profile.png" alt="Profile Portfolio" id="profile-img">
                     </div>
-                </div>
-                <div class="hero-text">
-                    <div class="section-tag">DIGITAL ARCHITECT</div>
-                    <h2 class="main-title">Crafting <span class="gradient-text">Exceptional</span> Digital Experiences</h2>
-                    <p class="quote">"Texnologiya — bu shunchaki kod emas, bu san'at va kelajakni qurish qurolidir."</p>
-                    <a href="assets/resume.pdf" class="resume-download glass" download>
-                        <span>DOWNLOAD RESUME</span>
-                        <span class="gradient-text">PDF ↗</span>
+                    <a href="assets/resume.pdf" target="_blank" class="resume-download">
+                        <span>RESUME_2026.PDF</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                     </a>
                 </div>
             </div>
         </section>
 
-        <section id="mastery" class="mastery-section">
-            <div class="section-label gradient-text">SKILLSET & TECHNOLOGY</div>
+        <section class="mastery-section">
+            <p class="section-label">MASTERY</p>
             <div class="tags-container">
-                <span class="tag glass">Frontend Architecture</span>
-                <span class="tag glass">Backend Systems</span>
-                <span class="tag glass">UI/UX Alchemy</span>
-                <span class="tag glass">Telegram Bot Ecosystems</span>
-                <span class="tag glass">Mobile Engineering</span>
-                <span class="tag glass">Strategic Design</span>
+                <span class="tag">INTERFACE DESIGN</span>
+                <span class="tag">3D MOTION</span>
+                <span class="tag">CREATIVE CODING</span>
+                <span class="tag">VISUAL IDENTITY</span>
+                <span class="tag">WEBGL STRATEGY</span>
+                <span class="tag">UX ALCHEMY</span>
             </div>
         </section>
 
-        <section id="career" class="career-section">
+        <section class="career-section" id="work">
             <div class="career-grid">
-                <div class="career-info">
-                    <div class="section-tag">TIMELINE</div>
-                    <h2 class="career-title gradient-text">Professional Journey</h2>
-                    <p class="career-subtitle">Har bir qadam — yangi tajriba va yuqori natija sari yo'l.</p>
+                <div class="career-left">
+                    <h2 class="career-title">WORK</h2>
+
                 </div>
-                <div class="career-timeline glass" style="padding: 3rem;">
+                <div class="career-timeline" id="career-timeline"></div>
+            </div>
+        </section>
 
     </main>
 
