@@ -66,6 +66,12 @@ header {
     font-weight: 700;
     letter-spacing: 2px;
     font-size: 1.1rem;
+    text-transform: uppercase;
+}
+
+.logo span {
+    color: var(--accent-gray);
+    opacity: 0.6;
 }
 
 .nav-links {

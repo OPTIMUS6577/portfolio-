@@ -2,8 +2,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const workDatabase = [
         {
+            role: 'Work Hub Innovation',
+            meta: 'CREATIVE HUB / 2024 - PRESENT',
+            description: "Biznesingiz uchun professional saytlar, botlar va ilovalar yaratish platformasi.",
+            link: 'workhub/index.html'
+        },
+        {
             role: 'IT Company Backend Developer',
-            meta: 'NEON VOID STUDIO / 2022 - PRESENT',
+            meta: 'NEON VOID STUDIO / 2022 - 2023',
             description: "G'ayritabiiy brendlar uchun immersiv tajribalar yaratishga rahbarlik."
         }
     ];
@@ -12,10 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (timelineContainer) {
         timelineContainer.innerHTML = workDatabase
             .map((item) => `
-                <div class="timeline-item">
+                <div class="timeline-item" ${item.link ? `onclick="window.location.href='${item.link}'" style="cursor: pointer;"` : ''}>
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <h3>${item.role}</h3>
+                        <h3>${item.role} ${item.link ? '<span style="font-size: 0.7rem; color: var(--accent-color); margin-left: 10px;">VIEW PROJECT ↗</span>' : ''}</h3>
                         <p class="timeline-meta">${item.meta}</p>
                         <p class="timeline-desc">${item.description}</p>
                     </div>
@@ -107,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Force visible button text in case cached CSS overrides styles.
             contactBtn.innerHTML = '<span class="btn-label">REGISTER</span>';
         }
-
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -123,91 +128,42 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.innerHTML = '<span class="btn-label">TRANSMITTING...</span>';
             btn.disabled = true;
 
-            // --- TELEGRAM BOT SOZLAMALARI ---
-            // 1. @BotFather orqali bot oching va tokenni oling
-            // 2. @getmyid_bot orqali o'z ID raqamingizni oling
             const BOT_TOKEN = '8469015792:AAHer6z93IlMyN_hF-1LPJdmMTcD3Zw77p4'; 
             const CHAT_ID = '1198878759';
-            
             const text = `🔥 Yangi Xabar (Portfolio)\n\n👤 Ism: ${name}\n📧 Email: ${email}\n📝 Xabar: ${message}\n📞 Telefon: ${phone}`;
-            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            
+            // Prepare Data for Netlify
+            const formData = new FormData(contactForm);
+            formData.append('form-name', 'portfolio-contact');
 
             try {
-                // Telegramga yuborish
-                if (BOT_TOKEN !== 'YOUR_BOT_TOKEN_HERE') {
-                    const response = await fetch(url, {
+                // 1. Send to Telegram & Netlify simultaneously
+                const [tgRes, netlifyRes] = await Promise.all([
+                    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: CHAT_ID,
-                            text: text
-                        })
-                    });
-                    
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error("Telegram API Error: " + JSON.stringify(errorData));
-                    }
-                } else {
-                    console.warn("Eslatma: Telegram token kiritilmagan! Faqat LocalStorage ga saqlanmoqda.");
+                        body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+                    }),
+                    fetch('/', {
+                        method: 'POST',
+                        body: new URLSearchParams(formData).toString(),
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+                    })
+                ]);
+                
+                if (tgRes.ok || netlifyRes.ok) {
+                    // Create beautiful notification
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `position: fixed; bottom: 30px; right: 30px; background: rgba(20, 20, 22, 0.95); border: 1px solid var(--accent-color); color: var(--text-primary); padding: 20px 25px; border-radius: 12px; box-shadow: 0 0 20px rgba(255, 255, 255, 0.15); z-index: 1000; font-family: var(--font-main); transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); display: flex; align-items: center; gap: 15px;`;
+                    notification.innerHTML = `<div style="background: var(--accent-color); color: #000; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">✓</div><div><h4 style="margin: 0; font-family: var(--font-heading); letter-spacing: 1px;">Muvaffaqiyatli!</h4><p style="margin: 5px 0 0; font-size: 0.85rem; color: var(--text-secondary);">Xabar Telegramingizga va bazaga tushdi.</p></div>`;
+                    document.body.appendChild(notification);
+                    requestAnimationFrame(() => { notification.style.transform = 'translateY(0)'; notification.style.opacity = '1'; });
+                    setTimeout(() => {
+                        notification.style.transform = 'translateY(100px)'; notification.style.opacity = '0';
+                        setTimeout(() => notification.remove(), 400);
+                    }, 4000);
+                    contactForm.reset();
                 }
-
-                // Save to LocalStorage Database
-                let messagesDB = JSON.parse(localStorage.getItem('portfolio_db') || '[]');
-                messagesDB.push({
-                    id: Date.now(),
-                    name: name,
-                    email: email,
-                    message: message,
-                    date: new Date().toLocaleString()
-                });
-                localStorage.setItem('portfolio_db', JSON.stringify(messagesDB));
-
-                // Create beautiful notification
-                const notification = document.createElement('div');
-                notification.style.cssText = `
-                    position: fixed;
-                    bottom: 30px;
-                    right: 30px;
-                    background: rgba(20, 20, 22, 0.95);
-                    border: 1px solid var(--accent-color);
-                    color: var(--text-primary);
-                    padding: 20px 25px;
-                    border-radius: 12px;
-                    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
-                    z-index: 1000;
-                    font-family: var(--font-main);
-                    transform: translateY(100px);
-                    opacity: 0;
-                    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                    display: flex;
-                    align-items: center;
-                    gap: 15px;
-                `;
-                
-                notification.innerHTML = `
-                    <div style="background: var(--accent-color); color: #000; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">✓</div>
-                    <div>
-                        <h4 style="margin: 0; font-family: var(--font-heading); letter-spacing: 1px;">Muvaffaqiyatli!</h4>
-                        <p style="margin: 5px 0 0; font-size: 0.85rem; color: var(--text-secondary);">Xabar Telegramingizga va bazaga tushdi.</p>
-                    </div>
-                `;
-                
-                document.body.appendChild(notification);
-                
-                // Animate in
-                requestAnimationFrame(() => {
-                    notification.style.transform = 'translateY(0)';
-                    notification.style.opacity = '1';
-                });
-
-                // Remove after 4 seconds
-                setTimeout(() => {
-                    notification.style.transform = 'translateY(100px)';
-                    notification.style.opacity = '0';
-                    setTimeout(() => notification.remove(), 400);
-                }, 4000);
-
             } catch (error) {
                 console.error("Xatolik yuz berdi: ", error);
                 alert("Internetda yoki botda xatolik yuz berdi!");

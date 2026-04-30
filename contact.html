@@ -24,22 +24,22 @@
 
             <div class="contact-grid">
                 <div class="contact-form-container">
-                    <form id="contact-form">
+                    <form id="contact-form" name="portfolio-contact" method="POST" data-netlify="true">
                         <div class="form-group">
                             <label>FULL NAME</label>
-                            <input type="text" id="contact-name" placeholder="E.g. Full Name" required>
+                            <input type="text" id="contact-name" name="fullname" placeholder="E.g. Full Name" required>
                         </div>
                         <div class="form-group">
                             <label>EMAIL ADDRESS</label>
-                            <input type="email" id="contact-email" placeholder="void@alchemy.dir" required>
+                            <input type="email" id="contact-email" name="email" placeholder="void@alchemy.dir" required>
                         </div>
                         <div class="form-group">
                             <label>PROJECT VISION <span style="font-size: 0.75rem; color: #888; text-transform: none; margin-left: 8px;">(Loyiha g'oyasi)</span></label>
-                            <textarea id="contact-message" placeholder="Loyiha haqida batafsil ma'lumot yozing..." required></textarea>
+                            <textarea id="contact-message" name="message" placeholder="Loyiha haqida batafsil ma'lumot yozing..." required></textarea>
                         </div>
                         <div class="form-group">
                             <label>PHONE NUMBER <span style="font-size: 0.75rem; color: #888; text-transform: none; margin-left: 8px;">(Telefon raqam kiriting)</span></label>
-                            <input type="tel" id="contact-phone" placeholder="+998 XX XXX XX XX" required>
+                            <input type="tel" id="contact-phone" name="phone" placeholder="+998 XX XXX XX XX" required>
                         </div>
                         <button type="submit" class="transmit-btn"><span class="btn-label">REGISTER</span></button>
                     </form>

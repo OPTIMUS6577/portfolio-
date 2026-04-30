@@ -8,9 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const contactForm = document.getElementById('lab-contact-form');
 
-    // Telegram Bot Config (Using your existing bot)
     const BOT_TOKEN = '8469015792:AAHer6z93IlMyN_hF-1LPJdmMTcD3Zw77p4';
     const CHAT_ID = '1198878759';
+
+    // Supabase Config (Buni keyinroq o'zingizning URL/Key bilan almashtirasiz)
+    const SUPABASE_URL = 'https://your-project.supabase.co';
+    const SUPABASE_KEY = 'your-anon-key';
+    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
     const serviceSelect = document.getElementById('service');
     const otherMsgGroup = document.getElementById('other-msg-group');
@@ -74,33 +78,29 @@ document.addEventListener('DOMContentLoaded', () => {
             finalService = `Boshqa: ${otherMsg}`;
         }
 
-        const message = `💼 *WORK HUB: NEW INQUIRY*\n\n👤 *Ism:* ${name}\n📞 *Tel:* ${phone}\n🛠️ *Xizmat:* ${finalService}\n\n_Sent via Work Hub_`;
+        // 1. Send to Telegram
+        const telegramMessage = `💼 *WORK HUB: NEW INQUIRY*\n\n👤 *Ism:* ${name}\n📞 *Tel:* ${phone}\n🛠️ *Xizmat:* ${finalService}\n\n_Sent via Work Hub_`;
+        
+        // 2. Prepare Data for Netlify
+        const formData = new FormData(contactForm);
+        formData.append('form-name', 'workhub-inquiry');
 
         try {
-            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: message,
-                    parse_mode: 'Markdown'
+            // Parallel send: Telegram and Netlify
+            const [tgRes, netlifyRes] = await Promise.all([
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: telegramMessage, parse_mode: 'Markdown' }),
                 }),
-            });
+                fetch('/', {
+                    method: 'POST',
+                    body: new URLSearchParams(formData).toString(),
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" }
+                })
+            ]);
 
-        if (response.ok) {
-                // LocalStorage ga saqlash (admin panel uchun)
-                const orders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
-                orders.push({
-                    id: Date.now(),
-                    name: name,
-                    phone: phone,
-                    service: finalService === `Boshqa: ${otherMsg}` ? 'other' : service,
-                    date: new Date().toISOString()
-                });
-                localStorage.setItem('workhub_orders', JSON.stringify(orders));
-
+            if (tgRes.ok || netlifyRes.ok) {
                 // Success notification
                 const note = document.createElement('div');
                 note.style.cssText = 'position:fixed;bottom:30px;right:30px;background:rgba(6,6,18,0.95);border:1px solid #bc13fe;color:#fff;padding:20px 25px;border-radius:16px;box-shadow:0 0 30px rgba(188,19,254,0.3);z-index:1000;font-family:Outfit,sans-serif;transform:translateY(100px);opacity:0;transition:all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55)';
@@ -109,8 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 requestAnimationFrame(() => { note.style.transform='translateY(0)'; note.style.opacity='1'; });
                 setTimeout(() => { note.style.transform='translateY(100px)'; note.style.opacity='0'; setTimeout(()=>note.remove(),400); }, 4000);
                 contactForm.reset();
-            } else {
-                throw new Error('Telegram API Error');
             }
         } catch (error) {
             console.error('Submission error:', error);

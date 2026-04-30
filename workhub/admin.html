@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel | Work Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+<!-- Supabase Library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#060612;--card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);--accent:#bc13fe;--accent2:#4e9ddd;--text:#fff;--muted:#888}
@@ -207,13 +209,44 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 const DB_KEY = 'workhub_orders';
 const TOKEN = '8469015792:AAHer6z93IlMyN_hF-1LPJdmMTcD3Zw77p4';
 
-function getOrders() {
-  return JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+// Supabase Config
+const SUPABASE_URL = 'https://your-project.supabase.co';
+const SUPABASE_KEY = 'your-anon-key';
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+let globalOrders = [];
+
+async function getOrdersFromDB() {
+  if (!supabase) return JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+  
+  try {
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    
+    // Map database fields to our app's fields
+    return data.map(item => ({
+      id: item.id,
+      name: item.name,
+      phone: item.phone,
+      service: item.service,
+      date: item.created_at
+    }));
+  } catch (err) {
+    console.error('Fetch error:', err);
+    return JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+  }
 }
 
-function initDashboard() {
+async function initDashboard() {
   updateTime();
   setInterval(updateTime, 1000);
+  
+  globalOrders = await getOrdersFromDB();
+  
   renderStats();
   renderOrders();
   renderAnalytics();
@@ -227,7 +260,7 @@ function updateTime() {
 }
 
 function renderStats() {
-  const orders = getOrders();
+  const orders = globalOrders;
   const today = new Date().toLocaleDateString('uz-UZ');
 
   document.getElementById('total-count').textContent = orders.length;
@@ -252,7 +285,7 @@ const SERVICE_LABELS = {site:'Sayt yaratish',bot:'Telegram Bot',app:'Mobil Ilova
 const SERVICE_BADGE = {site:'badge-site',bot:'badge-bot',app:'badge-app',game:'badge-game',ai:'badge-ai',other:'badge-other'};
 
 function renderOrders() {
-  const orders = getOrders();
+  const orders = globalOrders;
   const q = (document.getElementById('search-input')?.value || '').toLowerCase();
   const filtered = orders.filter(o => o.name.toLowerCase().includes(q) || o.phone.includes(q));
   const container = document.getElementById('orders-container');
@@ -282,10 +315,18 @@ function renderOrders() {
     </table>`;
 }
 
-function deleteOrder(id) {
+async function deleteOrder(id) {
   if (!confirm('Bu so\'rovni o\'chirasizmi?')) return;
-  const orders = getOrders().filter(o => o.id !== id);
-  localStorage.setItem(DB_KEY, JSON.stringify(orders));
+  
+  if (supabase) {
+    const { error } = await supabase.from('orders').delete().eq('id', id);
+    if (error) {
+      alert('O\'chirishda xatolik: ' + error.message);
+      return;
+    }
+  }
+
+  globalOrders = globalOrders.filter(o => o.id !== id);
   renderStats(); renderOrders(); renderAnalytics();
 }
 
@@ -296,7 +337,7 @@ function clearAll() {
 }
 
 function renderAnalytics() {
-  const orders = getOrders();
+  const orders = globalOrders;
   const counts = {};
   orders.forEach(o => { counts[o.service] = (counts[o.service] || 0) + 1; });
 

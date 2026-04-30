@@ -11,6 +11,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="icon-512.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="stars-overlay"></div>
@@ -151,18 +153,18 @@
                     <h2>INITIATE PROJECT</h2>
                     <p>Tayyormisiz? Ma'lumotlaringizni qoldiring, biz siz bilan bog'lanamiz.</p>
                 </div>
-                <form id="lab-contact-form">
+                <form id="lab-contact-form" name="workhub-inquiry" method="POST" data-netlify="true">
                     <div class="input-group">
                         <label>ISM</label>
-                        <input type="text" id="name" placeholder="Sizning ismingiz" required>
+                        <input type="text" id="name" name="name" placeholder="Sizning ismingiz" required>
                     </div>
                     <div class="input-group">
                         <label>TELEFON</label>
-                        <input type="tel" id="phone" value="+998 " placeholder="+998 XX XXX XX XX" required>
+                        <input type="tel" id="phone" name="phone" value="+998 " placeholder="+998 XX XXX XX XX" required>
                     </div>
                     <div class="input-group">
                         <label>XIZMAT TURI</label>
-                        <select id="service">
+                        <select id="service" name="service">
                             <option value="site">Sayt yaratish</option>
                             <option value="bot">Telegram Bot</option>
                             <option value="app">Mobil Ilova</option>
@@ -173,7 +175,7 @@
                     </div>
                     <div class="input-group" id="other-msg-group" style="display: none;">
                         <label>XABARINGIZNI YOZING</label>
-                        <textarea id="other-message" placeholder="Qanday xizmat kerakligi haqida yozing..."></textarea>
+                        <textarea id="other-message" name="message" placeholder="Qanday xizmat kerakligi haqida yozing..."></textarea>
                     </div>
                     <button type="submit">REGISTER <span>→</span></button>
                 </form>
