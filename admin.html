@@ -220,10 +220,8 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 const DB_KEY = 'workhub_orders';
 const TOKEN = '8469015792:AAHer6z93IlMyN_hF-1LPJdmMTcD3Zw77p4';
 
-// Supabase Config
-const SUPABASE_URL = 'https://your-project.supabase.co';
-const SUPABASE_KEY = 'your-anon-key';
-const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+// Supabase Config Removed
+const supabase = null;
 
 let globalOrders = [];
 
@@ -240,27 +238,10 @@ function checkLogin() {
 
 
 async function getOrdersFromDB() {
-  if (!supabase) return JSON.parse(localStorage.getItem(DB_KEY) || '[]');
-  
   try {
-    const { data, error } = await supabase
-      .from('orders')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    
-    // Map database fields to our app's fields
-    return data.map(item => ({
-      id: item.id,
-      name: item.name,
-      phone: item.phone,
-      service: item.service,
-      date: item.created_at
-    }));
-  } catch (err) {
-    console.error('Fetch error:', err);
     return JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+  } catch(e) {
+    return [];
   }
 }
 
