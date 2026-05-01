@@ -239,7 +239,8 @@ function checkLogin() {
 
 async function getOrdersFromDB() {
   try {
-    return JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+    const data = JSON.parse(localStorage.getItem(DB_KEY));
+    return Array.isArray(data) ? data : [];
   } catch(e) {
     return [];
   }
