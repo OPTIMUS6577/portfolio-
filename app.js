@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function showModal(title, subServices) {
+        document.querySelector('.modal-tag').innerText = "SELECTION";
         modalTitle.innerText = title;
         subServicesList.innerHTML = '';
         
@@ -74,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h5>${sub.name}</h5>
                 <p>${sub.desc}</p>
             `;
-            div.onclick = () => selectService(`${title}: ${sub.name}`);
+            div.onclick = () => selectService(`${title}: ${sub.name}`, sub.desc);
             subServicesList.appendChild(div);
         });
 
@@ -82,15 +83,30 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'hidden';
     }
 
-    function selectService(fullServiceName) {
-        serviceInput.value = fullServiceName;
-        serviceDisplay.value = fullServiceName;
+    function selectService(fullServiceName, desc = '') {
+        // Change modal to a confirmation step
+        document.querySelector('.modal-tag').innerText = "TAYYOR!";
+        modalTitle.innerText = "Ajoyib tanlov";
         
-        modal.classList.remove('active');
-        document.body.style.overflow = 'auto';
+        subServicesList.innerHTML = `
+            <div style="text-align: center; width: 100%; grid-column: 1 / -1;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+                <h3 style="color: var(--text); font-size: 1.5rem; margin-bottom: 0.5rem;">${fullServiceName}</h3>
+                <p style="color: var(--text-dim); margin-bottom: 2rem;">${desc ? desc : 'Biznesingiz uchun professional yechim.'}</p>
+                <button id="final-confirm-btn" style="margin: 0 auto; width: 100%; max-width: 300px;">FORMAGA O'TISH</button>
+            </div>
+        `;
 
-        // Scroll to form
-        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('final-confirm-btn').onclick = () => {
+            serviceInput.value = fullServiceName;
+            serviceDisplay.value = fullServiceName;
+            
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+
+            // Scroll to form
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        };
     }
 
     // Close Modal
