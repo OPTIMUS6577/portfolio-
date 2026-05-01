@@ -3,80 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALCHEMIST_DIR | Portfolio</title>
-    <link rel="stylesheet" href="style.css?v=2">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Work Hub | Digital Innovation Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#bc13fe">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon-512.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div class="glow-overlay"></div>
+    <div class="stars-overlay"></div>
+    <div class="glow-sphere"></div>
 
     <header>
-        <nav id="main-nav">
-            <div class="logo">ALCHEMIST<span>DIR</span></div>
+        <nav>
+            <div class="logo">WORK<span>HUB</span></div>
             <ul class="nav-links">
-                <li><a href="#work">WORK</a></li>
-                <li><a href="contact.html">LET'S CONNECT</a></li>
+                <li><a href="#services">SERVICES</a></li>
+                <li><a href="#about">ABOUT</a></li>
+                <li><a href="#contact">CONTACT</a></li>
+                <li><a href="admin.html" style="color: var(--accent); font-weight: 800;">ADMIN</a></li>
             </ul>
-            <button class="inquiry-btn" id="inquiry-trigger" onclick="window.location.href='contact.html'">CONTACT</button>
         </nav>
     </header>
 
     <main>
-        <section class="hero-section">
-            <div class="hero-content">
-                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                    <div class="profile-image-container">
-                        <img src="assets/profile.png" alt="Profile Portfolio" id="profile-img">
+        <section class="hero">
+            <h1 class="glitch" data-text="WORK HUB">WORK HUB</h1>
+            <p class="hero-subtitle">Future-proof digital engineering & creative alchemy.</p>
+            <div class="scroll-indicator">
+                <span>SCROLL TO DISCOVER</span>
+                <div class="mouse"></div>
+            </div>
+        </section>
+
+        <section id="services" class="services-section">
+            <div class="section-header">
+                <span class="tag">OUR EXPERTISE</span>
+                <h2>CORE CAPABILITIES</h2>
+            </div>
+
+            <div class="services-grid">
+                <!-- Group 1: Development -->
+                <div class="service-category">
+                    <h3>Digital Engineering</h3>
+                    <div class="service-items">
+                        <div class="s-card">
+                            <div class="icon">🌐</div>
+                            <h4>Sayt yaratish</h4>
+                            <p>Professional darajadagi zamonaviy veb-saytlar.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">🤖</div>
+                            <h4>Telegram bot</h4>
+                            <p>Biznesingiz uchun aqlli avtomatizatsiya.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">📱</div>
+                            <h4>Ilova yaratish</h4>
+                            <p>iOS va Android uchun mobil ilovalar.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">🎮</div>
+                            <h4>3D/2D O'yinlar</h4>
+                            <p>Interaktiv o'yin olamlari.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">⚡</div>
+                            <h4>MVP Yaratish</h4>
+                            <p>Startaplar uchun tezkor prototip.</p>
+                        </div>
                     </div>
-                    <a href="assets/resume.pdf" target="_blank" class="resume-download">
-                        <span>RESUME_2026.PDF</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    </a>
+                </div>
+
+                <!-- Group 2: Creative -->
+                <div class="service-category">
+                    <h3>Kreativ Markaz</h3>
+                    <div class="service-items">
+                        <div class="s-card">
+                            <div class="icon">🎬</div>
+                            <h4>Video yaratish</h4>
+                            <p>Yuqori sifatli motion va promo videolar.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">🖋️</div>
+                            <h4>Logotip dizayn</h4>
+                            <p>Brendingiz uchun unikal identifikatsiya.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">🖼️</div>
+                            <h4>Banner xizmati</h4>
+                            <p>Reklama va ijtimoiy tarmoqlar uchun dizayn.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">📊</div>
+                            <h4>Prezentatsiya</h4>
+                            <p>Investitsiya va biznes uchun taqdimotlar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Group 3: Intelligence -->
+                <div class="service-category">
+                    <h3>Smart Analytics</h3>
+                    <div class="service-items">
+                        <div class="s-card">
+                            <div class="icon">🧠</div>
+                            <h4>Sun'iy Intelekt</h4>
+                            <p>AI yordamida aqlli algoritmlar yaratish.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">📈</div>
+                            <h4>Data Science</h4>
+                            <p>Ma'lumotlar tahlili va prognozlash.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">🛡️</div>
+                            <h4>Kiberxavfsizlik</h4>
+                            <p>Audit va xavfsizlik tizimlari.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Group 4: Network -->
+                <div class="service-category">
+                    <h3>Nexus Network</h3>
+                    <div class="service-items">
+                        <div class="s-card">
+                            <div class="icon">💼</div>
+                            <h4>Ish topish</h4>
+                            <p>IT mutaxassislar uchun ish topish ko'prigi.</p>
+                        </div>
+                        <div class="s-card">
+                            <div class="icon">👨‍🏫</div>
+                            <h4>O'qituvchi topish</h4>
+                            <p>Eng yaxshi mentorlar va darslar.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="mastery-section">
-            <p class="section-label">MASTERY</p>
-            <div class="tags-container">
-                <span class="tag">INTERFACE DESIGN</span>
-                <span class="tag">3D MOTION</span>
-                <span class="tag">CREATIVE CODING</span>
-                <span class="tag">VISUAL IDENTITY</span>
-                <span class="tag">WEBGL STRATEGY</span>
-                <span class="tag">UX ALCHEMY</span>
-            </div>
-        </section>
-
-        <section class="career-section" id="work">
-            <div class="career-grid">
-                <div class="career-left">
-                    <h2 class="career-title">WORK</h2>
-
+        <section id="contact" class="contact-section">
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h2>INITIATE PROJECT</h2>
+                    <p>Tayyormisiz? Ma'lumotlaringizni qoldiring, biz siz bilan bog'lanamiz.</p>
                 </div>
-                <div class="career-timeline" id="career-timeline"></div>
+                <form id="lab-contact-form" name="workhub-inquiry" method="POST" data-netlify="true">
+                    <div class="input-group">
+                        <label>ISM</label>
+                        <input type="text" id="name" name="name" placeholder="Sizning ismingiz" required>
+                    </div>
+                    <div class="input-group">
+                        <label>TELEFON</label>
+                        <input type="tel" id="phone" name="phone" value="+998 " placeholder="+998 XX XXX XX XX" required>
+                    </div>
+                    <div class="input-group">
+                        <label>XIZMAT TURI</label>
+                        <select id="service" name="service">
+                            <option value="site">Sayt yaratish</option>
+                            <option value="bot">Telegram Bot</option>
+                            <option value="app">Mobil Ilova</option>
+                            <option value="game">O'yin yaratish</option>
+                            <option value="ai">Sun'iy Intelekt</option>
+                            <option value="other">Boshqa...</option>
+                        </select>
+                    </div>
+                    <div class="input-group" id="other-msg-group" style="display: none;">
+                        <label>XABARINGIZNI YOZING</label>
+                        <textarea id="other-message" name="message" placeholder="Qanday xizmat kerakligi haqida yozing..."></textarea>
+                    </div>
+                    <button type="submit">REGISTER <span>→</span></button>
+                </form>
             </div>
         </section>
-
     </main>
 
     <footer>
-        <div class="footer-content">
-
-            <div class="footer-bottom">
-                <div class="social-links">
-                    <a href="https://instagram.com/suxrob.77771" target="_blank">INSTAGRAM</a>
-                    <a href="workhub/index.html">WORK HUB</a>
-                    <a href="workhub/admin.html">ADMIN</a>
-                </div>
-                <div class="copyright">
-                    <p>©2024 DIGITAL ALCHEMY. BEYOND THE VOID.</p>
-                </div>
-            </div>
-        </div>
+        <p>&copy; 2026 WORK HUB. ALL RIGHTS RESERVED.</p>
+        <p style="margin-top: 10px;"><a href="admin.html" style="color: var(--muted); text-decoration: none; font-size: 0.7rem;">ADMIN PANEL</a></p>
     </footer>
 
     <script src="app.js"></script>
