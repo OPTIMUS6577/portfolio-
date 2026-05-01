@@ -116,7 +116,7 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
   <div class="login-box">
     <h1>WORK<span>HUB</span></h1>
     <p>Admin panelga kirish</p>
-    <input type="password" id="admin-password" placeholder="Parolni kiriting...">
+    <input type="password" id="admin-password" placeholder="Parolni kiriting..." onkeypress="if(event.key === 'Enter') checkLogin()">
     <button onclick="checkLogin()">KIRISH</button>
     <div id="login-err" class="login-error">Parol noto'g'ri!</div>
   </div>
