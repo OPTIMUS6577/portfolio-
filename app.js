@@ -47,21 +47,46 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: 'Mentor Topish', desc: 'Individual darslar va maslahat' }
         ]
     };
+const bannerImages = ['images/banner1.png'];
+const motionImages = ['images/motion1.png'];
+const logoImages = ['images/logo1.png'];
 
-    // Open Modal on Card Click
-    document.querySelectorAll('.s-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const category = card.getAttribute('data-category');
-            const mainService = card.querySelector('h4').innerText;
-            
-            if (subServicesData[category]) {
-                showModal(mainService, subServicesData[category]);
-            } else {
-                // Fallback for cards without specific sub-services
-                selectService(mainService);
-            }
+        // Open Modal on Card Click
+        document.querySelectorAll('.s-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const category = card.getAttribute('data-category');
+                const mainService = card.querySelector('h4').innerText.trim();
+                
+                // Show specific images for specific creative services
+                if (mainService === 'Banner Xizmati') {
+                    showImagesModal("BANNER", mainService, bannerImages);
+                } else if (mainService === 'Video yaratish' || mainService === 'Motion Video') {
+                    showImagesModal("VIDEO", "Motion Video", motionImages);
+                } else if (mainService === 'Logotip dizayn' || mainService === 'Logotip Dizayn') {
+                    showImagesModal("LOGOTIP", "Logotip Dizayn", logoImages);
+                } else if (subServicesData[category]) {
+                    showModal(mainService, subServicesData[category]);
+                } else {
+                    // Fallback for cards without specific sub-services
+                    selectService(mainService);
+                }
+            });
         });
-    });
+
+        // Show specific images in modal
+        function showImagesModal(tagText, title, imagesArray) {
+            document.querySelector('.modal-tag').innerText = tagText;
+            modalTitle.innerText = title;
+            subServicesList.innerHTML = '';
+            imagesArray.forEach(src => {
+                const imgDiv = document.createElement('div');
+                imgDiv.className = 'banner-image';
+                imgDiv.innerHTML = `<img src="${src}" alt="${title}" style="max-width:100%;border-radius:8px;margin-bottom:1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">`;
+                subServicesList.appendChild(imgDiv);
+            });
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
 
     function showModal(title, subServices) {
         document.querySelector('.modal-tag').innerText = "SELECTION";
@@ -202,4 +227,120 @@ document.addEventListener('DOMContentLoaded', () => {
         el.style.transition = 'all 0.6s ease-out';
         observer.observe(el);
     });
+
+    // --- Custom Cursor & Magnetic Buttons ---
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorOutline = document.getElementById('cursor-outline');
+
+    if (cursorDot && cursorOutline) {
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // Magnetic hover effect for buttons
+        document.querySelectorAll('button, .s-card, a').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorOutline.style.backgroundColor = 'rgba(188, 19, 254, 0.1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorOutline.style.backgroundColor = 'transparent';
+                el.style.transform = ''; // reset magnetic pull
+            });
+            
+            // Magnetic pull calculation for buttons
+            if(el.tagName === 'BUTTON') {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                });
+            }
+        });
+    }
+
+    // --- FAQ Accordion ---
+    document.querySelectorAll('.faq-question').forEach(item => {
+        item.addEventListener('click', () => {
+            const parent = item.parentElement;
+            const isActive = parent.classList.contains('active');
+            
+            // Close all
+            document.querySelectorAll('.faq-item').forEach(faq => {
+                faq.classList.remove('active');
+            });
+            
+            // Toggle current
+            if (!isActive) {
+                parent.classList.add('active');
+            }
+        });
+    });
+
+    // --- Particle Canvas Background ---
+    const canvas = document.getElementById('particles-bg');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.opacity = Math.random() * 0.5;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > width) this.x = 0;
+                if (this.x < 0) this.x = width;
+                if (this.y > height) this.y = 0;
+                if (this.y < 0) this.y = height;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(188, 19, 254, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 50; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
 });

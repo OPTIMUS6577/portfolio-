@@ -15,6 +15,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <!-- Background Canvas for Particles -->
+    <canvas id="particles-bg"></canvas>
+
     <div class="stars-overlay"></div>
     <div class="glow-sphere"></div>
 
@@ -22,9 +29,11 @@
         <nav>
             <div class="logo">WORK<span>HUB</span></div>
             <ul class="nav-links">
-                <li><a href="#services">SERVICES</a></li>
-                <li><a href="#about">ABOUT</a></li>
-                <li><a href="#contact">CONTACT</a></li>
+                <li><a href="#services">XIZMATLAR</a></li>
+                <li><a href="#portfolio">PORTFOLIO</a></li>
+                <li><a href="#testimonials">MIJOZLAR FIKRI</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#contact">ALOQA</a></li>
                 <li><a href="admin.html" style="color: var(--accent); font-weight: 800;">ADMIN</a></li>
             </ul>
         </nav>
@@ -140,6 +149,109 @@
                             <p>Eng yaxshi mentorlar va darslar.</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="portfolio-section">
+            <div class="section-header">
+                <span class="tag">REAL LOYIHALAR</span>
+                <h2>BIZNING ISHLAR</h2>
+            </div>
+            <div class="portfolio-grid">
+                <div class="p-card">
+                    <div class="p-image">
+                        <img src="images/banner1.png" alt="Banner Design">
+                        <div class="p-overlay">
+                            <span>SMM Banner Dizayn</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-card">
+                    <div class="p-image">
+                        <img src="images/logo1.png" alt="Logo Design">
+                        <div class="p-overlay">
+                            <span>Kompaniya Logotipi</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-card">
+                    <div class="p-image">
+                        <img src="images/motion1.png" alt="Motion Graphics">
+                        <div class="p-overlay">
+                            <span>Motion Video Promo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="testimonials-section">
+            <div class="section-header">
+                <span class="tag">ISHONCH</span>
+                <h2>MIJOZLAR FIKRI</h2>
+            </div>
+            <div class="testimonials-grid">
+                <div class="t-card">
+                    <div class="t-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="t-text">"Work Hub bilan ishlash juda maroqli bo'ldi. Ular bizning biznesimiz uchun mukammal sayt yaratib berishdi. Dizayn va tezlik a'lo darajada!"</p>
+                    <div class="t-author">
+                        <div class="t-avatar">AA</div>
+                        <div>
+                            <h4>Aziz Ahmedov</h4>
+                            <span>CEO, TechInvest</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="t-card">
+                    <div class="t-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="t-text">"Logotip va brending xizmatidan foydalandik. Biz kutgandan ham ajoyib natija. Kreativ yondashuv uchun katta rahmat."</p>
+                    <div class="t-author">
+                        <div class="t-avatar">MB</div>
+                        <div>
+                            <h4>Malika Botirova</h4>
+                            <span>Art Director</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="t-card">
+                    <div class="t-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="t-text">"Telegram botimiz endi savdolarni to'liq avtomatlashtirdi. Vaqtimizni va pulimizni tejadik. Juda zo'r mutaxassislar!"</p>
+                    <div class="t-author">
+                        <div class="t-avatar">ST</div>
+                        <div>
+                            <h4>Sardor To'rayev</h4>
+                            <span>Tadbirkor</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="faq-section">
+            <div class="section-header">
+                <span class="tag">SAVOL-JAVOB</span>
+                <h2>KO'P BERILADIGAN SAVOLLAR</h2>
+            </div>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">Sayt yaratish uchun qancha vaqt ketadi? <span class="faq-icon">+</span></div>
+                    <div class="faq-answer">Loyiha hajmiga qarab 1 haftadan 1 oygacha vaqt ketishi mumkin. Oddiy landing page'lar tezroq, murakkab tizimlar ko'proq vaqt talab qiladi.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">To'lov qanday amalga oshiriladi? <span class="faq-icon">+</span></div>
+                    <div class="faq-answer">Odatda loyiha boshida 50% oldindan to'lov, ish yakunlangandan so'ng qolgan 50% qismi to'lanadi.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Telegram botlar qanday ishlaydi? <span class="faq-icon">+</span></div>
+                    <div class="faq-answer">Biz sizning biznes jarayonlaringizni o'rganib chiqib, mijozlar bilan muloqotni yoki savdoni avtomatlashtiruvchi maxsus bot yaratib beramiz. Bot 24/7 ishlaydi.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Dizayn xizmatlari nimani o'z ichiga oladi? <span class="faq-icon">+</span></div>
+                    <div class="faq-answer">Logotiplar, ijtimoiy tarmoq bannerlari, UI/UX dizayn va kompaniya brendbukini yaratishni o'z ichiga oladi.</div>
                 </div>
             </div>
         </section>
