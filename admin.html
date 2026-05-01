@@ -292,7 +292,7 @@ const SERVICE_BADGE = {site:'badge-site',bot:'badge-bot',app:'badge-app',game:'b
 function renderOrders() {
   const orders = globalOrders;
   const q = (document.getElementById('search-input')?.value || '').toLowerCase();
-  const filtered = orders.filter(o => o.name.toLowerCase().includes(q) || o.phone.includes(q));
+  const filtered = orders.filter(o => (o.name || '').toLowerCase().includes(q) || (o.phone || '').includes(q));
   const container = document.getElementById('orders-container');
 
   if (filtered.length === 0) {
