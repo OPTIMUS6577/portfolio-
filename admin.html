@@ -332,12 +332,14 @@ async function deleteOrder(id) {
   }
 
   globalOrders = globalOrders.filter(o => o.id !== id);
-  renderStats(); renderOrders(); renderAnalytics();
+  localStorage.setItem(DB_KEY, JSON.stringify(globalOrders));
+  renderStats(); renderOrders(); renderAnalytics(); updateStorageSize();
 }
 
 function clearAll() {
   if (!confirm('Barcha ma\'lumotlarni o\'chirasizmi?')) return;
   localStorage.setItem(DB_KEY, '[]');
+  globalOrders = [];
   renderStats(); renderOrders(); renderAnalytics(); updateStorageSize();
 }
 

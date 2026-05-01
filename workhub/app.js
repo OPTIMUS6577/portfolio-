@@ -109,6 +109,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 requestAnimationFrame(() => { note.style.transform='translateY(0)'; note.style.opacity='1'; });
                 setTimeout(() => { note.style.transform='translateY(100px)'; note.style.opacity='0'; setTimeout(()=>note.remove(),400); }, 4000);
                 contactForm.reset();
+
+                // Save to localStorage for Admin Panel
+                try {
+                    const existingOrders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
+                    const newOrder = {
+                        id: Date.now(),
+                        name: name,
+                        phone: phone,
+                        service: service === 'other' ? 'other' : service,
+                        message: otherMsg,
+                        date: new Date().toISOString()
+                    };
+                    existingOrders.push(newOrder);
+                    localStorage.setItem('workhub_orders', JSON.stringify(existingOrders));
+                } catch (storageErr) {
+                    console.error('LocalStorage error:', storageErr);
+                }
             }
         } catch (error) {
             console.error('Submission error:', error);

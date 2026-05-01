@@ -156,6 +156,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             ]);
 
+            // Save to localStorage for Admin Panel
+            try {
+                const existingOrders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
+                const newOrder = {
+                    id: Date.now(),
+                    name: name,
+                    phone: phone,
+                    service: service || 'other',
+                    message: otherMsg,
+                    date: new Date().toISOString()
+                };
+                existingOrders.push(newOrder);
+                localStorage.setItem('workhub_orders', JSON.stringify(existingOrders));
+            } catch (storageErr) {
+                console.error('LocalStorage error:', storageErr);
+            }
+
             // Success notification
             alert('Muvaffaqiyatli! So\'rovingiz qabul qilindi.');
             contactForm.reset();
