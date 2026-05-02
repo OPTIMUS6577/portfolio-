@@ -343,4 +343,124 @@ const logoImages = ['images/logo1.png'];
         }
         animate();
     }
+
+    // --- Theme Toggle ---
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            themeBtn.innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
+        });
+    }
+
+    // --- Language Switcher (Simple) ---
+    const translations = {
+        uz: { cases_title: "LOYIHALAR TAHLILI", calc_title: "NARX KALKULYATORI", book_title: "ONLAYN UCHRASHUV" },
+        ru: { cases_title: "КЕЙСЫ", calc_title: "КАЛЬКУЛЯТОР ЦЕН", book_title: "ОНЛАЙН ВСТРЕЧА" },
+        en: { cases_title: "CASE STUDIES", calc_title: "PRICING CALCULATOR", book_title: "ONLINE BOOKING" }
+    };
+    const langSwitch = document.getElementById('lang-switch');
+    if (langSwitch) {
+        langSwitch.addEventListener('change', (e) => {
+            const lang = e.target.value;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerText = translations[lang][key];
+                }
+            });
+        });
+    }
+
+    // --- Pricing Calculator ---
+    const serviceChecks = document.querySelectorAll('.service-check');
+    const totalPriceEl = document.getElementById('total-price');
+    const calcOrderBtn = document.getElementById('calc-order-btn');
+    
+    if (serviceChecks.length > 0) {
+        serviceChecks.forEach(check => {
+            check.addEventListener('change', () => {
+                let total = 0;
+                serviceChecks.forEach(c => {
+                    if (c.checked) total += parseInt(c.value);
+                });
+                totalPriceEl.innerText = total;
+            });
+        });
+
+        calcOrderBtn.addEventListener('click', () => {
+            const selectedServices = Array.from(serviceChecks)
+                .filter(c => c.checked)
+                .map(c => c.getAttribute('data-name'))
+                .join(', ');
+            
+            if (!selectedServices) {
+                alert('Iltimos, kamida bitta xizmatni tanlang!');
+                return;
+            }
+
+            serviceInput.value = selectedServices;
+            serviceDisplay.value = "Kalkulyatordan tanlandi";
+            document.getElementById('other-message').value = `Tanlangan xizmatlar: ${selectedServices}\nTaxminiy narx: $${totalPriceEl.innerText}`;
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+
+    // --- Floating Chat ---
+    const floatingChat = document.getElementById('floating-chat');
+    const chatWindow = document.getElementById('chat-window');
+    const closeChat = document.getElementById('close-chat');
+    const sendChatBtn = document.getElementById('send-chat');
+    const chatMsgInput = document.getElementById('chat-msg');
+    const chatBody = document.getElementById('chat-body');
+
+    if (floatingChat) {
+        floatingChat.addEventListener('click', () => {
+            chatWindow.classList.add('active');
+            floatingChat.style.display = 'none';
+        });
+
+        closeChat.addEventListener('click', () => {
+            chatWindow.classList.remove('active');
+            floatingChat.style.display = 'flex';
+        });
+
+        sendChatBtn.addEventListener('click', () => {
+            const msg = chatMsgInput.value.trim();
+            if (!msg) return;
+            
+            // Add user message
+            const userP = document.createElement('p');
+            userP.className = 'user-msg';
+            userP.innerText = msg;
+            chatBody.appendChild(userP);
+            
+            chatMsgInput.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // Simple bot reply
+            setTimeout(() => {
+                const botP = document.createElement('p');
+                botP.className = 'bot-msg';
+                botP.innerText = "Xabaringiz qabul qilindi. Tez orada operator javob beradi yoki Telegram orqali bog'lanishingiz mumkin.";
+                chatBody.appendChild(botP);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 1000);
+        });
+    }
+
+    // --- Booking System ---
+    const bookBtn = document.getElementById('book-btn');
+    if (bookBtn) {
+        bookBtn.addEventListener('click', () => {
+            const date = document.getElementById('book-date').value;
+            const time = document.getElementById('book-time').value;
+            if(!date) {
+                alert("Iltimos, sanani tanlang!");
+                return;
+            }
+            alert(`Uchrashuv muvaffaqiyatli belgilandi!\nSana: ${date}\nVaqt: ${time}\nTez orada aloqaga chiqamiz.`);
+            document.getElementById('other-message').value = `Uchrashuv band qilindi: ${date} soat ${time}`;
+        });
+    }
 });

@@ -35,6 +35,14 @@
                 <li><a href="#faq">FAQ</a></li>
                 <li><a href="#contact">ALOQA</a></li>
                 <li><a href="admin.html" style="color: var(--accent); font-weight: 800;">ADMIN</a></li>
+                <li class="nav-controls">
+                    <select id="lang-switch" class="lang-select">
+                        <option value="uz">UZ</option>
+                        <option value="ru">RU</option>
+                        <option value="en">EN</option>
+                    </select>
+                    <button id="theme-toggle" class="theme-btn">☀️</button>
+                </li>
             </ul>
         </nav>
     </header>
@@ -187,6 +195,69 @@
             </div>
         </section>
 
+        <!-- Case Studies Section -->
+        <section id="case-studies" class="case-studies-section">
+            <div class="section-header">
+                <span class="tag">DEEP DIVE</span>
+                <h2 data-i18n="cases_title">LOYIHALAR TAHLILI</h2>
+            </div>
+            <div class="case-grid">
+                <div class="c-card">
+                    <div class="c-content">
+                        <h3>E-Commerce Platforma</h3>
+                        <p class="c-problem"><strong>Muammo:</strong> Mijozning savdolari faqat Instagram orqali bo'lgan va buyurtmalarni yo'qotgan.</p>
+                        <p class="c-solution"><strong>Yechim:</strong> To'liq avtomatlashgan internet magazin va Telegram bot yaratildi.</p>
+                        <p class="c-result"><strong>Natija:</strong> Savdolar 3 barobar oshdi, vaqt tejaldi.</p>
+                    </div>
+                </div>
+                <div class="c-card">
+                    <div class="c-content">
+                        <h3>Kompaniya Brendingi</h3>
+                        <p class="c-problem"><strong>Muammo:</strong> Eski dizayn zamonaviy standartlarga javob bermagan.</p>
+                        <p class="c-solution"><strong>Yechim:</strong> Yangi logotip, brendbuk va motion videolar tayyorlandi.</p>
+                        <p class="c-result"><strong>Natija:</strong> Brendning bozordagi nufuzi va ishonchi ortdi.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Calculator Section -->
+        <section id="calculator" class="calculator-section">
+            <div class="section-header">
+                <span class="tag">ESTIMATE</span>
+                <h2 data-i18n="calc_title">NARX KALKULYATORI</h2>
+            </div>
+            <div class="calc-container">
+                <div class="calc-options">
+                    <label class="calc-checkbox">
+                        <input type="checkbox" class="service-check" value="150" data-name="Landing Page">
+                        <span class="checkmark"></span>
+                        <div class="calc-text">Landing Page ($150)</div>
+                    </label>
+                    <label class="calc-checkbox">
+                        <input type="checkbox" class="service-check" value="300" data-name="E-Commerce">
+                        <span class="checkmark"></span>
+                        <div class="calc-text">Internet Magazin ($300)</div>
+                    </label>
+                    <label class="calc-checkbox">
+                        <input type="checkbox" class="service-check" value="100" data-name="Telegram Bot">
+                        <span class="checkmark"></span>
+                        <div class="calc-text">Telegram Bot ($100)</div>
+                    </label>
+                    <label class="calc-checkbox">
+                        <input type="checkbox" class="service-check" value="50" data-name="Logotip">
+                        <span class="checkmark"></span>
+                        <div class="calc-text">Logotip Dizayn ($50)</div>
+                    </label>
+                </div>
+                <div class="calc-result">
+                    <h3>Taxminiy Narx:</h3>
+                    <div class="price-display">$<span id="total-price">0</span></div>
+                    <button id="calc-order-btn" class="calc-btn">SHU XIZMATLARGA BUYURTMA BERISH</button>
+                </div>
+            </div>
+        </section>
+
         <!-- Testimonials Section -->
         <section id="testimonials" class="testimonials-section">
             <div class="section-header">
@@ -256,6 +327,26 @@
             </div>
         </section>
 
+        <!-- Appointment Booking Section -->
+        <section id="booking" class="booking-section">
+            <div class="section-header" style="text-align: center;">
+                <span class="tag">MEET US</span>
+                <h2 data-i18n="book_title">ONLAYN UCHRASHUV</h2>
+                <p style="color: var(--text-dim); margin-top: 1rem;">Loyiha haqida bepul konsultatsiya olish uchun vaqt band qiling.</p>
+            </div>
+            <div class="booking-container">
+                <div class="calendar-ui">
+                    <input type="date" id="book-date" class="book-input" required>
+                    <select id="book-time" class="book-input">
+                        <option value="10:00">10:00 - 10:30</option>
+                        <option value="14:00">14:00 - 14:30</option>
+                        <option value="16:00">16:00 - 16:30</option>
+                    </select>
+                    <button id="book-btn">Uchrashuv Belgilash</button>
+                </div>
+            </div>
+        </section>
+
         <section id="contact" class="contact-section">
             <div class="contact-container">
                 <div class="contact-info">
@@ -297,6 +388,24 @@
             <div id="sub-services-list" class="sub-services-grid">
                 <!-- Will be populated by JS -->
             </div>
+        </div>
+    </div>
+
+    <!-- Floating Live Chat -->
+    <div class="floating-chat" id="floating-chat">
+        <div class="chat-icon">💬</div>
+    </div>
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header">
+            <h4>Work Hub</h4>
+            <span id="close-chat">&times;</span>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <p class="bot-msg">Assalomu alaykum! Savollaringiz bo'lsa yozing.</p>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chat-msg" placeholder="Xabar...">
+            <button id="send-chat">➤</button>
         </div>
     </div>
 
