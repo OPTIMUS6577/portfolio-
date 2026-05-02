@@ -228,48 +228,6 @@ const logoImages = ['images/logo1.png'];
         observer.observe(el);
     });
 
-    // --- Custom Cursor & Magnetic Buttons ---
-    const cursorDot = document.getElementById('cursor-dot');
-    const cursorOutline = document.getElementById('cursor-outline');
-
-    if (cursorDot && cursorOutline) {
-        window.addEventListener('mousemove', (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
-
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
-
-            cursorOutline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 500, fill: "forwards" });
-        });
-
-        // Magnetic hover effect for buttons
-        document.querySelectorAll('button, .s-card, a').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                cursorOutline.style.backgroundColor = 'rgba(188, 19, 254, 0.1)';
-            });
-            el.addEventListener('mouseleave', () => {
-                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
-                cursorOutline.style.backgroundColor = 'transparent';
-                el.style.transform = ''; // reset magnetic pull
-            });
-            
-            // Magnetic pull calculation for buttons
-            if(el.tagName === 'BUTTON') {
-                el.addEventListener('mousemove', (e) => {
-                    const rect = el.getBoundingClientRect();
-                    const x = e.clientX - rect.left - rect.width / 2;
-                    const y = e.clientY - rect.top - rect.height / 2;
-                    el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-                });
-            }
-        });
-    }
-
     // --- FAQ Accordion ---
     document.querySelectorAll('.faq-question').forEach(item => {
         item.addEventListener('click', () => {

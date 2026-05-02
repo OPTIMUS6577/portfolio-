@@ -15,10 +15,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <!-- Custom Cursor -->
-    <div class="cursor-dot" id="cursor-dot"></div>
-    <div class="cursor-outline" id="cursor-outline"></div>
-
     <!-- Background Canvas for Particles -->
     <canvas id="particles-bg"></canvas>
 
@@ -35,15 +31,15 @@
                 <li><a href="#faq">FAQ</a></li>
                 <li><a href="#contact">ALOQA</a></li>
                 <li><a href="admin.html" style="color: var(--accent); font-weight: 800;">ADMIN</a></li>
-                <li class="nav-controls">
-                    <select id="lang-switch" class="lang-select">
-                        <option value="uz">UZ</option>
-                        <option value="ru">RU</option>
-                        <option value="en">EN</option>
-                    </select>
-                    <button id="theme-toggle" class="theme-btn">☀️</button>
-                </li>
             </ul>
+            <div class="nav-controls">
+                <select id="lang-switch" class="lang-select">
+                    <option value="uz">UZ</option>
+                    <option value="ru">RU</option>
+                    <option value="en">EN</option>
+                </select>
+                <button id="theme-toggle" class="theme-btn">☀️</button>
+            </div>
         </nav>
     </header>
 
