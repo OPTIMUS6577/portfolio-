@@ -383,7 +383,7 @@ const logoImages = ['images/logo1.png'];
             floatingChat.style.display = 'flex';
         });
 
-        sendChatBtn.addEventListener('click', () => {
+        sendChatBtn.addEventListener('click', async () => {
             const msg = chatMsgInput.value.trim();
             if (!msg) return;
             
@@ -395,6 +395,18 @@ const logoImages = ['images/logo1.png'];
             
             chatMsgInput.value = '';
             chatBody.scrollTop = chatBody.scrollHeight;
+
+            // Send to Telegram
+            const chatTelegramMsg = `💬 *WORK HUB: NEW CHAT MESSAGE*\n\n📩 *Xabar:* ${msg}\n\n_Sent via Live Chat_`;
+            try {
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: chatTelegramMsg, parse_mode: 'Markdown' }),
+                });
+            } catch (err) {
+                console.error('Chat telegram error:', err);
+            }
 
             // Simple bot reply
             setTimeout(() => {
@@ -410,15 +422,27 @@ const logoImages = ['images/logo1.png'];
     // --- Booking System ---
     const bookBtn = document.getElementById('book-btn');
     if (bookBtn) {
-        bookBtn.addEventListener('click', () => {
+        bookBtn.addEventListener('click', async () => {
             const date = document.getElementById('book-date').value;
             const time = document.getElementById('book-time').value;
             if(!date) {
                 alert("Iltimos, sanani tanlang!");
                 return;
             }
+
+            const bookingMsg = `📅 *WORK HUB: NEW BOOKING*\n\n🗓️ *Sana:* ${date}\n🕒 *Vaqt:* ${time}\n\n_Sent via Booking System_`;
+            
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: bookingMsg, parse_mode: 'Markdown' }),
+                });
+            } catch (err) { console.error(err); }
+
             alert(`Uchrashuv muvaffaqiyatli belgilandi!\nSana: ${date}\nVaqt: ${time}\nTez orada aloqaga chiqamiz.`);
             document.getElementById('other-message').value = `Uchrashuv band qilindi: ${date} soat ${time}`;
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
         });
     }
 });
