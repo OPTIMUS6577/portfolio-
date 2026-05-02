@@ -385,6 +385,7 @@ const logoImages = ['images/logo1.png'];
 
         sendChatBtn.addEventListener('click', async () => {
             const msg = chatMsgInput.value.trim();
+            const userInfo = document.getElementById('chat-user-info').value.trim();
             if (!msg) return;
             
             // Add user message
@@ -397,7 +398,7 @@ const logoImages = ['images/logo1.png'];
             chatBody.scrollTop = chatBody.scrollHeight;
 
             // Send to Telegram
-            const chatTelegramMsg = `💬 *WORK HUB: NEW CHAT MESSAGE*\n\n📩 *Xabar:* ${msg}\n\n_Sent via Live Chat_`;
+            const chatTelegramMsg = `💬 *WORK HUB: NEW CHAT MESSAGE*\n\n👤 *Kimdan:* ${userInfo || 'Noma\'lum'}\n📩 *Xabar:* ${msg}\n\n_Sent via Live Chat_`;
             try {
                 fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',

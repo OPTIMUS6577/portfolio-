@@ -399,9 +399,12 @@
         <div class="chat-body" id="chat-body">
             <p class="bot-msg">Assalomu alaykum! Savollaringiz bo'lsa yozing.</p>
         </div>
-        <div class="chat-input">
-            <input type="text" id="chat-msg" placeholder="Xabar...">
-            <button id="send-chat">➤</button>
+        <div class="chat-input" style="flex-direction: column; gap: 5px; padding: 10px;">
+            <input type="text" id="chat-user-info" placeholder="Ism va Tel (masalan: Suxrob +998...)" style="width: 100%; font-size: 0.7rem; border-bottom: 1px solid var(--accent); padding: 5px;">
+            <div style="display: flex; width: 100%;">
+                <input type="text" id="chat-msg" placeholder="Xabar...">
+                <button id="send-chat">➤</button>
+            </div>
         </div>
     </div>
 
