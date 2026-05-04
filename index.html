@@ -463,51 +463,107 @@
             </div>
         </section>
 
-        <section id="user-dashboard" class="user-dashboard-section" style="display: none; padding: 10rem 5%; min-height: 100vh;">
-            <div class="section-header">
-                <span class="tag">CLIENT HUB</span>
-                <h2 id="user-welcome">XUSH KELIBSIZ, <span>MEHMON</span></h2>
-                <p>Sizning loyihalaringiz va so'rovlaringiz boshqaruv markazi.</p>
-            </div>
-            
-            <div class="user-stats-grid">
-                <div class="u-stat-card">
-                    <div class="u-stat-icon">📂</div>
-                    <div class="u-stat-info">
-                        <h4>Aktiv Loyihalar</h4>
-                        <p class="u-stat-val">1</p>
-                    </div>
-                </div>
-                <div class="u-stat-card">
-                    <div class="u-stat-icon">🔔</div>
-                    <div class="u-stat-info">
-                        <h4>Xabarlar</h4>
-                        <p class="u-stat-val">0</p>
-                    </div>
-                </div>
-                <div class="u-stat-card">
-                    <div class="u-stat-icon">💳</div>
-                    <div class="u-stat-info">
-                        <h4>Balans</h4>
-                        <p class="u-stat-val">$0.00</p>
-                    </div>
+        <section id="user-dashboard" class="user-dashboard-wrapper" style="display: none;">
+            <div class="dashboard-sidebar">
+                <div class="sidebar-logo">WORK<span>HUB</span></div>
+                <nav class="sidebar-nav">
+                    <a href="#" class="active"><span class="icon">📊</span> Dashboard</a>
+                    <a href="#"><span class="icon">📈</span> Analytics</a>
+                    <a href="#"><span class="icon">💼</span> My Projects</a>
+                    <a href="#"><span class="icon">💳</span> Payments</a>
+                    <a href="#"><span class="icon">⚙️</span> Settings</a>
+                </nav>
+                <div class="sidebar-footer">
+                    <button class="new-project-btn">+ New Project</button>
+                    <button id="user-logout" class="logout-btn"><span>🚪</span> Logout</button>
                 </div>
             </div>
 
-            <div class="user-main-content">
-                <div class="u-card">
-                    <h3>Sizning So'rovlaringiz</h3>
-                    <div id="user-orders-list" class="u-orders-list">
-                        <!-- Populated by JS -->
-                        <div class="empty-state">Hozircha so'rovlar yo'q.</div>
+            <div class="dashboard-main">
+                <header class="dashboard-top">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search activities, projects...">
                     </div>
-                </div>
-                <div class="u-card">
-                    <h3>Tezkor Amallar</h3>
-                    <div class="u-actions">
-                        <button class="u-action-btn" onclick="document.getElementById('services').scrollIntoView()">Yangi Xizmat Buyurish</button>
-                        <button class="u-action-btn secondary" onclick="window.open('https://t.me/Workhub_admin', '_blank')">Admin Bilan Bog'lanish</button>
-                        <button class="u-action-btn danger" id="user-logout">Chiqish</button>
+                    <div class="user-profile">
+                        <div class="notifications">🔔</div>
+                        <div class="user-info">
+                            <span id="user-name-display">Azizbek</span>
+                            <small>Client</small>
+                        </div>
+                        <div class="user-avatar">👤</div>
+                    </div>
+                </header>
+
+                <div class="dashboard-content">
+                    <div class="welcome-section">
+                        <h2 id="user-welcome-text">Xush kelibsiz, <span>Azizbek!</span></h2>
+                        <p>Mana sizning bugungi boshqaruv paneli ko'rinishi.</p>
+                    </div>
+
+                    <div class="dashboard-stats">
+                        <div class="d-stat-card">
+                            <div class="d-stat-header">
+                                <div class="d-icon-box">📂</div>
+                                <span class="trend up">+12.5%</span>
+                            </div>
+                            <div class="d-stat-body">
+                                <small>LOYIHALAR</small>
+                                <h3>3 ta aktiv</h3>
+                            </div>
+                        </div>
+                        <div class="d-stat-card">
+                            <div class="d-stat-header">
+                                <div class="d-icon-box">⏳</div>
+                                <span class="progress-label">80% Yakunlandi</span>
+                            </div>
+                            <div class="d-stat-body">
+                                <small>VAZIFALAR</small>
+                                <h3>24/30</h3>
+                                <div class="progress-bar"><div style="width: 80%"></div></div>
+                            </div>
+                        </div>
+                        <div class="d-stat-card">
+                            <div class="d-stat-header">
+                                <div class="d-icon-box">💰</div>
+                                <span class="trend up">Oylik o'sish</span>
+                            </div>
+                            <div class="d-stat-body">
+                                <small>UMUMIY BALANS</small>
+                                <h3>8,200,000 UZS</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3>Haftalik progress</h3>
+                                <div class="chart-filters">
+                                    <span>Kunlik</span>
+                                    <span class="active">Haftalik</span>
+                                </div>
+                            </div>
+                            <div class="mock-chart">
+                                <!-- Simulated Chart Bars -->
+                                <div class="bar-group"><div class="bar" style="height: 40%"></div><span>Dush</span></div>
+                                <div class="bar-group"><div class="bar" style="height: 60%"></div><span>Sesh</span></div>
+                                <div class="bar-group"><div class="bar" style="height: 30%"></div><span>Chor</span></div>
+                                <div class="bar-group"><div class="bar" style="height: 80%"></div><span>Pay</span></div>
+                                <div class="bar-group"><div class="bar" style="height: 50%"></div><span>Jum</span></div>
+                                <div class="bar-group"><div class="bar" style="height: 90%"></div><span>Shan</span></div>
+                                <div class="bar-group"><div class="bar" style="height: 70%"></div><span>Yak</span></div>
+                            </div>
+                        </div>
+
+                        <div class="activity-container">
+                            <div class="activity-header">
+                                <h3>Oxirgi amallar</h3>
+                                <a href="#">Hammasini ko'rish</a>
+                            </div>
+                            <div id="user-activities-list" class="activity-list">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

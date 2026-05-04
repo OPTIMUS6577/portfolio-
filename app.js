@@ -224,54 +224,66 @@ const logoImages = ['images/logo1.png'];
     function updateUserUI(user) {
         const userDash = document.getElementById('user-dashboard');
         const contactSec = document.getElementById('contact');
-        const hero = document.querySelector('.hero');
         const dashLink = document.querySelector('a[href="admin.html"]');
+        const userNameDisplay = document.getElementById('user-name-display');
+        const userWelcomeText = document.getElementById('user-welcome-text');
 
         if (userDash) {
-            userDash.style.display = 'block';
-            document.getElementById('user-welcome').innerHTML = `XUSH KELIBSIZ, <span>${user.name.toUpperCase()}</span>`;
-            renderUserOrders(user.phone);
+            userDash.style.display = 'flex';
+            if (userNameDisplay) userNameDisplay.innerText = user.name;
+            if (userWelcomeText) userWelcomeText.innerHTML = `Xush kelibsiz, <span>${user.name}!</span>`;
+            renderUserActivities(user.phone);
         }
 
         if (contactSec) contactSec.style.display = 'none';
         
-        // Update menu link
-        if (dashLink && dashLink.innerText === 'DASHBOARD') {
-            dashLink.href = '#user-dashboard';
+        // Update menu link behavior
+        if (dashLink) {
+            dashLink.innerText = 'DASHBOARD';
+            dashLink.href = '#';
             dashLink.onclick = (e) => {
                 e.preventDefault();
-                document.getElementById('user-dashboard').scrollIntoView({ behavior: 'smooth' });
+                userDash.style.display = 'flex';
+            };
+        }
+
+        // New Project Button
+        const newProjectBtn = document.querySelector('.new-project-btn');
+        if (newProjectBtn) {
+            newProjectBtn.onclick = () => {
+                userDash.style.display = 'none';
+                document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
             };
         }
     }
 
-    function renderUserOrders(phone) {
+    function renderUserActivities(phone) {
         const orders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
         const userOrders = orders.filter(o => o.phone === phone);
-        const list = document.getElementById('user-orders-list');
+        const list = document.getElementById('user-activities-list');
         
         if (!list) return;
 
         if (userOrders.length === 0) {
-            list.innerHTML = '<div class="empty-state">Hozircha so\'rovlar yo\'q.</div>';
+            list.innerHTML = '<div class="empty-state">Hozircha amallar yo\'q.</div>';
             return;
         }
 
-        const smap = {site:'Sayt', bot:'Bot', app:'Ilova', game:'O\'yin', ai:'AI', creative:'Kreativ', dev:'Development', intel:'Smart AI', network:'Nexus'};
+        const smap = {site:'🌐 Web Site', bot:'🤖 Bot', app:'📱 App', game:'🎮 Game', ai:'🧠 AI', creative:'🎨 Creative', dev:'💻 Dev', intel:'🧠 AI', network:'🌐 Network'};
 
         list.innerHTML = userOrders.reverse().map(o => `
-            <div class="u-order-item">
-                <div class="u-order-info">
+            <div class="activity-item">
+                <div class="activity-icon">${smap[o.service] ? smap[o.service].split(' ')[0] : '📝'}</div>
+                <div class="activity-info">
                     <h5>${smap[o.service] || o.service}</h5>
                     <p>${new Date(o.date).toLocaleDateString()}</p>
                 </div>
-                <div class="u-order-status">QABUL QILINDI</div>
+                <div class="activity-amount">
+                    <div>Project Started</div>
+                    <span class="activity-status status-success">MUVAFFAQIYATLI</span>
+                </div>
             </div>
         `).join('');
-        
-        // Update stats
-        const statsVals = document.querySelectorAll('.u-stat-val');
-        if (statsVals.length > 0) statsVals[0].innerText = userOrders.length;
     }
 
     const logoutBtn = document.getElementById('user-logout');
