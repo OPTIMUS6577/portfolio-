@@ -1,24 +1,13 @@
 [build]
   publish = "."
 
-# Workhub sahifasini o'tkazib yubor
+# Admin panelni o'tkazib yubor (fayl mavjud bo'lsa uni ko'rsatish)
 [[redirects]]
-  from = "/workhub"
-  to = "/workhub/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/workhub/*"
-  to = "/workhub/:splat"
-  status = 200
-
-# Admin panelni o'tkazib yubor
-[[redirects]]
-  from = "/admin.html"
+  from = "/admin"
   to = "/admin.html"
   status = 200
 
-# Portfolio uchun SPA redirect (faqat asosiy sahifa)
+# Portfolio uchun SPA redirect (faqat mavjud bo'lmagan sahifalarni index.html ga yo'naltirish)
 [[redirects]]
   from = "/*"
   to = "/index.html"

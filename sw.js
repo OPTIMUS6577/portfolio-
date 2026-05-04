@@ -1,9 +1,10 @@
-const CACHE_NAME = 'workhub-v2.0';
+const CACHE_NAME = 'workhub-v3.0';
 const ASSETS = [
   './',
   './index.html',
+  './admin.html',
   './style.css?v=2.0',
-  './app.js?v=2.0',
+  './app.js?v=3.0',
   './manifest.json',
   './icon-512.png'
 ];
