@@ -7,6 +7,72 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const contactForm = document.getElementById('lab-contact-form');
+    
+    // --- 3D Rotating Planet (Three.js) ---
+    function initPlanet() {
+        const container = document.getElementById('planet-container');
+        if (!container) return;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // Planet Geometry
+        const geometry = new THREE.IcosahedronGeometry(2.5, 3);
+        const material = new THREE.MeshPhongMaterial({
+            color: 0xbc13fe,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.8,
+            emissive: 0xbc13fe,
+            emissiveIntensity: 0.5
+        });
+        const planet = new THREE.Mesh(geometry, material);
+        scene.add(planet);
+
+        // Core glow
+        const coreGeo = new THREE.SphereGeometry(1.8, 32, 32);
+        const coreMat = new THREE.MeshBasicMaterial({ 
+            color: 0xbc13fe, 
+            transparent: true, 
+            opacity: 0.2 
+        });
+        const core = new THREE.Mesh(coreGeo, coreMat);
+        scene.add(core);
+
+        // Lighting
+        const mainLight = new THREE.PointLight(0xffffff, 2, 100);
+        mainLight.position.set(10, 10, 10);
+        scene.add(mainLight);
+        
+        const blueLight = new THREE.PointLight(0x4e9ddd, 2, 100);
+        blueLight.position.set(-10, -10, 10);
+        scene.add(blueLight);
+
+        scene.add(new THREE.AmbientLight(0x404040));
+
+        camera.position.z = 6;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            planet.rotation.y += 0.003;
+            planet.rotation.x += 0.001;
+            core.rotation.y -= 0.002;
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    }
+    initPlanet();
     const BOT_TOKEN = '8469015792:AAHer6z93IlMyN_hF-1LPJdmMTcD3Zw77p4';
     const CHAT_ID = '1198878759';
 
@@ -147,6 +213,77 @@ const logoImages = ['images/logo1.png'];
         }
     };
 
+    // --- User Session & Dashboard Logic ---
+    function checkUserSession() {
+        const user = JSON.parse(localStorage.getItem('workhub_user'));
+        if (user) {
+            updateUserUI(user);
+        }
+    }
+
+    function updateUserUI(user) {
+        const userDash = document.getElementById('user-dashboard');
+        const contactSec = document.getElementById('contact');
+        const hero = document.querySelector('.hero');
+        const dashLink = document.querySelector('a[href="admin.html"]');
+
+        if (userDash) {
+            userDash.style.display = 'block';
+            document.getElementById('user-welcome').innerHTML = `XUSH KELIBSIZ, <span>${user.name.toUpperCase()}</span>`;
+            renderUserOrders(user.phone);
+        }
+
+        if (contactSec) contactSec.style.display = 'none';
+        
+        // Update menu link
+        if (dashLink && dashLink.innerText === 'DASHBOARD') {
+            dashLink.href = '#user-dashboard';
+            dashLink.onclick = (e) => {
+                e.preventDefault();
+                document.getElementById('user-dashboard').scrollIntoView({ behavior: 'smooth' });
+            };
+        }
+    }
+
+    function renderUserOrders(phone) {
+        const orders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
+        const userOrders = orders.filter(o => o.phone === phone);
+        const list = document.getElementById('user-orders-list');
+        
+        if (!list) return;
+
+        if (userOrders.length === 0) {
+            list.innerHTML = '<div class="empty-state">Hozircha so\'rovlar yo\'q.</div>';
+            return;
+        }
+
+        const smap = {site:'Sayt', bot:'Bot', app:'Ilova', game:'O\'yin', ai:'AI', creative:'Kreativ', dev:'Development', intel:'Smart AI', network:'Nexus'};
+
+        list.innerHTML = userOrders.reverse().map(o => `
+            <div class="u-order-item">
+                <div class="u-order-info">
+                    <h5>${smap[o.service] || o.service}</h5>
+                    <p>${new Date(o.date).toLocaleDateString()}</p>
+                </div>
+                <div class="u-order-status">QABUL QILINDI</div>
+            </div>
+        `).join('');
+        
+        // Update stats
+        const statsVals = document.querySelectorAll('.u-stat-val');
+        if (statsVals.length > 0) statsVals[0].innerText = userOrders.length;
+    }
+
+    const logoutBtn = document.getElementById('user-logout');
+    if (logoutBtn) {
+        logoutBtn.onclick = () => {
+            localStorage.removeItem('workhub_user');
+            location.reload();
+        };
+    }
+
+    checkUserSession();
+
     // Form Submission
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -182,24 +319,29 @@ const logoImages = ['images/logo1.png'];
             ]);
 
             // Save to localStorage for Admin Panel
+            const newOrder = {
+                id: Date.now(),
+                name: name,
+                phone: phone,
+                service: service || 'other',
+                message: otherMsg,
+                date: new Date().toISOString()
+            };
+
             try {
                 const existingOrders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
-                const newOrder = {
-                    id: Date.now(),
-                    name: name,
-                    phone: phone,
-                    service: service || 'other',
-                    message: otherMsg,
-                    date: new Date().toISOString()
-                };
                 existingOrders.push(newOrder);
                 localStorage.setItem('workhub_orders', JSON.stringify(existingOrders));
-            } catch (storageErr) {
-                console.error('LocalStorage error:', storageErr);
-            }
+            } catch (storageErr) { console.error(storageErr); }
 
-            // Success notification
-            alert('Muvaffaqiyatli! So\'rovingiz qabul qilindi.');
+            // Save User Session
+            localStorage.setItem('workhub_user', JSON.stringify({ name: name, phone: phone }));
+
+            // Success notification & Switch to Dashboard
+            alert('Muvaffaqiyatli! Xush kelibsiz.');
+            updateUserUI({ name: name, phone: phone });
+            document.getElementById('user-dashboard').scrollIntoView({ behavior: 'smooth' });
+            
             contactForm.reset();
             serviceDisplay.value = '';
         } catch (error) {
@@ -221,11 +363,35 @@ const logoImages = ['images/logo1.png'];
         });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.s-card, .service-category').forEach(el => {
+    document.querySelectorAll('.s-card, .service-category, .process-item, .team-card, .blog-card').forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
         el.style.transition = 'all 0.6s ease-out';
         observer.observe(el);
+    });
+
+    // --- Portfolio Filtering ---
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const portfolioCards = document.querySelectorAll('.p-card');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Active state
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.getAttribute('data-filter');
+
+            portfolioCards.forEach(card => {
+                if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                    card.style.display = 'block';
+                    setTimeout(() => card.style.opacity = '1', 10);
+                } else {
+                    card.style.opacity = '0';
+                    setTimeout(() => card.style.display = 'none', 300);
+                }
+            });
+        });
     });
 
     // --- FAQ Accordion ---
