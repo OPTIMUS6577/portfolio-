@@ -3,8 +3,8 @@
   "short_name": "WorkHub",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#050505",
-  "theme_color": "#bc13fe",
+  "background_color": "#f8f9fc",
+  "theme_color": "#2b59ff",
   "icons": [
     {
       "src": "icon-512.png",
