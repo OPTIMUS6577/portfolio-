@@ -348,9 +348,26 @@ body {
 .st-success { background: rgba(0, 179, 110, 0.1); color: #00b36e; }
 .st-pending { background: rgba(255, 159, 67, 0.1); color: #ff9f43; }
 
+#lab-contact-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
 .form-input {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border);
     color: white;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
 }
-.form-input:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-light); }
+.form-input:focus { 
+    border-color: var(--accent); 
+    background: rgba(188, 19, 254, 0.05);
+    box-shadow: 0 0 15px rgba(188, 19, 254, 0.2); 
+}
