@@ -1,0 +1,14 @@
+[build]
+  publish = "."
+
+# Admin panelni o'tkazib yubor (fayl mavjud bo'lsa uni ko'rsatish)
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+
+# Portfolio uchun SPA redirect (faqat mavjud bo'lmagan sahifalarni index.html ga yo'naltirish)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

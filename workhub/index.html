@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Hub | Enterprise Console</title>
+    <link rel="stylesheet" href="style.css?v=7.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#bc13fe">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .category-title {
+            font-family: var(--font-h);
+            font-size: 1.4rem;
+            color: white;
+            margin: 3rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .category-title::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        .back-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2rem;
+            transition: 0.3s;
+        }
+        .back-btn:hover {
+            background: var(--accent-light);
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-box">W</div>
+            <h2>WORK<span>HUB</span></h2>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-link active" data-target="overview">
+                <span class="icon">📊</span> Dashboard
+            </a>
+            <a href="#" class="nav-link" data-target="services">
+                <span class="icon">📈</span> Xizmatlar
+            </a>
+            <a href="#" class="nav-link" data-target="portfolio">
+                <span class="icon">💼</span> Portfolio
+            </a>
+            <a href="#" class="nav-link" data-target="contact">
+                <span class="icon">💬</span> Aloqa
+            </a>
+            <a href="#" class="nav-link" data-target="faq">
+                <span class="icon">❓</span> Savollar
+            </a>
+            <a href="admin.html" class="nav-link-admin" style="text-decoration:none; color:var(--text-dim); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem;">
+                <span class="icon">🔒</span> Admin Panel
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="new-action-btn" id="btn-new-project-sidebar">
+                <span>+</span> Yangi Loyiha
+            </button>
+            <button class="logout-btn" onclick="location.reload()">
+                <span>🚪</span> Chiqish
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+        <header class="dashboard-top">
+            <div class="search-bar">
+                <input type="text" placeholder="Qidiruv: amallar, xizmatlar yoki hisobotlar...">
+            </div>
+            <div class="top-controls">
+                <div class="ctrl-icon">🔔</div>
+                <div class="ctrl-icon">⚙️</div>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <span id="display-user-name">Suxrob</span>
+                        <small>Administrator</small>
+                    </div>
+                    <div class="user-avatar">👤</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-wrapper" id="main-content">
+            
+            <!-- OVERVIEW SECTION -->
+            <div id="view-overview" class="view-section">
+                <div class="welcome-msg">
+                    <h2>Xush kelibsiz, <span style="color: var(--accent);">Suxrob!</span></h2>
+                    <p>Mana sizning bugungi boshqaruv paneli ko'rinishi.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">💳</div>
+                            <span class="stat-trend trend-up">+12.5%</span>
+                        </div>
+                        <div class="stat-body">
+                            <small>UMUMIY BALANS</small>
+                            <h3>45,250,000 UZS</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">✔️</div>
+                            <span class="stat-trend trend-blue">80% Yakunlandi</span>
+                        </div>
+                        <div class="stat-body">
+                            <small>VAZIFALAR</small>
+                            <h3>24/30</h3>
+                            <div class="prog-container">
+                                <div class="prog-label">80%</div>
+                                <div class="prog-track"><div class="prog-fill" style="width: 80%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">📈</div>
+                            <span class="stat-trend trend-up">Oylik o'sish</span>
+                        </div>
+                        <div class="stat-body">
+                            <small>DAROMAD</small>
+                            <h3>8.2M UZS</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layout-grid">
+                    <div class="panel">
+                        <div class="panel-top">
+                            <h3>Haftalik progress</h3>
+                            <div class="panel-actions">
+                                <button>Kunlik</button>
+                                <button class="active">Haftalik</button>
+                            </div>
+                        </div>
+                        <div class="chart-visual">
+                            <div class="bar-item"><div class="bar-box" style="height: 40%"></div><span>Dush</span></div>
+                            <div class="bar-item"><div class="bar-box" style="height: 60%"></div><span>Sesh</span></div>
+                            <div class="bar-item"><div class="bar-box" style="height: 35%"></div><span>Chor</span></div>
+                            <div class="bar-item"><div class="bar-box" style="height: 85%"></div><span>Pay</span></div>
+                            <div class="bar-item"><div class="bar-box" style="height: 55%"></div><span>Jum</span></div>
+                            <div class="bar-item"><div class="bar-box" style="height: 95%"></div><span>Shan</span></div>
+                            <div class="bar-item"><div class="bar-box" style="height: 75%"></div><span>Yak</span></div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-top">
+                            <h3>Oxirgi amallar</h3>
+                            <a href="#" class="hammasini-btn">Hammasini ko'rish</a>
+                        </div>
+                        <div class="activity-stack" id="recent-activities">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SERVICES SECTION -->
+            <div id="view-services" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                
+                <div class="welcome-msg">
+                    <h2>Bizning <span style="color: var(--accent);">Xizmatlar</span></h2>
+                    <p>Professional raqamli yechimlar va kreativ yondashuv.</p>
+                </div>
+
+                <!-- Kreativ Markaz -->
+                <h3 class="category-title">Kreativ Markaz</h3>
+                <div class="stats-grid">
+                    <div class="stat-card s-item" data-service="Video Montaj">
+                        <div class="stat-header"><div class="stat-icon">🎬</div></div>
+                        <div class="stat-body">
+                            <h3>Video yaratish</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">Yuqori sifatli motion va promo videolar.</p>
+                        </div>
+                    </div>
+                    <div class="stat-card s-item" data-service="Logotip dizayn">
+                        <div class="stat-header"><div class="stat-icon">✒️</div></div>
+                        <div class="stat-body">
+                            <h3>Logotip dizayn</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">Brendingiz uchun unikal identifikatsiya.</p>
+                        </div>
+                    </div>
+                    <div class="stat-card s-item" data-service="Banner xizmati">
+                        <div class="stat-header"><div class="stat-icon">🖼️</div></div>
+                        <div class="stat-body">
+                            <h3>Banner xizmati</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">Reklama va ijtimoiy tarmoqlar uchun dizayn.</p>
+                        </div>
+                    </div>
+                    <div class="stat-card s-item" data-service="Prezentatsiya">
+                        <div class="stat-header"><div class="stat-icon">📊</div></div>
+                        <div class="stat-body">
+                            <h3>Prezentatsiya</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">Investitsiya va biznes uchun taqdimotlar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smart Analytics -->
+                <h3 class="category-title">Smart Analytics</h3>
+                <div class="stats-grid">
+                    <div class="stat-card s-item" data-service="Sun'iy Intelekt">
+                        <div class="stat-header"><div class="stat-icon">🧠</div></div>
+                        <div class="stat-body">
+                            <h3>Sun'iy Intelekt</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">AI yordamida aqlli algoritmlar yaratish.</p>
+                        </div>
+                    </div>
+                    <div class="stat-card s-item" data-service="Data Science">
+                        <div class="stat-header"><div class="stat-icon">📉</div></div>
+                        <div class="stat-body">
+                            <h3>Data Science</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">Ma'lumotlar tahlili va prognozlash.</p>
+                        </div>
+                    </div>
+                    <div class="stat-card s-item" data-service="Kiberxavfsizlik">
+                        <div class="stat-header"><div class="stat-icon">🛡️</div></div>
+                        <div class="stat-body">
+                            <h3>Kiberxavfsizlik</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">Audit va xavfsizlik tizimlari.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nexus Network -->
+                <h3 class="category-title">Nexus Network</h3>
+                <div class="stats-grid">
+                    <div class="stat-card s-item" data-service="Ish topish">
+                        <div class="stat-header"><div class="stat-icon">💼</div></div>
+                        <div class="stat-body">
+                            <h3>Ish topish</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">IT mutaxassislar uchun ish topish ko'prigi.</p>
+                        </div>
+                    </div>
+                    <div class="stat-card s-item" data-service="O'qituvchi topish">
+                        <div class="stat-header"><div class="stat-icon">👨‍🏫</div></div>
+                        <div class="stat-body">
+                            <h3>O'qituvchi topish</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">Eng yaxshi mentorlar va darslar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Old/Classic Services -->
+                <h3 class="category-title">Classic Services</h3>
+                <div class="stats-grid">
+                    <div class="stat-card s-item" data-service="Veb-sayt">
+                        <div class="stat-header"><div class="stat-icon">🌐</div></div>
+                        <div class="stat-body">
+                            <h3>Sayt yaratish</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">Landing, Magazin, Korporativ.</p>
+                        </div>
+                    </div>
+                    <div class="stat-card s-item" data-service="Telegram Bot">
+                        <div class="stat-header"><div class="stat-icon">🤖</div></div>
+                        <div class="stat-body">
+                            <h3>Telegram bot</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">Savdo va boshqaruv botlari.</p>
+                        </div>
+                    </div>
+                    <div class="stat-card s-item" data-service="SEO">
+                        <div class="stat-header"><div class="stat-icon">🚀</div></div>
+                        <div class="stat-body">
+                            <h3>SEO</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">Google qidiruvida topga chiqish.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PORTFOLIO SECTION -->
+            <div id="view-portfolio" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>Bizning <span style="color: var(--accent);">Portfolio</span></h2>
+                    <p>Muvaffaqiyatli yakunlangan loyihalarimiz tahlili.</p>
+                </div>
+                <div class="layout-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+                    <div class="panel p-item">
+                        <img src="images/banner1.png" style="width: 100%; border-radius: 15px; margin-bottom: 1rem;">
+                        <h4>SMM Banner Dizayn</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-dim);">Kompaniya uchun maxsus kreativlar.</p>
+                    </div>
+                    <div class="panel p-item">
+                        <img src="images/logo1.png" style="width: 100%; border-radius: 15px; margin-bottom: 1rem;">
+                        <h4>Logotip & Brending</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-dim);">Yangi brend identifikatsiyasi.</p>
+                    </div>
+                    <div class="panel p-item">
+                        <img src="images/motion1.png" style="width: 100%; border-radius: 15px; margin-bottom: 1rem;">
+                        <h4>Motion Video</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-dim);">Reklama va promo videolar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTACT SECTION -->
+            <div id="view-contact" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>Loyihani <span style="color: var(--accent);">Boshlash</span></h2>
+                    <p>Ma'lumotlaringizni qoldiring, biz siz bilan bog'lanamiz.</p>
+                </div>
+                <div class="panel" style="max-width: 600px;">
+                    <form id="lab-contact-form">
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="font-size: 0.75rem; font-weight: 800; color: var(--text-dim);">ISM</label>
+                            <input type="text" id="name" name="name" class="form-input" placeholder="Ismingiz" required>
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="font-size: 0.75rem; font-weight: 800; color: var(--text-dim);">TELEFON</label>
+                            <input type="tel" id="phone" name="phone" class="form-input" value="+998 " required>
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="font-size: 0.75rem; font-weight: 800; color: var(--text-dim);">XIZMAT</label>
+                            <select id="service-select" name="service" class="form-input">
+                                <option value="Veb-sayt">Veb-sayt yaratish</option>
+                                <option value="Telegram Bot">Telegram Bot</option>
+                                <option value="Dizayn">Dizayn xizmati</option>
+                                <option value="Video Montaj">Video yaratish</option>
+                                <option value="Logotip dizayn">Logotip dizayn</option>
+                                <option value="Banner xizmati">Banner xizmati</option>
+                                <option value="Prezentatsiya">Prezentatsiya</option>
+                                <option value="Sun'iy Intelekt">Sun'iy Intellekt</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Kiberxavfsizlik">Kiberxavfsizlik</option>
+                                <option value="Ish topish">Ish topish</option>
+                                <option value="O'qituvchi topish">O'qituvchi topish</option>
+                                <option value="SEO">SEO</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 2rem;">
+                            <label style="font-size: 0.75rem; font-weight: 800; color: var(--text-dim);">XABAR</label>
+                            <textarea id="message" name="message" class="form-input" style="height: 100px;" placeholder="Loyiha haqida batafsil..."></textarea>
+                        </div>
+                        <button type="submit" class="new-action-btn" style="width: 100%;">YUBORISH</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- FAQ SECTION -->
+            <div id="view-faq" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>Ko'p beriladigan <span style="color: var(--accent);">Savollar</span></h2>
+                    <p>Sizni qiziqtirgan asosiy ma'lumotlar.</p>
+                </div>
+                <div class="activity-stack">
+                    <div class="panel" style="margin-bottom: 1rem;">
+                        <h4 style="color: var(--accent);">Sayt yaratish uchun qancha vaqt ketadi?</h4>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">Loyiha hajmiga qarab 1 haftadan 1 oygacha vaqt ketishi mumkin.</p>
+                    </div>
+                    <div class="panel" style="margin-bottom: 1rem;">
+                        <h4 style="color: var(--accent);">To'lov qanday amalga oshiriladi?</h4>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">50% oldindan to'lov va 50% ish yakunlangandan so'ng.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="app.js?v=7.0"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "Work Hub",
+  "short_name": "WorkHub",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f8f9fc",
+  "theme_color": "#2b59ff",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
