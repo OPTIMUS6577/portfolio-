@@ -1,149 +1,183 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Navigation Logic
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('.view-section');
+    const data = window.regionsData;
+    let charts = {};
 
-    function switchView(target) {
-        // Update active link
-        navLinks.forEach(link => {
-            if (link.getAttribute('data-target') === target) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
+    // DOM Elements
+    const severeList = document.getElementById('severe-districts');
+    const newList = document.getElementById('new-districts');
+    
+    // KPI Elements
+    const kpiFunds = document.querySelector('#kpi-funds .kpi-value');
+    const kpiProjects = document.querySelector('#kpi-projects .kpi-value');
+    const kpiNeighborhoods = document.querySelector('#kpi-neighborhoods .kpi-value');
+    const kpiJobs = document.querySelector('#kpi-jobs .kpi-value');
+
+    // Passport Elements
+    const passEst = document.getElementById('pass-established');
+    const passArea = document.getElementById('pass-area');
+    const passPop = document.getElementById('pass-population');
+    const passUnemp = document.getElementById('pass-unemployment');
+    const passPov = document.getElementById('pass-poverty');
+    const passInd = document.getElementById('pass-industrial');
+
+    // Projects List
+    const projectsList = document.getElementById('projects-list');
+    const totalSummary = document.getElementById('total-summary-value');
+
+    function initCharts() {
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } }
             }
-        });
-
-        // Show target section
-        sections.forEach(sec => {
-            if (sec.id === `view-${target}`) {
-                sec.style.display = 'block';
-            } else {
-                sec.style.display = 'none';
-            }
-        });
-
-        // Scroll to top of content
-        document.getElementById('main-content').scrollTop = 0;
-    }
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            switchView(link.getAttribute('data-target'));
-        });
-    });
-
-    // Handle "New Project" buttons
-    const newProjectBtns = document.querySelectorAll('#btn-new-project-sidebar, #btn-new-project-main');
-    newProjectBtns.forEach(btn => {
-        btn.onclick = () => switchView('contact');
-    });
-
-    // Handle Service Card clicks
-    document.querySelectorAll('.s-item').forEach(card => {
-        card.onclick = () => {
-            const serviceName = card.getAttribute('data-service');
-            const select = document.getElementById('service-select');
-            if (select) select.value = serviceName;
-            switchView('contact');
         };
-    });
 
-    // Form Handling
-    const contactForm = document.getElementById('lab-contact-form');
-    const BOT_TOKEN = '8469015792:AAHer6z93IlMyN_hF-1LPJdmMTcD3Zw77p4';
-    const CHAT_ID = '1198878759';
+        // Pie Chart
+        charts.pie = new Chart(document.getElementById('pieChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Sanoat', 'Infratuzilma', 'Ijtimoiy', 'Boshqa'],
+                datasets: [{
+                    data: [0, 0, 0, 0],
+                    backgroundColor: ['#1a5d1a', '#f4d03f', '#2d8a2d', '#d4ac0d']
+                }]
+            },
+            options: chartOptions
+        });
 
-    if (contactForm) {
-        contactForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitBtn = contactForm.querySelector('button');
-            const originalBtnText = submitBtn.innerHTML;
+        // Bar Chart
+        charts.bar = new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Sektor 1', 'Sektor 2', 'Sektor 3', 'Sektor 4', 'Sektor 5'],
+                datasets: [{
+                    label: 'Miqdor (mlrd)',
+                    data: [0, 0, 0, 0, 0],
+                    backgroundColor: '#1a5d1a'
+                }]
+            },
+            options: chartOptions
+        });
 
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            const service = document.getElementById('service-select').value;
-            const msg = document.getElementById('message').value;
+        // Donut Chart
+        charts.donut = new Chart(document.getElementById('donutChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Infratuzilma', 'Ijtimoiy'],
+                datasets: [{
+                    data: [0, 0],
+                    backgroundColor: ['#2d8a2d', '#f4d03f']
+                }]
+            },
+            options: chartOptions
+        });
 
-            submitBtn.innerHTML = 'YUBORILMOQDA...';
-            submitBtn.disabled = true;
-
-            const telegramMessage = `💼 *WORK HUB: NEW INQUIRY*\n\n👤 *Ism:* ${name}\n📞 *Tel:* ${phone}\n🛠️ *Xizmat:* ${service}\n💬 *Xabar:* ${msg || 'Yo\'q'}\n\n_Sent via Enterprise Console_`;
-
-            try {
-                // Send to Telegram
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: CHAT_ID, text: telegramMessage, parse_mode: 'Markdown' }),
-                });
-
-                // Save to LocalStorage
-                const orders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
-                orders.push({ id: Date.now(), name, phone, service, message: msg, date: new Date().toISOString() });
-                localStorage.setItem('workhub_orders', JSON.stringify(orders));
-
-                alert('Muvaffaqiyatli! Tez orada bog\'lanamiz.');
-                contactForm.reset();
-                renderActivities();
-                switchView('overview');
-            } catch (err) {
-                console.error(err);
-                alert('Xatolik yuz berdi.');
-            } finally {
-                submitBtn.innerHTML = originalBtnText;
-                submitBtn.disabled = false;
-            }
+        // Polar Chart
+        charts.polar = new Chart(document.getElementById('polarChart'), {
+            type: 'polarArea',
+            data: {
+                labels: ['Sanoat', 'Infratuzilma', 'Ijtimoiy', 'Boshqa'],
+                datasets: [{
+                    data: [0, 0, 0, 0],
+                    backgroundColor: ['rgba(26, 93, 26, 0.7)', 'rgba(244, 208, 63, 0.7)', 'rgba(45, 138, 45, 0.7)', 'rgba(212, 172, 13, 0.7)']
+                }]
+            },
+            options: chartOptions
         });
     }
 
-    // Render Activities in Dashboard
-    function renderActivities() {
-        const list = document.getElementById('recent-activities');
-        if (!list) return;
+    function updateDashboard(region) {
+        // Update KPIs
+        kpiFunds.innerText = region.kpi.totalFunds;
+        kpiProjects.innerText = region.kpi.projectsCount;
+        kpiNeighborhoods.innerText = region.kpi.neighborhoodsCount || '-';
+        kpiJobs.innerText = region.kpi.newJobs;
 
-        const orders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
-        if (orders.length === 0) {
-            list.innerHTML = `
-                <div class="item-row">
-                    <div class="item-icon">📦</div>
-                    <div class="item-details">
-                        <h4>Apple Store Online</h4>
-                        <p>Hozircha amallar yo'q. Bu namuna.</p>
-                    </div>
-                    <div class="item-meta">
-                        <span class="item-val">-24.5M</span>
-                        <span class="item-status st-success">NAMUNA</span>
-                    </div>
-                </div>
+        // Update Passport
+        passEst.innerText = region.passport.established;
+        passArea.innerText = region.passport.area;
+        passPop.innerText = region.passport.population;
+        passUnemp.innerText = region.passport.unemployment;
+        passPov.innerText = region.passport.poverty;
+        passInd.innerText = region.passport.industrial;
+
+        // Update Charts
+        charts.pie.data.datasets[0].data = region.charts.pie;
+        charts.pie.update();
+
+        charts.bar.data.datasets[0].data = region.charts.bar;
+        charts.bar.update();
+
+        charts.donut.data.datasets[0].data = region.charts.donut;
+        charts.donut.update();
+
+        charts.polar.data.datasets[0].data = region.charts.polar;
+        charts.polar.update();
+
+        // Update Projects
+        projectsList.innerHTML = '';
+        region.projects.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            card.innerHTML = `
+                <h4>${p.name}</h4>
+                <div class="funds">${p.funds} mlrd so'm</div>
+                <p class="desc">${p.desc}</p>
             `;
-            return;
-        }
-
-        const icons = { 'Veb-sayt': '🌐', 'Telegram Bot': '🤖', 'Dizayn': '🎨', 'Boshqa': '📝' };
-
-        list.innerHTML = orders.reverse().slice(0, 5).map(o => `
-            <div class="item-row">
-                <div class="item-icon">${icons[o.service] || '📂'}</div>
-                <div class="item-details">
-                    <h4>${o.name}</h4>
-                    <p>${o.service.toUpperCase()} - ${new Date(o.date).toLocaleDateString()}</p>
-                </div>
-                <div class="item-meta">
-                    <span class="item-val plus">+BUYURTMA</span>
-                    <span class="item-status st-pending">JARAYONDA</span>
-                </div>
-            </div>
-        `).join('');
+            projectsList.appendChild(card);
+        });
+        totalSummary.innerText = `${region.kpi.totalFunds} mlrd so'm`;
     }
 
-    renderActivities();
+    function renderList() {
+        data.districts.forEach(d => {
+            const li = document.createElement('li');
+            li.className = 'region-item';
+            li.innerHTML = `<i class="fas ${d.icon}"></i> <span>${d.name}</span>`;
+            li.dataset.id = d.id;
+            
+            li.addEventListener('click', (e) => {
+                document.querySelectorAll('.region-item, .neighborhood-item').forEach(el => el.classList.remove('active'));
+                li.classList.add('active');
+                
+                // Remove existing sublists
+                document.querySelectorAll('.neighborhood-list').forEach(ul => ul.remove());
+                
+                // Add neighborhood list
+                const subUl = document.createElement('ul');
+                subUl.className = 'neighborhood-list';
+                
+                const neighborhoodItems = data.neighborhoods.filter(n => n.parentId === d.id);
+                neighborhoodItems.forEach(n => {
+                    const subLi = document.createElement('li');
+                    subLi.className = 'neighborhood-item';
+                    subLi.innerText = n.name;
+                    subLi.addEventListener('click', (ev) => {
+                        ev.stopPropagation();
+                        document.querySelectorAll('.neighborhood-item').forEach(el => el.classList.remove('active'));
+                        subLi.classList.add('active');
+                        updateDashboard(n);
+                    });
+                    subUl.appendChild(subLi);
+                });
+                
+                li.after(subUl);
+                updateDashboard(d);
+            });
 
-    // Stats Animation (Mock)
-    const bars = document.querySelectorAll('.bar-box');
-    bars.forEach(bar => {
-        const h = bar.style.height;
-        bar.style.height = '0';
-        setTimeout(() => bar.style.height = h, 500);
-    });
+            if (d.type === 'severe') {
+                severeList.appendChild(li);
+            } else {
+                newList.appendChild(li);
+            }
+        });
+
+        // Select first district by default
+        const first = document.querySelector('.region-item');
+        if (first) first.click();
+    }
+
+    initCharts();
+    renderList();
 });
