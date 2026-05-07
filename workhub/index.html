@@ -71,6 +71,34 @@
             <a href="#" class="nav-link" data-target="faq">
                 <span class="icon">❓</span> Savollar
             </a>
+            <a href="#" class="nav-link" data-target="client-portal">
+                <span class="icon">👤</span> Mijoz Kabineti
+            </a>
+            <a href="#" class="nav-link" data-target="pricing">
+                <span class="icon">💳</span> Tariflar
+            </a>
+            <a href="#" class="nav-link" data-target="team">
+                <span class="icon">👥</span> Jamoa
+            </a>
+            <a href="#" class="nav-link" data-target="reviews">
+                <span class="icon">⭐</span> Fikrlar
+            </a>
+            <a href="#" class="nav-link" data-target="blog">
+                <span class="icon">📰</span> Blog
+            </a>
+            <a href="#" class="nav-link" data-target="kanban">
+                <span class="icon">📋</span> Vazifalar
+            </a>
+            <a href="#" class="nav-link" data-target="analytics">
+                <span class="icon">📊</span> Hisobotlar
+            </a>
+            <a href="#" class="nav-link" data-target="calendar">
+                <span class="icon">📅</span> Kalendar
+            </a>
+            <a href="#" class="nav-link" data-target="notifications">
+                <span class="icon">🔔</span> Bildirishnomalar
+                <span class="notif-badge" id="notif-badge">3</span>
+            </a>
             <a href="admin.html" class="nav-link-admin" style="text-decoration:none; color:var(--text-dim); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem;">
                 <span class="icon">🔒</span> Admin Panel
             </a>
@@ -93,6 +121,8 @@
                 <input type="text" placeholder="Qidiruv: amallar, xizmatlar yoki hisobotlar...">
             </div>
             <div class="top-controls">
+                <div class="ctrl-icon" id="lang-toggle" title="Tilni o'zgartirish">🇺🇿</div>
+                <div class="ctrl-icon" id="theme-toggle" title="Mavzuni o'zgartirish">🌙</div>
                 <div class="ctrl-icon">🔔</div>
                 <div class="ctrl-icon">⚙️</div>
                 <div class="user-profile">
@@ -386,8 +416,316 @@
                 </div>
             </div>
 
+            <!-- CLIENT PORTAL SECTION -->
+            <div id="view-client-portal" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>Mijozlar <span style="color: var(--accent);">Kabineti</span></h2>
+                    <p>O'z loyihalaringizni kuzatib boring va to'lovlarni amalga oshiring.</p>
+                </div>
+                <div class="layout-grid">
+                    <div class="panel">
+                        <h3>Aktiv Loyiham: "Edu-Platforma"</h3>
+                        <div class="prog-container" style="margin-top: 15px;">
+                            <div class="prog-label">Holat: Dasturlash bosqichida (65%)</div>
+                            <div class="prog-track" style="margin-top: 5px;"><div class="prog-fill" style="width: 65%"></div></div>
+                        </div>
+                        <br>
+                        <p style="color: var(--text-dim); font-size: 0.9rem;">Oxirgi yangilanish: Bugun, 10:30 - "Backend API tugatildi".</p>
+                    </div>
+                    <div class="panel">
+                        <h3>To'lov holati</h3>
+                        <h2 style="color: var(--danger); margin: 10px 0;">2,500,000 UZS</h2>
+                        <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 15px;">2-qism to'lovi kutilmoqda.</p>
+                        <button class="new-action-btn" style="width: 100%; font-size: 0.9rem;">💳 Onlayn To'lov (Payme)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRICING SECTION -->
+            <div id="view-pricing" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>Bizning <span style="color: var(--accent);">Tariflar</span></h2>
+                    <p>O'z biznesingiz uchun mos paketni tanlang.</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="panel p-card">
+                        <h3 style="color: var(--text-dim);">Start</h3>
+                        <h2 style="font-size: 2rem; margin: 15px 0;">$150 <small style="font-size: 1rem; color: var(--text-dim);">/loy.</small></h2>
+                        <ul style="list-style: none; color: var(--text-dim); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.8;">
+                            <li>✔️ Landing Page</li>
+                            <li>✔️ Boshlang'ich SEO</li>
+                            <li>✔️ 1 oy bepul support</li>
+                        </ul>
+                        <button class="new-action-btn s-item" data-service="Veb-sayt (Start)" style="width: 100%; font-size: 0.9rem;">Tanlash</button>
+                    </div>
+                    <div class="panel p-card" style="border-color: var(--accent); box-shadow: 0 0 20px rgba(188, 19, 254, 0.2);">
+                        <div style="background: var(--accent); color: white; padding: 2px 10px; border-radius: 10px; display: inline-block; font-size: 0.7rem; font-weight: bold; margin-bottom: 10px;">MASHHUR</div>
+                        <h3>Business</h3>
+                        <h2 style="font-size: 2rem; margin: 15px 0;">$400 <small style="font-size: 1rem; color: var(--text-dim);">/loy.</small></h2>
+                        <ul style="list-style: none; color: var(--text-dim); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.8;">
+                            <li>✔️ Korporativ sayt</li>
+                            <li>✔️ Mukammal SEO & UI/UX</li>
+                            <li>✔️ 3 oy bepul support + Bot</li>
+                        </ul>
+                        <button class="new-action-btn s-item" data-service="Veb-sayt (Business)" style="width: 100%; font-size: 0.9rem;">Tanlash</button>
+                    </div>
+                    <div class="panel p-card">
+                        <h3 style="color: var(--text-dim);">Enterprise</h3>
+                        <h2 style="font-size: 2rem; margin: 15px 0;">$1000+</h2>
+                        <ul style="list-style: none; color: var(--text-dim); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.8;">
+                            <li>✔️ Murakkab web tizim</li>
+                            <li>✔️ AI va Data Science qo'shilgan</li>
+                            <li>✔️ 24/7 shaxsiy menejer</li>
+                        </ul>
+                        <button class="new-action-btn s-item" data-service="Murakkab tizim (Enterprise)" style="width: 100%; font-size: 0.9rem;">Bog'lanish</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEAM SECTION -->
+            <div id="view-team" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>Bizning <span style="color: var(--accent);">Jamoa</span></h2>
+                    <p>Loyihangiz ustida ishlovchi tajribali mutaxassislar.</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card" style="text-align: center;">
+                        <div class="user-avatar" style="width: 80px; height: 80px; font-size: 2.5rem; margin: 0 auto 15px;">👨‍💻</div>
+                        <h3>Suxrob</h3>
+                        <p style="color: var(--text-dim); font-size: 0.9rem;">Founder & Full-Stack Dasturchi</p>
+                    </div>
+                    <div class="stat-card" style="text-align: center;">
+                        <div class="user-avatar" style="width: 80px; height: 80px; font-size: 2.5rem; margin: 0 auto 15px;">🎨</div>
+                        <h3>Azizbek</h3>
+                        <p style="color: var(--text-dim); font-size: 0.9rem;">UI/UX & Motion Dizayner</p>
+                    </div>
+                    <div class="stat-card" style="text-align: center;">
+                        <div class="user-avatar" style="width: 80px; height: 80px; font-size: 2.5rem; margin: 0 auto 15px;">📈</div>
+                        <h3>Maftuna</h3>
+                        <p style="color: var(--text-dim); font-size: 0.9rem;">SMM & Marketing Menenjer</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVIEWS SECTION -->
+            <div id="view-reviews" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>Mijozlar <span style="color: var(--accent);">Fikri</span></h2>
+                    <p>Biz bilan ishlagan mijozlarning taassurotlari.</p>
+                </div>
+                <div class="layout-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="panel">
+                        <div style="color: #ff9f43; font-size: 1.2rem; margin-bottom: 10px;">⭐⭐⭐⭐⭐</div>
+                        <p style="font-style: italic; color: var(--text-dim);">"Work Hub jamoasi ajoyib ishlaydi! Bizning kompaniya uchun zo'r CRM tizim qilib berishdi. Ishlari juda tez va sifatli."</p>
+                        <h4 style="margin-top: 15px;">- Alisher, "TechBaza" MCHJ rahbari</h4>
+                    </div>
+                    <div class="panel">
+                        <div style="color: #ff9f43; font-size: 1.2rem; margin-bottom: 10px;">⭐⭐⭐⭐⭐</div>
+                        <p style="font-style: italic; color: var(--text-dim);">"Dizayn xizmatlaridan foydalandik. Logotip va SMM postlarimiz umuman boshqa darajaga chiqdi. Rahmat kattakon!"</p>
+                        <h4 style="margin-top: 15px;">- Malika, "Gullar Olami" asoschisi</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOG SECTION -->
+            <div id="view-blog" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>IT <span style="color: var(--accent);">Yangiliklar & Blog</span></h2>
+                    <p>Texnologiyalar, biznes va dizayn olamidagi so'nggi trendlar.</p>
+                </div>
+                <div class="layout-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+                    <div class="panel">
+                        <div style="width: 100%; height: 150px; background: rgba(188, 19, 254, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin-bottom: 15px;">🤖</div>
+                        <h4>2026-yilda Sun'iy Intellekt Trendlari</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 10px;">Nima uchun har bir biznesga AI kerak bo'ladi? Batafsil o'qish...</p>
+                        <button class="back-btn" style="margin-top: 15px; padding: 0.4rem 0.8rem; font-size: 0.8rem; margin-bottom: 0;">O'qish</button>
+                    </div>
+                    <div class="panel">
+                        <div style="width: 100%; height: 150px; background: rgba(0, 179, 110, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin-bottom: 15px;">📱</div>
+                        <h4>Telegram Bot vs Ilova</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 10px;">Qaysi biri sizning biznesingizga ko'proq foyda keltiradi?</p>
+                        <button class="back-btn" style="margin-top: 15px; padding: 0.4rem 0.8rem; font-size: 0.8rem; margin-bottom: 0;">O'qish</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KANBAN BOARD SECTION -->
+            <div id="view-kanban" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>Vazifalar <span style="color: var(--accent);">Kanbani</span></h2>
+                    <p>Loyiha vazifalarini holat bo'yicha boshqaring.</p>
+                </div>
+                <div style="display:flex; justify-content:flex-end; margin-bottom:1.5rem;">
+                    <button class="new-action-btn" onclick="openTaskModal()" style="padding:0.8rem 1.5rem; font-size:0.9rem;">➕ Yangi Vazifa</button>
+                </div>
+                <div class="kanban-board">
+                    <div class="kanban-col" id="col-todo" ondragover="event.preventDefault()" ondrop="dropTask(event,'todo')">
+                        <div class="kanban-col-header"><span>⏳</span> Kutilmoqda <span class="k-count" id="count-todo">0</span></div>
+                        <div class="kanban-cards" id="cards-todo"></div>
+                    </div>
+                    <div class="kanban-col" id="col-inprogress" ondragover="event.preventDefault()" ondrop="dropTask(event,'inprogress')">
+                        <div class="kanban-col-header"><span>🔄</span> Jarayonda <span class="k-count" id="count-inprogress">0</span></div>
+                        <div class="kanban-cards" id="cards-inprogress"></div>
+                    </div>
+                    <div class="kanban-col" id="col-done" ondragover="event.preventDefault()" ondrop="dropTask(event,'done')">
+                        <div class="kanban-col-header"><span>✅</span> Yakunlandi <span class="k-count" id="count-done">0</span></div>
+                        <div class="kanban-cards" id="cards-done"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANALYTICS SECTION -->
+            <div id="view-analytics" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>Biznes <span style="color: var(--accent);">Hisobotlari</span></h2>
+                    <p>Oylik daromad, xizmatlar statistikasi va o'sish ko'rsatkichlari.</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header"><div class="stat-icon">💰</div><span class="stat-trend trend-up">+18.3%</span></div>
+                        <div class="stat-body"><small>OY DAROMADI</small><h3>12.5M UZS</h3></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header"><div class="stat-icon">👥</div><span class="stat-trend trend-blue">+7 yangi</span></div>
+                        <div class="stat-body"><small>MIJOZLAR</small><h3>34</h3></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header"><div class="stat-icon">🏆</div><span class="stat-trend trend-up">+3 ta</span></div>
+                        <div class="stat-body"><small>YAKUNLANGAN LOYIHALAR</small><h3>12</h3></div>
+                    </div>
+                </div>
+                <div class="layout-grid">
+                    <div class="panel">
+                        <div class="panel-top" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+                            <h3>Oylik Daromad Grafigi</h3>
+                            <div class="panel-actions"><button class="active">2026</button><button>2025</button></div>
+                        </div>
+                        <div class="analytics-chart">
+                            <div class="a-bar-wrap"><div class="a-bar" style="height:45%"></div><span>Yan</span></div>
+                            <div class="a-bar-wrap"><div class="a-bar" style="height:60%"></div><span>Fev</span></div>
+                            <div class="a-bar-wrap"><div class="a-bar" style="height:38%"></div><span>Mar</span></div>
+                            <div class="a-bar-wrap"><div class="a-bar" style="height:75%"></div><span>Apr</span></div>
+                            <div class="a-bar-wrap"><div class="a-bar a-bar-active" style="height:92%"></div><span>May</span></div>
+                            <div class="a-bar-wrap"><div class="a-bar" style="height:30%"></div><span>Iyn</span></div>
+                            <div class="a-bar-wrap"><div class="a-bar" style="height:55%"></div><span>Iyl</span></div>
+                            <div class="a-bar-wrap"><div class="a-bar" style="height:70%"></div><span>Avg</span></div>
+                            <div class="a-bar-wrap"><div class="a-bar" style="height:48%"></div><span>Sen</span></div>
+                            <div class="a-bar-wrap"><div class="a-bar" style="height:85%"></div><span>Okt</span></div>
+                            <div class="a-bar-wrap"><div class="a-bar" style="height:62%"></div><span>Noy</span></div>
+                            <div class="a-bar-wrap"><div class="a-bar" style="height:90%"></div><span>Dek</span></div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-top" style="margin-bottom:1.5rem;"><h3>Xizmatlar Bo'yicha</h3></div>
+                        <div class="service-stats">
+                            <div class="s-stat-row"><span>🌐 Veb-sayt</span><div class="s-stat-bar"><div style="width:85%"></div></div><b>85%</b></div>
+                            <div class="s-stat-row"><span>🤖 Telegram Bot</span><div class="s-stat-bar"><div style="width:60%"></div></div><b>60%</b></div>
+                            <div class="s-stat-row"><span>🎬 Video</span><div class="s-stat-bar"><div style="width:45%"></div></div><b>45%</b></div>
+                            <div class="s-stat-row"><span>✒️ Dizayn</span><div class="s-stat-bar"><div style="width:72%"></div></div><b>72%</b></div>
+                            <div class="s-stat-row"><span>🚀 SEO</span><div class="s-stat-bar"><div style="width:38%"></div></div><b>38%</b></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CALENDAR SECTION -->
+            <div id="view-calendar" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>Loyiha <span style="color: var(--accent);">Kalendari</span></h2>
+                    <p>Muddatlar, uchrashuvlar va reja jadvalingiz.</p>
+                </div>
+                <div class="layout-grid">
+                    <div class="panel">
+                        <div class="cal-header">
+                            <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+                            <h3 id="cal-month-title">May 2026</h3>
+                            <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+                        </div>
+                        <div class="cal-grid" id="cal-grid">
+                            <div class="cal-day-name">Dush</div>
+                            <div class="cal-day-name">Sesh</div>
+                            <div class="cal-day-name">Chor</div>
+                            <div class="cal-day-name">Pay</div>
+                            <div class="cal-day-name">Jum</div>
+                            <div class="cal-day-name">Shan</div>
+                            <div class="cal-day-name">Yak</div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <h3 style="margin-bottom:1.5rem;">📌 Yaqindagi Voqealar</h3>
+                        <div class="event-list" id="event-list">
+                            <div class="event-item">
+                                <div class="event-dot" style="background:#bc13fe"></div>
+                                <div><h4>Edu-Platforma tekshiruv</h4><p>8-May, 14:00</p></div>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-dot" style="background:#00b36e"></div>
+                                <div><h4>Logo dizayn topshirish</h4><p>10-May, 11:00</p></div>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-dot" style="background:#ff9f43"></div>
+                                <div><h4>Mijoz bilan uchrashuv</h4><p>12-May, 15:30</p></div>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-dot" style="background:#ff4d4d"></div>
+                                <div><h4>To'lov muddati (2-qism)</h4><p>15-May</p></div>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-dot" style="background:#bc13fe"></div>
+                                <div><h4>TechBaza sayt launch</h4><p>20-May, 10:00</p></div>
+                            </div>
+                        </div>
+                        <button class="new-action-btn" style="width:100%; margin-top:1.5rem; font-size:0.9rem;" onclick="alert('Yangi voqea qo\'shish funksiyasi!')">➕ Voqea Qo'shish</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOTIFICATIONS SECTION -->
+            <div id="view-notifications" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg" style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <h2>Bildirishnomalar <span style="color: var(--accent);">Markazi</span></h2>
+                        <p>Barcha yangilanishlar, buyurtmalar va eslatmalar.</p>
+                    </div>
+                    <button class="back-btn" style="margin-bottom:0;" onclick="clearAllNotifs()">🗑️ Hammasini o'chirish</button>
+                </div>
+                <div class="notif-filters">
+                    <button class="notif-filter-btn active" onclick="filterNotifs(this, 'all')">Barchasi</button>
+                    <button class="notif-filter-btn" onclick="filterNotifs(this, 'order')">Buyurtmalar</button>
+                    <button class="notif-filter-btn" onclick="filterNotifs(this, 'payment')">To'lovlar</button>
+                    <button class="notif-filter-btn" onclick="filterNotifs(this, 'system')">Tizim</button>
+                </div>
+                <div class="notif-list" id="notif-list"></div>
+            </div>
+
         </div>
     </main>
+
+    <!-- LIVE CHAT WIDGET -->
+    <div class="chat-widget" id="chat-widget">
+        <div class="chat-header" onclick="toggleChat()">
+            💬 Jonli Chat
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="chat-msg bot">Assalomu alaykum! Work Hub jamoasi sizga yordam berishga tayyor. Qanday savolingiz bor?</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input" placeholder="Xabar yozing..." onkeypress="if(event.key==='Enter') sendChatMsg()">
+            <button onclick="sendChatMsg()">➤</button>
+        </div>
+    </div>
+    <div class="chat-btn" id="chat-btn" onclick="toggleChat()">
+        💬
+    </div>
 
     <script src="app.js?v=7.0"></script>
 </body>

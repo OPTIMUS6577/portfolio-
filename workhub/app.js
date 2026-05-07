@@ -145,5 +145,381 @@ document.addEventListener('DOMContentLoaded', () => {
         const h = bar.style.height;
         bar.style.height = '0';
         setTimeout(() => bar.style.height = h, 500);
-    });
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    
+    if (localStorage.getItem('theme') === 'light') {
+        body.classList.add('light-mode');
+        if(themeToggle) themeToggle.innerText = '☀️';
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                localStorage.setItem('theme', 'light');
+                themeToggle.innerText = '☀️';
+            } else {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.innerText = '🌙';
+            }
+        });
+    }
+
+    // Language Toggle
+    const langToggle = document.getElementById('lang-toggle');
+    if (langToggle) {
+        let isUz = true;
+        langToggle.addEventListener('click', () => {
+            isUz = !isUz;
+            if (isUz) {
+                langToggle.innerText = '🇺🇿';
+                alert("Til O'zbek tiliga o'zgardi");
+            } else {
+                langToggle.innerText = '🇬🇧';
+                alert("Language switched to English");
+            }
+        });
+    }
 });
+
+// Chat Widget Logic
+function toggleChat() {
+    const chatWidget = document.getElementById('chat-widget');
+    if (chatWidget.style.display === 'flex') {
+        chatWidget.style.display = 'none';
+    } else {
+        chatWidget.style.display = 'flex';
+    }
+}
+
+function sendChatMsg() {
+    const input = document.getElementById('chat-input');
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    const chatBody = document.getElementById('chat-body');
+    
+    const userDiv = document.createElement('div');
+    userDiv.className = 'chat-msg user';
+    userDiv.innerText = msg;
+    chatBody.appendChild(userDiv);
+    
+    input.value = '';
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    setTimeout(() => {
+        const botDiv = document.createElement('div');
+        botDiv.className = 'chat-msg bot';
+        botDiv.innerText = "Xabaringiz qabul qilindi. Tez orada operator javob beradi.";
+        chatBody.appendChild(botDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }, 1000);
+}
+
+// ============================================================
+// ===== KANBAN BOARD =====
+// ============================================================
+let kanbanTasks = JSON.parse(localStorage.getItem('kanban_tasks') || 'null') || [
+    { id: 1, title: 'TechBaza landing page', desc: 'Dizayn va dasturlash', status: 'inprogress', tags: ['web'] },
+    { id: 2, title: 'Logo dizayn - GullarOlami', desc: 'Logotip va brandbook', status: 'todo', tags: ['design'] },
+    { id: 3, title: 'Telegram bot - savdo', desc: 'CRM integratsiya bilan', status: 'todo', tags: ['bot'] },
+    { id: 4, title: 'Edu-Platforma backend', desc: 'API va database yakunlash', status: 'done', tags: ['web'] },
+    { id: 5, title: 'SEO audit - Texnologiya.uz', desc: 'Onpage SEO tahlil', status: 'inprogress', tags: ['web'] },
+];
+let draggedTaskId = null;
+
+function saveKanban() {
+    localStorage.setItem('kanban_tasks', JSON.stringify(kanbanTasks));
+}
+
+function renderKanban() {
+    const cols = { todo: [], inprogress: [], done: [] };
+    kanbanTasks.forEach(t => cols[t.status] && cols[t.status].push(t));
+
+    ['todo', 'inprogress', 'done'].forEach(col => {
+        const container = document.getElementById(`cards-${col}`);
+        const countEl = document.getElementById(`count-${col}`);
+        if (!container) return;
+
+        countEl.textContent = cols[col].length;
+        container.innerHTML = cols[col].map(task => `
+            <div class="kanban-card" draggable="true" id="task-${task.id}"
+                ondragstart="dragStart(${task.id})" ondragend="dragEnd()">
+                <h4>${task.title}</h4>
+                <p>${task.desc}</p>
+                <div class="card-tags">
+                    ${task.tags.map(t => `<span class="kanban-tag tag-${t}">${t.toUpperCase()}</span>`).join('')}
+                    <button onclick="deleteTask(${task.id})" style="margin-left:auto;background:rgba(255,77,77,0.15);border:none;color:#ff4d4d;border-radius:6px;padding:2px 8px;cursor:pointer;font-size:0.7rem;">✕</button>
+                </div>
+            </div>
+        `).join('') || `<div style="color:var(--text-dim);font-size:0.85rem;text-align:center;padding:2rem 0;">Bu yerga tashlang</div>`;
+    });
+}
+
+function dragStart(id) {
+    draggedTaskId = id;
+    document.getElementById(`task-${id}`).style.opacity = '0.5';
+}
+
+function dragEnd() {
+    if (draggedTaskId) {
+        const el = document.getElementById(`task-${draggedTaskId}`);
+        if (el) el.style.opacity = '1';
+    }
+}
+
+function dropTask(event, newStatus) {
+    event.preventDefault();
+    if (!draggedTaskId) return;
+    const task = kanbanTasks.find(t => t.id === draggedTaskId);
+    if (task) {
+        task.status = newStatus;
+        saveKanban();
+        renderKanban();
+        // Add notification for done tasks
+        if (newStatus === 'done') {
+            addNotification({ type: 'system', icon: '✅', title: 'Vazifa yakunlandi!', text: `"${task.title}" muvaffaqiyatli yakunlandi.` });
+        }
+    }
+    draggedTaskId = null;
+}
+
+function deleteTask(id) {
+    kanbanTasks = kanbanTasks.filter(t => t.id !== id);
+    saveKanban();
+    renderKanban();
+}
+
+// Drag-over highlight
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.kanban-col').forEach(col => {
+        col.addEventListener('dragover', () => col.classList.add('drag-over'));
+        col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
+        col.addEventListener('drop', () => col.classList.remove('drag-over'));
+    });
+    renderKanban();
+    renderCalendar();
+    renderNotifications();
+});
+
+// Task Modal
+function openTaskModal() {
+    let overlay = document.getElementById('task-modal-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'task-modal-overlay';
+        overlay.id = 'task-modal-overlay';
+        overlay.innerHTML = `
+            <div class="task-modal">
+                <h3>➕ Yangi Vazifa Qo'shish</h3>
+                <div style="margin-bottom:1.2rem;">
+                    <label style="font-size:0.75rem;font-weight:800;color:var(--text-dim);display:block;margin-bottom:0.5rem;">VAZIFA NOMI</label>
+                    <input type="text" id="task-title-input" class="form-input" placeholder="Vazifa nomini kiriting..." required>
+                </div>
+                <div style="margin-bottom:1.2rem;">
+                    <label style="font-size:0.75rem;font-weight:800;color:var(--text-dim);display:block;margin-bottom:0.5rem;">TAVSIF</label>
+                    <input type="text" id="task-desc-input" class="form-input" placeholder="Qisqacha tavsif...">
+                </div>
+                <div style="margin-bottom:1.2rem;">
+                    <label style="font-size:0.75rem;font-weight:800;color:var(--text-dim);display:block;margin-bottom:0.5rem;">HOLAT</label>
+                    <select id="task-status-input" class="form-input">
+                        <option value="todo">⏳ Kutilmoqda</option>
+                        <option value="inprogress">🔄 Jarayonda</option>
+                        <option value="done">✅ Yakunlandi</option>
+                    </select>
+                </div>
+                <div style="margin-bottom:1.2rem;">
+                    <label style="font-size:0.75rem;font-weight:800;color:var(--text-dim);display:block;margin-bottom:0.5rem;">TAG</label>
+                    <select id="task-tag-input" class="form-input">
+                        <option value="web">WEB</option>
+                        <option value="design">DESIGN</option>
+                        <option value="bot">BOT</option>
+                        <option value="urgent">URGENT</option>
+                    </select>
+                </div>
+                <div class="task-modal-btns">
+                    <button class="modal-cancel-btn" onclick="closeTaskModal()">Bekor qilish</button>
+                    <button class="new-action-btn" style="flex:1" onclick="addTask()">Saqlash</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+    }
+    requestAnimationFrame(() => overlay.classList.add('open'));
+}
+
+function closeTaskModal() {
+    const overlay = document.getElementById('task-modal-overlay');
+    if (overlay) {
+        overlay.classList.remove('open');
+    }
+}
+
+function addTask() {
+    const title = document.getElementById('task-title-input').value.trim();
+    const desc = document.getElementById('task-desc-input').value.trim();
+    const status = document.getElementById('task-status-input').value;
+    const tag = document.getElementById('task-tag-input').value;
+    if (!title) { alert("Vazifa nomini kiriting!"); return; }
+
+    const newTask = {
+        id: Date.now(),
+        title, desc: desc || 'Tavsif yo\'q',
+        status, tags: [tag]
+    };
+    kanbanTasks.push(newTask);
+    saveKanban();
+    renderKanban();
+    closeTaskModal();
+    addNotification({ type: 'system', icon: '📋', title: 'Yangi vazifa qo\'shildi!', text: `"${title}" vazifasi yaratildi.` });
+}
+
+// ============================================================
+// ===== CALENDAR =====
+// ============================================================
+let currentCalDate = new Date();
+const eventDays = [8, 10, 12, 15, 20]; // days with events in current month
+
+function renderCalendar() {
+    const grid = document.getElementById('cal-grid');
+    const titleEl = document.getElementById('cal-month-title');
+    if (!grid || !titleEl) return;
+
+    const months = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'];
+    titleEl.textContent = `${months[currentCalDate.getMonth()]} ${currentCalDate.getFullYear()}`;
+
+    // Remove old day cells (keep 7 header cells)
+    const allChildren = Array.from(grid.children);
+    allChildren.slice(7).forEach(c => c.remove());
+
+    const year = currentCalDate.getFullYear();
+    const month = currentCalDate.getMonth();
+    const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+    const totalDays = new Date(year, month + 1, 0).getDate();
+    const today = new Date();
+
+    // Convert Sunday-first to Monday-first
+    const startOffset = (firstDay === 0) ? 6 : firstDay - 1;
+
+    for (let i = 0; i < startOffset; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'cal-day empty';
+        grid.appendChild(empty);
+    }
+
+    for (let d = 1; d <= totalDays; d++) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'cal-day';
+        dayEl.textContent = d;
+
+        const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+        if (isToday) dayEl.classList.add('today');
+        if (eventDays.includes(d) && !isToday) dayEl.classList.add('has-event');
+
+        dayEl.onclick = () => {
+            document.querySelectorAll('.cal-day').forEach(el => el.style.outline = '');
+            dayEl.style.outline = '2px solid var(--accent)';
+        };
+        grid.appendChild(dayEl);
+    }
+}
+
+function changeMonth(dir) {
+    currentCalDate.setMonth(currentCalDate.getMonth() + dir);
+    renderCalendar();
+}
+
+// ============================================================
+// ===== NOTIFICATIONS =====
+// ============================================================
+let notifications = JSON.parse(localStorage.getItem('workhub_notifs') || 'null') || [
+    { id: 1, type: 'order', icon: '📦', title: 'Yangi buyurtma keldi!', text: 'Alisher "Veb-sayt" xizmati uchun so\'rov yubordi.', time: '5 daqiqa oldin', unread: true },
+    { id: 2, type: 'payment', icon: '💰', title: 'To\'lov amalga oshirildi', text: 'Malika 2,500,000 UZS to\'lov qildi. Hisobingiz yangilandi.', time: '1 soat oldin', unread: true },
+    { id: 3, type: 'system', icon: '🔔', title: 'Loyiha muddati yaqinlashmoqda', text: 'Edu-Platforma loyihasi 3 kundan keyin topshirilishi kerak.', time: '2 soat oldin', unread: true },
+    { id: 4, type: 'order', icon: '📋', title: 'Yangi xizmat so\'rovi', text: 'Jasur Telegram Bot yaratish bo\'yicha ariza yubordi.', time: 'Kecha', unread: false },
+    { id: 5, type: 'system', icon: '✅', title: 'TechBaza loyihasi yakunlandi', text: 'Muvaffaqiyatli topshirildi va mijoz tasdiqladi.', time: '2 kun oldin', unread: false },
+    { id: 6, type: 'payment', icon: '⚠️', title: 'To\'lov eslatmasi', text: 'Nexus Bot loyihasi uchun 2-qism to\'lov kutilmoqda.', time: '3 kun oldin', unread: false },
+];
+
+let currentFilter = 'all';
+
+function saveNotifications() {
+    localStorage.setItem('workhub_notifs', JSON.stringify(notifications));
+    updateBadge();
+}
+
+function updateBadge() {
+    const badge = document.getElementById('notif-badge');
+    const unreadCount = notifications.filter(n => n.unread).length;
+    if (badge) {
+        badge.textContent = unreadCount;
+        badge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+    }
+}
+
+function renderNotifications(filter = currentFilter) {
+    const list = document.getElementById('notif-list');
+    if (!list) return;
+
+    const filtered = filter === 'all' ? notifications : notifications.filter(n => n.type === filter);
+
+    if (filtered.length === 0) {
+        list.innerHTML = `<div style="text-align:center;color:var(--text-dim);padding:3rem;">🎉 Bildirishnomalar yo'q</div>`;
+        return;
+    }
+
+    list.innerHTML = filtered.map(n => `
+        <div class="notif-item ${n.unread ? 'unread' : ''}" id="notif-${n.id}">
+            <div class="notif-icon ${n.type}">${n.icon}</div>
+            <div class="notif-content">
+                <h4>${n.title}</h4>
+                <p>${n.text}</p>
+                <div class="notif-time">${n.time}</div>
+            </div>
+            <button class="notif-dismiss" onclick="dismissNotif(${n.id})">✕</button>
+        </div>
+    `).join('');
+
+    // Mark all visible as read
+    notifications.forEach(n => { if (filter === 'all' || n.type === filter) n.unread = false; });
+    saveNotifications();
+}
+
+function dismissNotif(id) {
+    notifications = notifications.filter(n => n.id !== id);
+    saveNotifications();
+    renderNotifications(currentFilter);
+}
+
+function clearAllNotifs() {
+    if (!confirm('Barcha bildirishnomalarni o\'chirmoqchimisiz?')) return;
+    notifications = [];
+    saveNotifications();
+    renderNotifications(currentFilter);
+}
+
+function filterNotifs(btn, filter) {
+    currentFilter = filter;
+    document.querySelectorAll('.notif-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderNotifications(filter);
+}
+
+function addNotification(notif) {
+    const newNotif = {
+        id: Date.now(),
+        type: notif.type || 'system',
+        icon: notif.icon || '🔔',
+        title: notif.title,
+        text: notif.text,
+        time: 'Hozir',
+        unread: true
+    };
+    notifications.unshift(newNotif);
+    saveNotifications();
+}
+
+// Initialize badge on load
+document.addEventListener('DOMContentLoaded', updateBadge);
