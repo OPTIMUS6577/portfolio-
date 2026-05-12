@@ -102,7 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const list = document.getElementById('recent-activities');
         if (!list) return;
 
-        const orders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
+        let orders = [];
+        try {
+            orders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
+            if (!Array.isArray(orders)) orders = [];
+        } catch(e) {
+            orders = [];
+        }
+
         if (orders.length === 0) {
             list.innerHTML = `
                 <div class="item-row">
@@ -120,14 +127,24 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const icons = { 'Veb-sayt': '🌐', 'Telegram Bot': '🤖', 'Dizayn': '🎨', 'Boshqa': '📝' };
+        const icons = { 
+            'Veb-sayt': '🌐', 
+            'Telegram Bot': '🤖', 
+            'Dizayn': '🎨', 
+            'Video Montaj': '🎬',
+            'Logotip dizayn': '✒️',
+            'Banner xizmati': '🖼️',
+            'Prezentatsiya': '📊',
+            'Sun\'iy Intelekt': '🧠',
+            'Boshqa': '📝' 
+        };
 
-        list.innerHTML = orders.reverse().slice(0, 5).map(o => `
+        list.innerHTML = [...orders].reverse().slice(0, 5).map(o => `
             <div class="item-row">
                 <div class="item-icon">${icons[o.service] || '📂'}</div>
                 <div class="item-details">
-                    <h4>${o.name}</h4>
-                    <p>${o.service.toUpperCase()} - ${new Date(o.date).toLocaleDateString()}</p>
+                    <h4>${o.name || 'Noma\'lum'}</h4>
+                    <p>${(o.service || 'BOSHQA').toUpperCase()} - ${new Date(o.date).toLocaleDateString()}</p>
                 </div>
                 <div class="item-meta">
                     <span class="item-val plus">+BUYURTMA</span>
@@ -141,10 +158,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Stats Animation (Mock)
     const bars = document.querySelectorAll('.bar-box');
-    bars.forEach(bar => {
-        const h = bar.style.height;
-        bar.style.height = '0';
-        setTimeout(() => bar.style.height = h, 500);
+    setTimeout(() => {
+        bars.forEach(bar => {
+            const h = bar.getAttribute('style').match(/height:\s*([\d%]+)/)?.[1] || '50%';
+            bar.style.height = '0';
+            setTimeout(() => bar.style.height = h, 100);
+        });
+    }, 500);
     // Theme Toggle
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
