@@ -552,5 +552,86 @@ function addNotification(notif) {
     saveNotifications();
 }
 
+// ============================================================
+// ===== BLOG LOGIC =====
+// ============================================================
+const blogArticles = {
+    'ai-trends': {
+        title: "2026-yilda Sun'iy Intellekt Trendlari",
+        content: `
+            <p>2026-yilda Sun'iy Intellekt (AI) nafaqat texnologik sohada, balki kundalik biznes jarayonlarining ajralmas qismiga aylanadi. Bu yerda asosiy trendlar:</p>
+            <ul>
+                <li><strong>Avtonom Agentlar:</strong> Endi AI nafaqat savollarga javob beradi, balki mustaqil vazifalarni bajaradi (elektron pochta yozish, uchrashuvlar belgilash).</li>
+                <li><strong>Shaxsiylashtirilgan Mijoz Tajribasi:</strong> Har bir mijoz uchun individual yondashuv real vaqt rejimida shakllanadi.</li>
+                <li><strong>AI va Kibernavfsizlik:</strong> Xavfsizlik tizimlari hujumlarni sodir bo'lishidan oldin prognoz qiladi.</li>
+            </ul>
+            <p>Biznesingizni ushbu trendlarga moslashtirish uchun hozirdan harakat qilish lozim.</p>
+        `
+    },
+    'bot-vs-app': {
+        title: "Telegram Bot vs Ilova",
+        content: `
+            <p>Ko'pchilik tadbirkorlar "Biznes uchun nima afzal: Mobil ilovami yoki Telegram bot?" degan savolga duch kelishadi.</p>
+            <h3>Telegram Botning afzalliklari:</h3>
+            <ul>
+                <li>Arzonroq ishlab chiqish narxi.</li>
+                <li>Mijozlar telefoniga yangi narsa yuklab olishi shart emas.</li>
+                <li>Muloqot juda tez va qulay.</li>
+            </ul>
+            <h3>Mobil Ilovaning afzalliklari:</h3>
+            <ul>
+                <li>Ko'proq funksionallik va dizayn erkinligi.</li>
+                <li>Brendning telefon ekranida doimiy ko'rinishi.</li>
+                <li>Offline ishlash imkoniyati.</li>
+            </ul>
+            <p>Agar siz endigina boshlayotgan bo'lsangiz, Telegram botdan boshlash eng to'g'ri strategiya hisoblanadi.</p>
+        `
+    },
+    'security-tips': {
+        title: "Kiberxavfsizlik sirlari",
+        content: `
+            <p>Raqamli dunyoda ma'lumotlar xavfsizligi eng muhim masala. Biznesingizni himoya qilish uchun:</p>
+            <ol>
+                <li>Ikki bosqichli autentifikatsiyani (2FA) yoqing.</li>
+                <li>Parollarni doimiy yangilab turing.</li>
+                <li>Xodimlaringizni phishing hujumlaridan ehtiyot bo'lishga o'rgating.</li>
+            </ol>
+        `
+    }
+};
+
+function openBlogModal(id) {
+    const article = blogArticles[id];
+    if (!article) return;
+
+    const overlay = document.getElementById('blog-modal-overlay');
+    const content = document.getElementById('blog-content');
+    
+    content.innerHTML = `
+        <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--accent);">${article.title}</h2>
+        <div style="line-height: 1.8; color: var(--text); font-size: 1.1rem;">
+            ${article.content}
+        </div>
+    `;
+    
+    overlay.classList.add('open');
+}
+
+function closeBlogModal() {
+    document.getElementById('blog-modal-overlay').classList.remove('open');
+}
+
+// Attach events to blog buttons
+document.addEventListener('DOMContentLoaded', () => {
+    const blogBtns = document.querySelectorAll('.view-section#view-blog .blog-card .new-action-btn');
+    const ids = ['ai-trends', 'bot-vs-app', 'security-tips'];
+    
+    blogBtns.forEach((btn, index) => {
+        if (ids[index]) {
+            btn.onclick = () => openBlogModal(ids[index]);
+        }
+    });
+});
+
 // Initialize badge on load
 document.addEventListener('DOMContentLoaded', updateBadge);
