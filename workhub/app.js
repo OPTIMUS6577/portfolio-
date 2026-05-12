@@ -633,5 +633,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// Sidebar toggle for mobile
+function toggleSidebar() {
+    const sidebar = document.querySelector('.dashboard-sidebar');
+    sidebar.classList.toggle('active');
+}
+
+// Close sidebar on link click (mobile)
+document.addEventListener('DOMContentLoaded', () => {
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 850) {
+                document.querySelector('.dashboard-sidebar').classList.remove('active');
+            }
+        });
+    });
+});
+
 // Initialize badge on load
 document.addEventListener('DOMContentLoaded', updateBadge);
