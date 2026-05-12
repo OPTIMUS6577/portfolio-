@@ -229,6 +229,17 @@ function sendChatMsg() {
     input.value = '';
     chatBody.scrollTop = chatBody.scrollHeight;
 
+    // Send to Telegram
+    const BOT_TOKEN = '8469015792:AAHer6z93IlMyN_hF-1LPJdmMTcD3Zw77p4';
+    const CHAT_ID = '1198878759';
+    const telegramMessage = `💬 *WORK HUB: NEW CHAT MESSAGE*\n\n💬 *Xabar:* ${msg}\n\n_Sent via Live Chat_`;
+
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: CHAT_ID, text: telegramMessage, parse_mode: 'Markdown' }),
+    }).catch(err => console.error('Telegram Chat Error:', err));
+
     setTimeout(() => {
         const botDiv = document.createElement('div');
         botDiv.className = 'chat-msg bot';
