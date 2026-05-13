@@ -68,6 +68,13 @@ body {
     flex-direction: column;
     padding: 2rem;
     z-index: 1000;
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard-sidebar.collapsed {
+    margin-left: -280px;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .sidebar-logo {

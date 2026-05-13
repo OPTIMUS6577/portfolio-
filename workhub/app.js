@@ -8,8 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const savedLang = localStorage.getItem('workhub_lang') || 'uz';
-    changeLanguage(savedLang);
+    // Force UZ if no lang saved, or just override for now to fix user issue
+    const savedLang = 'uz'; 
+    localStorage.setItem('workhub_lang', 'uz');
+    changeLanguage('uz');
     loadUserProfile();
     
     renderActivities();
@@ -97,9 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // AUTO-HIDE SIDEBAR FOR CLEAN VIEW
+        // UNIVERSAL SIDEBAR HIDE (Desktop & Mobile)
         const sidebar = document.querySelector('.dashboard-sidebar');
-        if (sidebar) sidebar.classList.remove('active');
+        if (sidebar) {
+            sidebar.classList.add('collapsed'); // Desktop & Mobile logic
+            sidebar.classList.remove('active'); // Old mobile logic
+        }
 
         // Scroll to top of content
         const mainContent = document.getElementById('main-content');

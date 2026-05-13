@@ -1,4 +1,4 @@
-const CACHE_NAME = 'workhub-v10.0';
+const CACHE_NAME = 'workhub-v11.0';
 const ASSETS = [
   './',
   './index.html',
