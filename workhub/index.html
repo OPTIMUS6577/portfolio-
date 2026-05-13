@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Work Hub | Enterprise Console</title>
-    <link rel="stylesheet" href="style.css?v=7.0">
+    <title>Work Hub v2 | Opshi Plan</title>
+    <link rel="stylesheet" href="style.css?v=8.0">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#bc13fe">
+    
+    <!-- Mobile App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Work Hub">
+    <link rel="apple-touch-icon" href="icon-512.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         .category-title {
@@ -47,6 +55,10 @@
     </style>
 </head>
 <body>
+    <!-- PAGE LOADER -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
 
     <!-- SIDEBAR -->
     <aside class="dashboard-sidebar">
@@ -56,7 +68,10 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a href="#" class="nav-link active" data-target="overview">
+            <a href="#" class="nav-link active" data-target="opshi-plan">
+                <span class="icon">🗺️</span> Opshi Plan
+            </a>
+            <a href="#" class="nav-link" data-target="overview">
                 <span class="icon">📊</span> Dashboard
             </a>
             <a href="#" class="nav-link" data-target="services">
@@ -99,17 +114,26 @@
                 <span class="icon">🔔</span> Bildirishnomalar
                 <span class="notif-badge" id="notif-badge">3</span>
             </a>
+            <a href="#" class="nav-link" data-target="files">
+                <span class="icon">📁</span> Fayllar
+            </a>
+            <a href="#" class="nav-link" data-target="settings">
+                <span class="icon">⚙️</span> Sozlamalar
+            </a>
             <a href="admin.html" class="nav-link-admin" style="text-decoration:none; color:var(--text-dim); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem;">
                 <span class="icon">🔒</span> Admin Panel
             </a>
         </nav>
 
         <div class="sidebar-footer">
-            <button class="new-action-btn" id="btn-new-project-sidebar">
-                <span>+</span> Yangi Loyiha
+            <a href="../index.html" class="nav-link portal-link" style="margin-bottom: 1rem; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 10px; font-size: 0.9rem;">
+                <span class="icon">🏠</span> Portalga qaytish
+            </a>
+            <button class="new-project-btn" onclick="openModal()" style="width: 100%; margin-bottom: 0.5rem;">
+                <span class="icon">+</span> <span id="txt-new-project">Yangi Loyiha</span>
             </button>
-            <button class="logout-btn" onclick="location.reload()">
-                <span>🚪</span> Chiqish
+            <button class="logout-btn" onclick="location.reload()" style="background: none; border: 1px solid var(--border); color: var(--muted); width: 100%; padding: 0.8rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s;">
+                <span class="icon">🚪</span> Chiqish
             </button>
         </div>
     </aside>
@@ -124,22 +148,72 @@
                 </div>
             </div>
             <div class="top-controls">
-                <div class="ctrl-icon" id="lang-toggle" title="Tilni o'zgartirish">🇺🇿</div>
+                <div class="lang-selector">
+                    <span onclick="changeLanguage('uz')" class="lang-item active" id="lang-uz">Uzbek</span>
+                    <span onclick="changeLanguage('ru')" class="lang-item" id="lang-ru">Rus</span>
+                    <span onclick="changeLanguage('en')" class="lang-item" id="lang-en">Ingliz</span>
+                </div>
                 <div class="ctrl-icon" id="theme-toggle" title="Mavzuni o'zgartirish">🌙</div>
                 <div class="ctrl-icon">🔔</div>
                 <div class="ctrl-icon">⚙️</div>
-                <div class="user-profile">
+                <div class="user-profile" onclick="openUserModal()">
                     <div class="user-info">
                         <span id="display-user-name">Suxrob</span>
-                        <small>Administrator</small>
+                        <small id="display-user-role">Administrator</small>
                     </div>
-                    <div class="user-avatar">👤</div>
+                    <div class="user-avatar" id="display-user-avatar">👤</div>
                 </div>
             </div>
         </header>
 
         <div class="content-wrapper" id="main-content">
             
+            <!-- OPSHI PLAN SECTION -->
+            <div id="view-opshi-plan" class="view-section" style="display: block;">
+                <div class="welcome-msg">
+                    <h1>Sizning <span>Opshi Plan</span>ingiz</h1>
+                    <p>Loyihaning umumiy strategiyasi va asosiy yo'nalishlari.</p>
+                </div>
+
+                <div class="opshi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; margin-top: 3rem;">
+                    <div class="opshi-card" style="background: var(--card-bg); border: 1px solid var(--border); padding: 3rem; border-radius: 32px; backdrop-filter: blur(20px); border-bottom: 4px solid var(--accent);">
+                        <div style="font-size: 3rem; margin-bottom: 2rem;">🚀</div>
+                        <h2 style="margin-bottom: 1.5rem; font-family: 'Outfit', sans-serif;">Strategik Maqsad</h2>
+                        <p style="color: var(--text-dim); line-height: 1.7; font-size: 1.05rem;">Biznesni to'liq raqamlashtirish va mijozlar uchun eng qulay ekotizimni yaratish. Har bir jarayonni avtomatlashtirish orqali vaqtni tejash.</p>
+                    </div>
+                    <div class="opshi-card" style="background: var(--card-bg); border: 1px solid var(--border); padding: 3rem; border-radius: 32px; backdrop-filter: blur(20px); border-bottom: 4px solid var(--success);">
+                        <div style="font-size: 3rem; margin-bottom: 2rem;">💎</div>
+                        <h2 style="margin-bottom: 1.5rem; font-family: 'Outfit', sans-serif;">Sifat va Ishonch</h2>
+                        <p style="color: var(--text-dim); line-height: 1.7; font-size: 1.05rem;">Xizmat ko'rsatish sifatini xalqaro standartlarga yetkazish va mijozlar ishonchini 100% ga oshirish. Xavfsiz va tezkor yechimlar.</p>
+                    </div>
+                    <div class="opshi-card" style="background: var(--card-bg); border: 1px solid var(--border); padding: 3rem; border-radius: 32px; backdrop-filter: blur(20px); border-bottom: 4px solid #4e9ddd;">
+                        <div style="font-size: 3rem; margin-bottom: 2rem;">📈</div>
+                        <h2 style="margin-bottom: 1.5rem; font-family: 'Outfit', sans-serif;">Kengayish Rejasi</h2>
+                        <p style="color: var(--text-dim); line-height: 1.7; font-size: 1.05rem;">Yil yakuniga qadar foydalanuvchilar sonini 10,000 taga yetkazish va yangi xalqaro bozorlarga chiqish strategiyasini ishlab chiqish.</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 4rem; background: rgba(255,255,255,0.02); padding: 3rem; border-radius: 32px; border: 1px solid var(--border);">
+                    <h3 style="margin-bottom: 2rem; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 15px;">
+                        <span style="color: var(--accent);">📅</span> Kelgusi 90 kunlik Roadmap
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                        <div style="padding: 1.5rem; background: rgba(0, 179, 110, 0.05); border-radius: 20px; border-left: 5px solid var(--success);">
+                            <h4 style="margin-bottom: 10px;">1-Bosqich</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-dim);">UI/UX dizaynini to'liq yangilash va mobil versiyani optimallashtirish.</p>
+                        </div>
+                        <div style="padding: 1.5rem; background: rgba(188, 19, 254, 0.05); border-radius: 20px; border-left: 5px solid var(--accent);">
+                            <h4 style="margin-bottom: 10px;">2-Bosqich</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-dim);">Telegram bot integratsiyasi va bildirishnomalar tizimini yo'lga qo'yish.</p>
+                        </div>
+                        <div style="padding: 1.5rem; background: rgba(78, 157, 221, 0.05); border-radius: 20px; border-left: 5px solid #4e9ddd;">
+                            <h4 style="margin-bottom: 10px;">3-Bosqich</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-dim);">Analitika va hisobotlar modulini kengaytirish, AI yordamchini qo'shish.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- OVERVIEW SECTION -->
             <div id="view-overview" class="view-section">
                 <div class="welcome-msg">
@@ -180,6 +254,16 @@
                         <div class="stat-body">
                             <small>DAROMAD</small>
                             <h3>8.2M UZS</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">🛰️</div>
+                            <span class="stat-trend trend-success">Stabil</span>
+                        </div>
+                        <div class="stat-body">
+                            <small>TIZIM HOLATI</small>
+                            <h3>99.9% Online</h3>
                         </div>
                     </div>
                 </div>
@@ -710,6 +794,90 @@
                 <div class="notif-list" id="notif-list"></div>
             </div>
 
+            <!-- FILES SECTION -->
+            <div id="view-files" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>Raqamli <span style="color: var(--accent);">Fayllar</span></h2>
+                    <p>Loyihalaringizga tegishli hujjatlar va media fayllar.</p>
+                </div>
+                <div class="file-manager-grid">
+                    <div class="file-card">
+                        <div class="file-icon">📄</div>
+                        <div class="file-info">
+                            <h4>Shartnoma_Edu.pdf</h4>
+                            <small>2.4 MB • 12 May 2026</small>
+                        </div>
+                        <button class="file-action">⋮</button>
+                    </div>
+                    <div class="file-card">
+                        <div class="file-icon">🖼️</div>
+                        <div class="file-info">
+                            <h4>Logo_Final.png</h4>
+                            <small>850 KB • 10 May 2026</small>
+                        </div>
+                        <button class="file-action">⋮</button>
+                    </div>
+                    <div class="file-card">
+                        <div class="file-icon">📊</div>
+                        <div class="file-info">
+                            <h4>Hisobot_Aprel.xlsx</h4>
+                            <small>1.1 MB • 1 May 2026</small>
+                        </div>
+                        <button class="file-action">⋮</button>
+                    </div>
+                    <div class="file-card upload-card" onclick="alert('Fayl yuklash...')">
+                        <div class="file-icon">+</div>
+                        <div class="file-info">
+                            <h4>Fayl yuklash</h4>
+                            <small>Max: 50MB</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS SECTION -->
+            <div id="view-settings" class="view-section" style="display: none;">
+                <button class="back-btn" onclick="switchView('overview')">⬅️ Dashboard'ga qaytish</button>
+                <div class="welcome-msg">
+                    <h2>Tizim <span style="color: var(--accent);">Sozlamalari</span></h2>
+                    <p>Profil, xavfsizlik va bildirishnomalarni boshqarish.</p>
+                </div>
+                <div class="panel" style="max-width: 800px;">
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Bildirishnomalar</h4>
+                            <p>Telegram orqali bildirishnomalarni qabul qilish</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Xavfsiz Kirish</h4>
+                            <p>Har gal kirishda parolni so'rash</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Avtomatik Saqlash</h4>
+                            <p>Vazifalarni har 5 daqiqada saqlash</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <button class="new-action-btn" style="margin-top: 2rem; width: 200px;">Saqlash</button>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -743,6 +911,48 @@
         </div>
     </div>
 
-    <script src="app.js?v=7.0"></script>
+    <!-- USER MODAL -->
+    <div class="task-modal-overlay" id="user-modal-overlay">
+        <div class="task-modal">
+            <h3>👤 Profilni Tahrirlash</h3>
+            <div style="margin-bottom:1.5rem; text-align:center;">
+                <div class="user-avatar" style="width:80px; height:80px; margin:0 auto 10px; font-size:2rem; cursor:pointer;" id="user-modal-avatar">👤</div>
+                <small style="color:var(--text-dim);">Avatar tanlash uchun bosing</small>
+            </div>
+            <div style="margin-bottom:1.2rem;">
+                <label style="font-size:0.75rem;font-weight:800;color:var(--text-dim);display:block;margin-bottom:0.5rem;">ISM</label>
+                <input type="text" id="user-name-input" class="form-input" value="Suxrob">
+            </div>
+            <div style="margin-bottom:1.2rem;">
+                <label style="font-size:0.75rem;font-weight:800;color:var(--text-dim);display:block;margin-bottom:0.5rem;">ROL</label>
+                <input type="text" id="user-role-input" class="form-input" value="Administrator">
+            </div>
+            <div class="task-modal-btns">
+                <button class="modal-cancel-btn" onclick="closeUserModal()">Bekor qilish</button>
+                <button class="new-action-btn" style="flex:1" onclick="saveUserProfile()">Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="quick-actions-container" id="quick-actions">
+        <button class="qa-main-btn" onclick="toggleQuickActions()">⚡</button>
+        <div class="qa-menu">
+            <button onclick="openTaskModal()">📝 Yangi Vazifa</button>
+            <button onclick="switchView('contact')">💬 Bog'lanish</button>
+            <button onclick="location.reload()">🔄 Yangilash</button>
+        </div>
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+    <script src="app.js?v=8.0"></script>
 </body>
 </html>

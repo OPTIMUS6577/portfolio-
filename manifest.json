@@ -1,10 +1,10 @@
 {
-  "name": "Work Hub",
-  "short_name": "WorkHub",
+  "name": "Antigravity Ecosystem",
+  "short_name": "Antigravity",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#f8f9fc",
-  "theme_color": "#2b59ff",
+  "background_color": "#03030b",
+  "theme_color": "#bc13fe",
   "icons": [
     {
       "src": "icon-512.png",

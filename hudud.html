@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HududMonitor - Qashqadaryo viloyati</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <i class="fas fa-chart-line"></i>
+            <h1>HududMonitor</h1>
+        </div>
+        <div class="header-info" style="display: flex; align-items: center; gap: 20px;">
+            <span>Qashqadaryo viloyati monitoring platformasi</span>
+            <a href="index.html" style="background: rgba(255,255,255,0.1); color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.8rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;">
+                <i class="fas fa-home"></i> Portal
+            </a>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Left Panel: Regions List -->
+        <aside class="left-panel">
+            <div class="panel-header">
+                <h3>Hududlar ro'yxati</h3>
+            </div>
+            <div class="list-container">
+                <div class="section-title">O'g'ir tumanlar</div>
+                <ul id="severe-districts" class="region-list"></ul>
+
+                <div class="section-title">Yangi O'zbekiston qiyofasidagi tumanlar</div>
+                <ul id="new-districts" class="region-list"></ul>
+            </div>
+        </aside>
+
+        <!-- Center Panel: Charts and KPIs -->
+        <section class="center-panel">
+            <div class="kpi-grid">
+                <div class="kpi-card" id="kpi-funds">
+                    <div class="kpi-icon"><i class="fas fa-money-bill-wave"></i></div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Jami mablag'</span>
+                        <h2 class="kpi-value">0</h2>
+                        <span class="kpi-unit">mlrd so'm</span>
+                    </div>
+                </div>
+                <div class="kpi-card" id="kpi-projects">
+                    <div class="kpi-icon"><i class="fas fa-list-check"></i></div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Loyihalar soni</span>
+                        <h2 class="kpi-value">0</h2>
+                        <span class="kpi-unit">ta</span>
+                    </div>
+                </div>
+                <div class="kpi-card" id="kpi-neighborhoods">
+                    <div class="kpi-icon"><i class="fas fa-house-chimney"></i></div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Mahallalar soni</span>
+                        <h2 class="kpi-value">0</h2>
+                        <span class="kpi-unit">ta</span>
+                    </div>
+                </div>
+                <div class="kpi-card" id="kpi-jobs">
+                    <div class="kpi-icon"><i class="fas fa-user-plus"></i></div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Yangi ish o'rinlari</span>
+                        <h2 class="kpi-value">0</h2>
+                        <span class="kpi-unit">ta</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>Mablag'lar ulushi</h3>
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Sektorlar bo'yicha miqdor</h3>
+                    <canvas id="barChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Infratuzilma va Ijtimoiy soha</h3>
+                    <canvas id="donutChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Rivojlanish darajasi</h3>
+                    <canvas id="polarChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel: Passport and Program -->
+        <aside class="right-panel">
+            <div class="panel-section" id="region-passport">
+                <h3>Hudud pasporti</h3>
+                <div class="passport-info">
+                    <div class="info-row"><span>Tashkil topgan:</span> <strong id="pass-established">-</strong></div>
+                    <div class="info-row"><span>Maydoni (km²):</span> <strong id="pass-area">-</strong></div>
+                    <div class="info-row"><span>Aholi soni:</span> <strong id="pass-population">-</strong></div>
+                    <div class="info-row"><span>Ishsizlik (%):</span> <strong id="pass-unemployment">-</strong></div>
+                    <div class="info-row"><span>Kambag'allik (%):</span> <strong id="pass-poverty">-</strong></div>
+                    <div class="info-row"><span>Sanoat hajmi:</span> <strong id="pass-industrial">-</strong></div>
+                </div>
+            </div>
+
+            <div class="panel-section" id="address-program">
+                <h3>Manzilli dastur</h3>
+                <div class="projects-list" id="projects-list">
+                    <!-- Projects will be injected here -->
+                </div>
+                <div class="total-funds-summary">
+                    <span>Jami:</span>
+                    <strong id="total-summary-value">0 mlrd so'm</strong>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

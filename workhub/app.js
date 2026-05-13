@@ -1,9 +1,88 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Navigation Logic
+    // --- INITIALIZATION ---
+    window.addEventListener('load', () => {
+        const loader = document.getElementById('page-loader');
+        if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        }
+    });
+
+    const savedLang = localStorage.getItem('workhub_lang') || 'uz';
+    changeLanguage(savedLang);
+    loadUserProfile();
+    
+    // Ensure switchView is available before calling
+    setTimeout(() => {
+        if (window.switchView) window.switchView('opshi-plan');
+    }, 500);
+    renderActivities();
+    renderKanban();
+    renderCalendar();
+    renderNotifications();
+    updateBadge();
+
+    // --- SEARCH LOGIC ---
+    const searchInput = document.querySelector('.search-bar input');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            
+            // Filter Service Cards
+            document.querySelectorAll('.stat-card.s-item').forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const desc = card.querySelector('p').textContent.toLowerCase();
+                card.style.display = (title.includes(term) || desc.includes(term)) ? 'flex' : 'none';
+            });
+
+            // Filter Activities
+            document.querySelectorAll('.item-row').forEach(row => {
+                const title = row.querySelector('h4').textContent.toLowerCase();
+                const sub = row.querySelector('p').textContent.toLowerCase();
+                row.style.display = (title.includes(term) || sub.includes(term)) ? 'flex' : 'none';
+            });
+        });
+    }
+
+    // --- PWA INSTALL LOGIC ---
+    let deferredPrompt;
+    const installBtn = document.getElementById('btn-install-pwa');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault();
+        // Stash the event so it can be triggered later.
+        deferredPrompt = e;
+        // Update UI notify the user they can add to home screen
+        if (installBtn) installBtn.style.display = 'flex';
+    });
+
+    if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            // Show the prompt
+            deferredPrompt.prompt();
+            // Wait for the user to respond to the prompt
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to the install prompt: ${outcome}`);
+            // We've used the prompt, and can't use it again, throw it away
+            deferredPrompt = null;
+            // Hide the button
+            installBtn.style.display = 'none';
+        });
+    }
+
+    window.addEventListener('appinstalled', (evt) => {
+        console.log('WorkHub was installed.');
+        if (installBtn) installBtn.style.display = 'none';
+        addNotification({ type: 'system', icon: '📱', title: 'Ilova o\'rnatildi!', text: 'Work Hub endi asosiy ekraningizda.' });
+    });
+
+    // --- NAVIGATION LOGIC ---
     const navLinks = document.querySelectorAll('.nav-link');
     const sections = document.querySelectorAll('.view-section');
 
-    function switchView(target) {
+    window.switchView = function(target) {
         // Update active link
         navLinks.forEach(link => {
             if (link.getAttribute('data-target') === target) {
@@ -23,7 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Scroll to top of content
-        document.getElementById('main-content').scrollTop = 0;
+        const mainContent = document.getElementById('main-content');
+        if (mainContent) mainContent.scrollTop = 0;
+        window.scrollTo(0, 0);
+
+        // Close sidebar on mobile
+        if (window.innerWidth <= 850) {
+            const sidebar = document.querySelector('.dashboard-sidebar');
+            if (sidebar) sidebar.classList.remove('active');
+        }
     }
 
     navLinks.forEach(link => {
@@ -33,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Handle "New Project" buttons
+    // --- BUTTON HANDLERS ---
     const newProjectBtns = document.querySelectorAll('#btn-new-project-sidebar, #btn-new-project-main');
     newProjectBtns.forEach(btn => {
         btn.onclick = () => switchView('contact');
@@ -49,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     });
 
-    // Form Handling
+    // --- FORM HANDLING ---
     const contactForm = document.getElementById('lab-contact-form');
     const BOT_TOKEN = '8469015792:AAHer6z93IlMyN_hF-1LPJdmMTcD3Zw77p4';
     const CHAT_ID = '1198878759';
@@ -87,6 +174,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 contactForm.reset();
                 renderActivities();
                 switchView('overview');
+                
+                addNotification({ 
+                    type: 'order', 
+                    icon: '📦', 
+                    title: 'Yangi so\'rov yuborildi', 
+                    text: `Sizning "${service}" bo'yicha so'rovingiz qabul qilindi.` 
+                });
             } catch (err) {
                 console.error(err);
                 alert('Xatolik yuz berdi.');
@@ -97,87 +191,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Render Activities in Dashboard
-    function renderActivities() {
-        const list = document.getElementById('recent-activities');
-        if (!list) return;
-
-        let orders = [];
-        try {
-            orders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
-            if (!Array.isArray(orders)) orders = [];
-        } catch(e) {
-            orders = [];
-        }
-
-        if (orders.length === 0) {
-            list.innerHTML = `
-                <div class="item-row">
-                    <div class="item-icon">📦</div>
-                    <div class="item-details">
-                        <h4>Apple Store Online</h4>
-                        <p>Hozircha amallar yo'q. Bu namuna.</p>
-                    </div>
-                    <div class="item-meta">
-                        <span class="item-val">-24.5M</span>
-                        <span class="item-status st-success">NAMUNA</span>
-                    </div>
-                </div>
-            `;
-            return;
-        }
-
-        const icons = { 
-            'Veb-sayt': '🌐', 
-            'Telegram Bot': '🤖', 
-            'Dizayn': '🎨', 
-            'Video Montaj': '🎬',
-            'Logotip dizayn': '✒️',
-            'Banner xizmati': '🖼️',
-            'Prezentatsiya': '📊',
-            'Sun\'iy Intelekt': '🧠',
-            'Boshqa': '📝' 
-        };
-
-        list.innerHTML = [...orders].reverse().slice(0, 5).map(o => `
-            <div class="item-row">
-                <div class="item-icon">${icons[o.service] || '📂'}</div>
-                <div class="item-details">
-                    <h4>${o.name || 'Noma\'lum'}</h4>
-                    <p>${(o.service || 'BOSHQA').toUpperCase()} - ${new Date(o.date).toLocaleDateString()}</p>
-                </div>
-                <div class="item-meta">
-                    <span class="item-val plus">+BUYURTMA</span>
-                    <span class="item-status st-pending">JARAYONDA</span>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    renderActivities();
-
-    // Stats Animation (Mock)
-    const bars = document.querySelectorAll('.bar-box');
-    setTimeout(() => {
-        bars.forEach(bar => {
-            const h = bar.getAttribute('style').match(/height:\s*([\d%]+)/)?.[1] || '50%';
-            bar.style.height = '0';
-            setTimeout(() => bar.style.height = h, 100);
-        });
-    }, 500);
-    // Theme Toggle
+    // --- THEME TOGGLE ---
     const themeToggle = document.getElementById('theme-toggle');
-    const body = document.body;
-    
     if (localStorage.getItem('theme') === 'light') {
-        body.classList.add('light-mode');
-        if(themeToggle) themeToggle.innerText = '☀️';
+        document.body.classList.add('light-mode');
+        if (themeToggle) themeToggle.innerText = '☀️';
     }
 
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
-            body.classList.toggle('light-mode');
-            if (body.classList.contains('light-mode')) {
+            document.body.classList.toggle('light-mode');
+            if (document.body.classList.contains('light-mode')) {
                 localStorage.setItem('theme', 'light');
                 themeToggle.innerText = '☀️';
             } else {
@@ -187,39 +211,325 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Language Toggle
-    const langToggle = document.getElementById('lang-toggle');
-    if (langToggle) {
-        let isUz = true;
-        langToggle.addEventListener('click', () => {
-            isUz = !isUz;
-            if (isUz) {
-                langToggle.innerText = '🇺🇿';
-                alert("Til O'zbek tiliga o'zgardi");
-            } else {
-                langToggle.innerText = '🇬🇧';
-                alert("Language switched to English");
-            }
+    // --- STATS ANIMATION ---
+    const bars = document.querySelectorAll('.bar-box');
+    setTimeout(() => {
+        bars.forEach(bar => {
+            const h = bar.getAttribute('style').match(/height:\s*([\d%]+)/)?.[1] || '50%';
+            bar.style.height = '0';
+            setTimeout(() => bar.style.height = h, 100);
         });
-    }
+    }, 500);
 });
 
-// Chat Widget Logic
-function toggleChat() {
-    const chatWidget = document.getElementById('chat-widget');
-    if (chatWidget.style.display === 'flex') {
-        chatWidget.style.display = 'none';
-    } else {
-        chatWidget.style.display = 'flex';
+// --- GLOBAL FUNCTIONS ---
+
+// Render Activities in Dashboard
+function renderActivities() {
+    const list = document.getElementById('recent-activities');
+    if (!list) return;
+
+    let orders = [];
+    try {
+        orders = JSON.parse(localStorage.getItem('workhub_orders') || '[]');
+        if (!Array.isArray(orders)) orders = [];
+    } catch(e) {
+        orders = [];
     }
+
+    if (orders.length === 0) {
+        list.innerHTML = `
+            <div class="item-row">
+                <div class="item-icon">📦</div>
+                <div class="item-details">
+                    <h4>Apple Store Online</h4>
+                    <p>Hozircha amallar yo'q. Bu namuna.</p>
+                </div>
+                <div class="item-meta">
+                    <span class="item-val">-24.5M</span>
+                    <span class="item-status st-success">NAMUNA</span>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    const icons = { 
+        'Veb-sayt': '🌐', 
+        'Telegram Bot': '🤖', 
+        'Dizayn': '🎨', 
+        'Video Montaj': '🎬',
+        'Logotip dizayn': '✒️',
+        'Banner xizmati': '🖼️',
+        'Prezentatsiya': '📊',
+        'Sun\'iy Intelekt': '🧠',
+        'Boshqa': '📝' 
+    };
+
+    list.innerHTML = [...orders].reverse().slice(0, 5).map(o => `
+        <div class="item-row">
+            <div class="item-icon">${icons[o.service] || '📂'}</div>
+            <div class="item-details">
+                <h4>${o.name || 'Noma\'lum'}</h4>
+                <p>${(o.service || 'BOSHQA').toUpperCase()} - ${new Date(o.date).toLocaleDateString()}</p>
+            </div>
+            <div class="item-meta">
+                <span class="item-val plus">+BUYURTMA</span>
+                <span class="item-status st-pending">JARAYONDA</span>
+            </div>
+        </div>
+    `).join('');
 }
 
-function sendChatMsg() {
+const TRANSLATIONS = {
+    uz: {
+        dashboard: "📊 Dashboard",
+        services: "📈 Xizmatlar",
+        portfolio: "💼 Portfolio",
+        contact: "💬 Aloqa",
+        faq: "❓ Savollar",
+        client_portal: "👤 Mijoz Kabineti",
+        pricing: "💳 Tariflar",
+        team: "👥 Jamoa",
+        reviews: "⭐ Fikrlar",
+        blog: "📰 Blog",
+        kanban: "📋 Vazifalar",
+        analytics: "📊 Hisobotlar",
+        calendar: "📅 Kalendar",
+        notifications: "🔔 Bildirishnomalar",
+        admin: "🔒 Admin Panel",
+        new_project: "+ Yangi Loyiha",
+        logout: "🚪 Chiqish",
+        welcome: "Xush kelibsiz,",
+        overview_sub: "Mana sizning bugungi boshqaruv paneli ko'rinishi.",
+        total_balance: "UMUMIY BALANS",
+        tasks_stat: "VAZIFALAR",
+        income_stat: "DAROMAD",
+        weekly_progress: "Haftalik progress",
+        recent_activity: "Oxirgi amallar",
+        view_all: "Hammasini ko'rish",
+        back_btn: "⬅️ Dashboard'ga qaytish",
+        service_title: "Bizning <span>Xizmatlar</span>",
+        service_sub: "Professional raqamli yechimlar va kreativ yondashuv.",
+        portfolio_title: "Bizning <span>Portfolio</span>",
+        portfolio_sub: "Muvaffaqiyatli yakunlangan loyihalarimiz tahlili.",
+        contact_title: "Loyihani <span>Boshlash</span>",
+        contact_sub: "Ma'lumotlaringizni qoldiring, biz siz bilan bog'lanamiz.",
+        form_name: "ISM",
+        form_phone: "TELEFON",
+        form_service: "XIZMAT",
+        form_message: "XABAR",
+        form_submit: "YUBORISH",
+        form_sending: "YUBORILMOQDA...",
+        faq_title: "Ko'p beriladigan <span>Savollar</span>",
+        faq_sub: "Sizni qiziqtirgan asosiy ma'lumotlar.",
+        team_title: "Bizning <span>Jamoa</span>",
+        team_sub: "Loyihangiz ustida ishlovchi tajribali mutaxassislar.",
+        reviews_title: "Mijozlar <span>Fikri</span>",
+        reviews_sub: "Biz bilan ishlagan mijozlarning taassurotlari.",
+        files: "📁 Fayllar",
+        settings: "⚙️ Sozlamalar",
+        files_title: "Raqamli <span>Fayllar</span>",
+        files_sub: "Loyihalaringizga tegishli hujjatlar va media fayllar.",
+        settings_title: "Tizim <span>Sozlamalari</span>",
+        settings_sub: "Profil, xavfsizlik va bildirishnomalarni boshqarish."
+    },
+    ru: {
+        dashboard: "📊 Панель",
+        services: "📈 Услуги",
+        portfolio: "💼 Портфолио",
+        contact: "💬 Контакты",
+        faq: "❓ Вопросы",
+        client_portal: "👤 Кабинет",
+        pricing: "💳 Тарифы",
+        team: "👥 Команда",
+        reviews: "⭐ Отзывы",
+        blog: "📰 Блог",
+        kanban: "📋 Задачи",
+        analytics: "📊 Отчеты",
+        calendar: "📅 Календарь",
+        notifications: "🔔 Уведомления",
+        admin: "🔒 Админ Панель",
+        new_project: "+ Новый Проект",
+        logout: "🚪 Выход",
+        welcome: "Добро пожаловать,",
+        overview_sub: "Вот ваш обзор панели управления на сегодня.",
+        total_balance: "ОБЩИЙ БАЛАНС",
+        tasks_stat: "ЗАДАЧИ",
+        income_stat: "ДОХОД",
+        weekly_progress: "Недельный прогресс",
+        recent_activity: "Последние действия",
+        view_all: "Посмотреть все",
+        back_btn: "⬅️ Вернуться на главную",
+        service_title: "Наши <span>Услуги</span>",
+        service_sub: "Профессиональные цифровые решения и креативный подход.",
+        portfolio_title: "Наше <span>Портфолио</span>",
+        portfolio_sub: "Анализ наших успешно завершенных проектов.",
+        contact_title: "Начать <span>Проект</span>",
+        contact_sub: "Оставьте свои данные, и мы свяжемся с вами.",
+        form_name: "ИМЯ",
+        form_phone: "ТЕЛЕФОН",
+        form_service: "УСЛУГА",
+        form_message: "СООБЩЕНИЕ",
+        form_submit: "ОТПРАВИТЬ",
+        form_sending: "ОТПРАВКА...",
+        faq_title: "Частые <span>Вопросы</span>",
+        faq_sub: "Основная информация, которая может вас заинтересовать.",
+        team_title: "Наша <span>Команда</span>",
+        team_sub: "Опытные специалисты, работающие над вашим проектом.",
+        reviews_title: "Отзывы <span>Клиентов</span>",
+        reviews_sub: "Впечатления клиентов, которые работали с нами.",
+        files: "📁 Файлы",
+        settings: "⚙️ Настройки",
+        files_title: "Цифровые <span>Файлы</span>",
+        files_sub: "Документы и медиафайлы, относящиеся к вашим проектам.",
+        settings_title: "Системные <span>Настройки</span>",
+        settings_sub: "Управление профилем, безопасностью и уведомлениями."
+    },
+    en: {
+        dashboard: "📊 Dashboard",
+        services: "📈 Services",
+        portfolio: "💼 Portfolio",
+        contact: "💬 Contact",
+        faq: "❓ FAQ",
+        client_portal: "👤 Client Portal",
+        pricing: "💳 Pricing",
+        team: "👥 Team",
+        reviews: "⭐ Reviews",
+        blog: "📰 Blog",
+        kanban: "📋 Tasks",
+        analytics: "📊 Analytics",
+        calendar: "📅 Calendar",
+        notifications: "🔔 Notifications",
+        admin: "🔒 Admin Panel",
+        new_project: "+ New Project",
+        logout: "🚪 Logout",
+        welcome: "Welcome back,",
+        overview_sub: "Here is your dashboard overview for today.",
+        total_balance: "TOTAL BALANCE",
+        tasks_stat: "TASKS",
+        income_stat: "INCOME",
+        weekly_progress: "Weekly Progress",
+        recent_activity: "Recent Activity",
+        view_all: "View All",
+        back_btn: "⬅️ Back to Dashboard",
+        service_title: "Our <span>Services</span>",
+        service_sub: "Professional digital solutions and creative approach.",
+        portfolio_title: "Our <span>Portfolio</span>",
+        portfolio_sub: "Analysis of our successfully completed projects.",
+        contact_title: "Start <span>Project</span>",
+        contact_sub: "Leave your details, and we will get in touch.",
+        form_name: "NAME",
+        form_phone: "PHONE",
+        form_service: "SERVICE",
+        form_message: "MESSAGE",
+        form_submit: "SUBMIT",
+        form_sending: "SENDING...",
+        faq_title: "Frequently Asked <span>Questions</span>",
+        faq_sub: "Key information you might be interested in.",
+        team_title: "Our <span>Team</span>",
+        team_sub: "Experienced specialists working on your project.",
+        reviews_title: "Client <span>Reviews</span>",
+        reviews_sub: "Impressions of clients who worked with us.",
+        files: "📁 Files",
+        settings: "⚙️ Settings",
+        files_title: "Digital <span>Files</span>",
+        files_sub: "Documents and media files related to your projects.",
+        settings_title: "System <span>Settings</span>",
+        settings_sub: "Manage profile, security and notifications."
+    }
+};
+
+// Language Toggle
+window.changeLanguage = function(lang) {
+    document.querySelectorAll('.lang-item').forEach(el => el.classList.remove('active'));
+    const activeLang = document.getElementById(`lang-${lang}`);
+    if (activeLang) activeLang.classList.add('active');
+    
+    // Save preference
+    localStorage.setItem('workhub_lang', lang);
+    
+    const t = TRANSLATIONS[lang];
+    if (!t) return;
+
+    // Update Sidebar
+    const navs = document.querySelectorAll('.nav-link');
+    const navKeys = ['overview', 'services', 'portfolio', 'contact', 'faq', 'client-portal', 'pricing', 'team', 'reviews', 'blog', 'kanban', 'analytics', 'calendar', 'notifications', 'files', 'settings'];
+    navs.forEach(link => {
+        const target = link.getAttribute('data-target');
+        const key = target.replace('-', '_');
+        if (t[key]) {
+            const icon = link.querySelector('.icon').innerText;
+            link.innerHTML = `<span class="icon">${icon}</span> ${t[key].split(' ').slice(1).join(' ')}`;
+        }
+    });
+
+    // Update Headings & Texts
+    const welcomeH2 = document.querySelector('.welcome-msg h2');
+    if (welcomeH2) welcomeH2.innerHTML = `${t.welcome} <span style="color: var(--accent);">Suxrob!</span>`;
+    
+    const welcomeP = document.querySelector('.welcome-msg p');
+    if (welcomeP) welcomeP.textContent = t.overview_sub;
+
+    const sidebarNewBtn = document.getElementById('btn-new-project-sidebar');
+    if (sidebarNewBtn) sidebarNewBtn.innerHTML = `<span>+</span> ${t.new_project.split(' ').slice(1).join(' ')}`;
+
+    const logoutBtn = document.querySelector('.logout-btn');
+    if (logoutBtn) logoutBtn.innerHTML = `<span>🚪</span> ${t.logout.split(' ').slice(1).join(' ')}`;
+
+    // Update Stats
+    const stats = document.querySelectorAll('.stat-body small');
+    if (stats[0]) stats[0].textContent = t.total_balance;
+    if (stats[1]) stats[1].textContent = t.tasks_stat;
+    if (stats[2]) stats[2].textContent = t.income_stat;
+
+    // Update View Titles
+    document.querySelectorAll('.view-section').forEach(view => {
+        const title = view.querySelector('.welcome-msg h2');
+        const sub = view.querySelector('.welcome-msg p');
+        const back = view.querySelector('.back-btn');
+        const id = view.id.replace('view-', '');
+        
+        if (title && t[`${id.replace('-', '_')}_title` || id]) {
+            title.innerHTML = t[`${id.replace('-', '_')}_title` || id];
+        }
+        if (sub && t[`${id.replace('-', '_')}_sub` || id]) {
+            sub.textContent = t[`${id.replace('-', '_')}_sub` || id];
+        }
+        if (back) back.textContent = t.back_btn;
+    });
+
+    // Update Form
+    const labels = document.querySelectorAll('#lab-contact-form label');
+    if (labels[0]) labels[0].textContent = t.form_name;
+    if (labels[1]) labels[1].textContent = t.form_phone;
+    if (labels[2]) labels[2].textContent = t.form_service;
+    if (labels[3]) labels[3].textContent = t.form_message;
+    
+    const submitBtn = document.querySelector('#lab-contact-form button');
+    if (submitBtn) submitBtn.textContent = t.form_submit;
+
+    console.log("Language switched to: " + lang);
+}
+
+window.toggleSidebar = function() {
+    const sidebar = document.querySelector('.dashboard-sidebar');
+    if (sidebar) sidebar.classList.toggle('active');
+}
+
+window.toggleChat = function() {
+    const chatWidget = document.getElementById('chat-widget');
+    if (!chatWidget) return;
+    chatWidget.style.display = chatWidget.style.display === 'flex' ? 'none' : 'flex';
+}
+
+window.sendChatMsg = function() {
     const input = document.getElementById('chat-input');
-    const msg = input.value.trim();
+    const msg = input ? input.value.trim() : '';
     if (!msg) return;
 
     const chatBody = document.getElementById('chat-body');
+    if (!chatBody) return;
     
     const userDiv = document.createElement('div');
     userDiv.className = 'chat-msg user';
@@ -249,9 +559,7 @@ function sendChatMsg() {
     }, 1000);
 }
 
-// ============================================================
-// ===== KANBAN BOARD =====
-// ============================================================
+// Kanban Logic
 let kanbanTasks = JSON.parse(localStorage.getItem('kanban_tasks') || 'null') || [
     { id: 1, title: 'TechBaza landing page', desc: 'Dizayn va dasturlash', status: 'inprogress', tags: ['web'] },
     { id: 2, title: 'Logo dizayn - GullarOlami', desc: 'Logotip va brandbook', status: 'todo', tags: ['design'] },
@@ -289,54 +597,7 @@ function renderKanban() {
     });
 }
 
-function dragStart(id) {
-    draggedTaskId = id;
-    document.getElementById(`task-${id}`).style.opacity = '0.5';
-}
-
-function dragEnd() {
-    if (draggedTaskId) {
-        const el = document.getElementById(`task-${draggedTaskId}`);
-        if (el) el.style.opacity = '1';
-    }
-}
-
-function dropTask(event, newStatus) {
-    event.preventDefault();
-    if (!draggedTaskId) return;
-    const task = kanbanTasks.find(t => t.id === draggedTaskId);
-    if (task) {
-        task.status = newStatus;
-        saveKanban();
-        renderKanban();
-        // Add notification for done tasks
-        if (newStatus === 'done') {
-            addNotification({ type: 'system', icon: '✅', title: 'Vazifa yakunlandi!', text: `"${task.title}" muvaffaqiyatli yakunlandi.` });
-        }
-    }
-    draggedTaskId = null;
-}
-
-function deleteTask(id) {
-    kanbanTasks = kanbanTasks.filter(t => t.id !== id);
-    saveKanban();
-    renderKanban();
-}
-
-// Drag-over highlight
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.kanban-col').forEach(col => {
-        col.addEventListener('dragover', () => col.classList.add('drag-over'));
-        col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
-        col.addEventListener('drop', () => col.classList.remove('drag-over'));
-    });
-    renderKanban();
-    renderCalendar();
-    renderNotifications();
-});
-
-// Task Modal
-function openTaskModal() {
+window.openTaskModal = function() {
     let overlay = document.getElementById('task-modal-overlay');
     if (!overlay) {
         overlay = document.createElement('div');
@@ -381,14 +642,12 @@ function openTaskModal() {
     requestAnimationFrame(() => overlay.classList.add('open'));
 }
 
-function closeTaskModal() {
+window.closeTaskModal = function() {
     const overlay = document.getElementById('task-modal-overlay');
-    if (overlay) {
-        overlay.classList.remove('open');
-    }
+    if (overlay) overlay.classList.remove('open');
 }
 
-function addTask() {
+window.addTask = function() {
     const title = document.getElementById('task-title-input').value.trim();
     const desc = document.getElementById('task-desc-input').value.trim();
     const status = document.getElementById('task-status-input').value;
@@ -407,11 +666,43 @@ function addTask() {
     addNotification({ type: 'system', icon: '📋', title: 'Yangi vazifa qo\'shildi!', text: `"${title}" vazifasi yaratildi.` });
 }
 
-// ============================================================
-// ===== CALENDAR =====
-// ============================================================
+window.deleteTask = function(id) {
+    kanbanTasks = kanbanTasks.filter(t => t.id !== id);
+    saveKanban();
+    renderKanban();
+}
+
+window.dragStart = function(id) {
+    draggedTaskId = id;
+    const el = document.getElementById(`task-${id}`);
+    if (el) el.style.opacity = '0.5';
+}
+
+window.dragEnd = function() {
+    if (draggedTaskId) {
+        const el = document.getElementById(`task-${draggedTaskId}`);
+        if (el) el.style.opacity = '1';
+    }
+}
+
+window.dropTask = function(event, newStatus) {
+    event.preventDefault();
+    if (!draggedTaskId) return;
+    const task = kanbanTasks.find(t => t.id === draggedTaskId);
+    if (task) {
+        task.status = newStatus;
+        saveKanban();
+        renderKanban();
+        if (newStatus === 'done') {
+            addNotification({ type: 'system', icon: '✅', title: 'Vazifa yakunlandi!', text: `"${task.title}" muvaffaqiyatli yakunlandi.` });
+        }
+    }
+    draggedTaskId = null;
+}
+
+// Calendar Logic
 let currentCalDate = new Date();
-const eventDays = [8, 10, 12, 15, 20]; // days with events in current month
+const eventDays = [8, 10, 12, 15, 20];
 
 function renderCalendar() {
     const grid = document.getElementById('cal-grid');
@@ -421,17 +712,15 @@ function renderCalendar() {
     const months = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'];
     titleEl.textContent = `${months[currentCalDate.getMonth()]} ${currentCalDate.getFullYear()}`;
 
-    // Remove old day cells (keep 7 header cells)
     const allChildren = Array.from(grid.children);
     allChildren.slice(7).forEach(c => c.remove());
 
     const year = currentCalDate.getFullYear();
     const month = currentCalDate.getMonth();
-    const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+    const firstDay = new Date(year, month, 1).getDay();
     const totalDays = new Date(year, month + 1, 0).getDate();
     const today = new Date();
 
-    // Convert Sunday-first to Monday-first
     const startOffset = (firstDay === 0) ? 6 : firstDay - 1;
 
     for (let i = 0; i < startOffset; i++) {
@@ -457,21 +746,16 @@ function renderCalendar() {
     }
 }
 
-function changeMonth(dir) {
+window.changeMonth = function(dir) {
     currentCalDate.setMonth(currentCalDate.getMonth() + dir);
     renderCalendar();
 }
 
-// ============================================================
-// ===== NOTIFICATIONS =====
-// ============================================================
+// Notifications Logic
 let notifications = JSON.parse(localStorage.getItem('workhub_notifs') || 'null') || [
     { id: 1, type: 'order', icon: '📦', title: 'Yangi buyurtma keldi!', text: 'Alisher "Veb-sayt" xizmati uchun so\'rov yubordi.', time: '5 daqiqa oldin', unread: true },
     { id: 2, type: 'payment', icon: '💰', title: 'To\'lov amalga oshirildi', text: 'Malika 2,500,000 UZS to\'lov qildi. Hisobingiz yangilandi.', time: '1 soat oldin', unread: true },
     { id: 3, type: 'system', icon: '🔔', title: 'Loyiha muddati yaqinlashmoqda', text: 'Edu-Platforma loyihasi 3 kundan keyin topshirilishi kerak.', time: '2 soat oldin', unread: true },
-    { id: 4, type: 'order', icon: '📋', title: 'Yangi xizmat so\'rovi', text: 'Jasur Telegram Bot yaratish bo\'yicha ariza yubordi.', time: 'Kecha', unread: false },
-    { id: 5, type: 'system', icon: '✅', title: 'TechBaza loyihasi yakunlandi', text: 'Muvaffaqiyatli topshirildi va mijoz tasdiqladi.', time: '2 kun oldin', unread: false },
-    { id: 6, type: 'payment', icon: '⚠️', title: 'To\'lov eslatmasi', text: 'Nexus Bot loyihasi uchun 2-qism to\'lov kutilmoqda.', time: '3 kun oldin', unread: false },
 ];
 
 let currentFilter = 'all';
@@ -513,29 +797,9 @@ function renderNotifications(filter = currentFilter) {
         </div>
     `).join('');
 
-    // Mark all visible as read
+    // Mark as read after viewing
     notifications.forEach(n => { if (filter === 'all' || n.type === filter) n.unread = false; });
     saveNotifications();
-}
-
-function dismissNotif(id) {
-    notifications = notifications.filter(n => n.id !== id);
-    saveNotifications();
-    renderNotifications(currentFilter);
-}
-
-function clearAllNotifs() {
-    if (!confirm('Barcha bildirishnomalarni o\'chirmoqchimisiz?')) return;
-    notifications = [];
-    saveNotifications();
-    renderNotifications(currentFilter);
-}
-
-function filterNotifs(btn, filter) {
-    currentFilter = filter;
-    document.querySelectorAll('.notif-filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderNotifications(filter);
 }
 
 function addNotification(notif) {
@@ -550,106 +814,126 @@ function addNotification(notif) {
     };
     notifications.unshift(newNotif);
     saveNotifications();
+    renderNotifications();
 }
 
-// ============================================================
-// ===== BLOG LOGIC =====
-// ============================================================
+window.dismissNotif = function(id) {
+    notifications = notifications.filter(n => n.id !== id);
+    saveNotifications();
+    renderNotifications(currentFilter);
+}
+
+window.clearAllNotifs = function() {
+    if (!confirm('Barcha bildirishnomalarni o\'chirmoqchimisiz?')) return;
+    notifications = [];
+    saveNotifications();
+    renderNotifications(currentFilter);
+}
+
+window.filterNotifs = function(btn, filter) {
+    currentFilter = filter;
+    document.querySelectorAll('.notif-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderNotifications(filter);
+}
+
+// Blog Modal Logic
 const blogArticles = {
     'ai-trends': {
         title: "2026-yilda Sun'iy Intellekt Trendlari",
         content: `
-            <p>2026-yilda Sun'iy Intellekt (AI) nafaqat texnologik sohada, balki kundalik biznes jarayonlarining ajralmas qismiga aylanadi. Bu yerda asosiy trendlar:</p>
+            <p>2026-yilda Sun'iy Intellekt (AI) nafaqat texnologik sohada, balki kundalik biznes jarayonlarining ajralmas qismiga aylanadi.</p>
             <ul>
-                <li><strong>Avtonom Agentlar:</strong> Endi AI nafaqat savollarga javob beradi, balki mustaqil vazifalarni bajaradi (elektron pochta yozish, uchrashuvlar belgilash).</li>
-                <li><strong>Shaxsiylashtirilgan Mijoz Tajribasi:</strong> Har bir mijoz uchun individual yondashuv real vaqt rejimida shakllanadi.</li>
-                <li><strong>AI va Kibernavfsizlik:</strong> Xavfsizlik tizimlari hujumlarni sodir bo'lishidan oldin prognoz qiladi.</li>
+                <li><strong>Avtonom Agentlar:</strong> Endi AI nafaqat savollarga javob beradi, balki mustaqil vazifalarni bajaradi.</li>
+                <li><strong>Shaxsiylashtirilgan Mijoz Tajribasi:</strong> Har bir mijoz uchun individual yondashuv.</li>
             </ul>
-            <p>Biznesingizni ushbu trendlarga moslashtirish uchun hozirdan harakat qilish lozim.</p>
         `
     },
     'bot-vs-app': {
         title: "Telegram Bot vs Ilova",
-        content: `
-            <p>Ko'pchilik tadbirkorlar "Biznes uchun nima afzal: Mobil ilovami yoki Telegram bot?" degan savolga duch kelishadi.</p>
-            <h3>Telegram Botning afzalliklari:</h3>
-            <ul>
-                <li>Arzonroq ishlab chiqish narxi.</li>
-                <li>Mijozlar telefoniga yangi narsa yuklab olishi shart emas.</li>
-                <li>Muloqot juda tez va qulay.</li>
-            </ul>
-            <h3>Mobil Ilovaning afzalliklari:</h3>
-            <ul>
-                <li>Ko'proq funksionallik va dizayn erkinligi.</li>
-                <li>Brendning telefon ekranida doimiy ko'rinishi.</li>
-                <li>Offline ishlash imkoniyati.</li>
-            </ul>
-            <p>Agar siz endigina boshlayotgan bo'lsangiz, Telegram botdan boshlash eng to'g'ri strategiya hisoblanadi.</p>
-        `
-    },
-    'security-tips': {
-        title: "Kiberxavfsizlik sirlari",
-        content: `
-            <p>Raqamli dunyoda ma'lumotlar xavfsizligi eng muhim masala. Biznesingizni himoya qilish uchun:</p>
-            <ol>
-                <li>Ikki bosqichli autentifikatsiyani (2FA) yoqing.</li>
-                <li>Parollarni doimiy yangilab turing.</li>
-                <li>Xodimlaringizni phishing hujumlaridan ehtiyot bo'lishga o'rgating.</li>
-            </ol>
-        `
+        content: `<p>Ko'pchilik tadbirkorlar "Biznes uchun nima afzal: Mobil ilovami yoki Telegram bot?" degan savolga duch kelishadi...</p>`
     }
 };
 
-function openBlogModal(id) {
+window.openBlogModal = function(id) {
     const article = blogArticles[id];
     if (!article) return;
-
     const overlay = document.getElementById('blog-modal-overlay');
     const content = document.getElementById('blog-content');
-    
-    content.innerHTML = `
-        <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--accent);">${article.title}</h2>
-        <div style="line-height: 1.8; color: var(--text); font-size: 1.1rem;">
-            ${article.content}
-        </div>
-    `;
-    
+    if (!overlay || !content) return;
+    content.innerHTML = `<h2>${article.title}</h2><div>${article.content}</div>`;
     overlay.classList.add('open');
 }
 
-function closeBlogModal() {
-    document.getElementById('blog-modal-overlay').classList.remove('open');
+window.closeBlogModal = function() {
+    const overlay = document.getElementById('blog-modal-overlay');
+    if (overlay) overlay.classList.remove('open');
 }
 
-// Attach events to blog buttons
-document.addEventListener('DOMContentLoaded', () => {
-    const blogBtns = document.querySelectorAll('.view-section#view-blog .blog-card .new-action-btn');
-    const ids = ['ai-trends', 'bot-vs-app', 'security-tips'];
+// User Profile Logic
+window.loadUserProfile = function() {
+    const profile = JSON.parse(localStorage.getItem('workhub_profile') || '{"name":"Suxrob", "role":"Administrator", "avatar":"👤"}');
+    document.getElementById('display-user-name').textContent = profile.name;
+    document.getElementById('display-user-role').textContent = profile.role;
+    document.getElementById('display-user-avatar').textContent = profile.avatar;
     
-    blogBtns.forEach((btn, index) => {
-        if (ids[index]) {
-            btn.onclick = () => openBlogModal(ids[index]);
-        }
-    });
-});
+    // Update welcome message if present
+    const welcomeH2 = document.querySelector('.welcome-msg h2');
+    if (welcomeH2) {
+        const lang = localStorage.getItem('workhub_lang') || 'uz';
+        const t = TRANSLATIONS[lang] || TRANSLATIONS.uz;
+        welcomeH2.innerHTML = `${t.welcome} <span style="color: var(--accent);">${profile.name}!</span>`;
+    }
 
-// Sidebar toggle for mobile
-function toggleSidebar() {
-    const sidebar = document.querySelector('.dashboard-sidebar');
-    sidebar.classList.toggle('active');
+    // Fill inputs in modal
+    document.getElementById('user-name-input').value = profile.name;
+    document.getElementById('user-role-input').value = profile.role;
+    document.getElementById('user-modal-avatar').textContent = profile.avatar;
 }
 
-// Close sidebar on link click (mobile)
-document.addEventListener('DOMContentLoaded', () => {
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth <= 850) {
-                document.querySelector('.dashboard-sidebar').classList.remove('active');
-            }
-        });
-    });
+window.openUserModal = function() {
+    const overlay = document.getElementById('user-modal-overlay');
+    if (overlay) overlay.classList.add('open');
+}
+
+window.closeUserModal = function() {
+    const overlay = document.getElementById('user-modal-overlay');
+    if (overlay) overlay.classList.remove('open');
+}
+
+window.saveUserProfile = function() {
+    const name = document.getElementById('user-name-input').value.trim();
+    const role = document.getElementById('user-role-input').value.trim();
+    const avatar = document.getElementById('user-modal-avatar').textContent;
+    
+    if (!name) return alert("Ism kiriting!");
+    
+    const profile = { name, role, avatar };
+    localStorage.setItem('workhub_profile', JSON.stringify(profile));
+    loadUserProfile();
+    closeUserModal();
+    addNotification({ type: 'system', icon: '👤', title: 'Profil yangilandi', text: 'Ma\'lumotlaringiz muvaffaqiyatli saqlandi.' });
+}
+
+// Quick Actions Logic
+window.toggleQuickActions = function() {
+    const menu = document.querySelector('.qa-menu');
+    if (menu) menu.classList.toggle('open');
+}
+
+// Close QA menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('#quick-actions')) {
+        const menu = document.querySelector('.qa-menu');
+        if (menu) menu.classList.remove('open');
+    }
 });
 
-// Initialize badge on load
-document.addEventListener('DOMContentLoaded', updateBadge);
+// Avatar cycling (simple)
+document.getElementById('user-modal-avatar').onclick = function() {
+    const avatars = ['👤', '👨‍💻', '👨‍💼', '🚀', '🛠️', '💎'];
+    const current = this.textContent;
+    let idx = avatars.indexOf(current);
+    idx = (idx + 1) % avatars.length;
+    this.textContent = avatars[idx];
+}

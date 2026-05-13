@@ -1,12 +1,13 @@
-const CACHE_NAME = 'workhub-v4.0';
+const CACHE_NAME = 'antigravity-ecosystem-v1.0';
 const ASSETS = [
   './',
   './index.html',
+  './hudud.html',
   './admin.html',
-  './style.css?v=2.0',
-  './app.js?v=3.0',
-  './manifest.json',
-  './icon-512.png'
+  './style.css',
+  './app.js',
+  './data.js',
+  './manifest.json'
 ];
 
 // Install: Eski keshni kutmasdan darhol yangisiga o'tish
