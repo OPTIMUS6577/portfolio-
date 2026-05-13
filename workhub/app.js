@@ -12,10 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     changeLanguage(savedLang);
     loadUserProfile();
     
-    // Ensure switchView is available before calling
-    setTimeout(() => {
-        if (window.switchView) window.switchView('opshi-plan');
-    }, 500);
     renderActivities();
     renderKanban();
     renderCalendar();
@@ -100,6 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 sec.style.display = 'none';
             }
         });
+
+        // AUTO-HIDE SIDEBAR FOR CLEAN VIEW
+        const sidebar = document.querySelector('.dashboard-sidebar');
+        if (sidebar) sidebar.classList.remove('active');
 
         // Scroll to top of content
         const mainContent = document.getElementById('main-content');
