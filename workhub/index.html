@@ -3,7 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Work Hub v3 [UPDATE OK]</title>
+    <title>Work Hub v4 [FINAL RESET]</title>
+    <script>
+        // Force unregister all service workers to clear cache
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+        // Clear caches
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                for (let name of names) caches.delete(name);
+            });
+        }
+    </script>
     <link rel="stylesheet" href="style.css?v=9.0">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#bc13fe">
