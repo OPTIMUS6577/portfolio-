@@ -15,6 +15,7 @@
             --muted: #808090;
             --glass: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 255, 255, 0.08);
+            --accent3: #ff9f43;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -133,6 +134,7 @@
 
         .card-1 .icon-box { background: rgba(188, 19, 254, 0.1); color: var(--accent1); box-shadow: 0 0 20px rgba(188, 19, 254, 0.2); }
         .card-2 .icon-box { background: rgba(0, 179, 110, 0.1); color: var(--accent2); box-shadow: 0 0 20px rgba(0, 179, 110, 0.2); }
+        .card-3 .icon-box { background: rgba(255, 159, 67, 0.1); color: var(--accent3); box-shadow: 0 0 20px rgba(255, 159, 67, 0.2); }
 
         .portal-card:hover .icon-box { transform: scale(1.1) rotate(10deg); }
 
@@ -164,6 +166,7 @@
 
         .card-1 .enter-btn { background: var(--accent1); color: white; }
         .card-2 .enter-btn { background: var(--accent2); color: #03030b; }
+        .card-3 .enter-btn { background: var(--accent3); color: #03030b; }
 
         .portal-card:hover .enter-btn { padding-right: 3rem; }
 
@@ -217,6 +220,14 @@
                 <h2>Hudud Monitor</h2>
                 <p>Real-time regional monitoring dashboard with advanced analytics and KPI tracking.</p>
                 <div class="enter-btn">Open Monitor <i class="fas fa-arrow-right"></i></div>
+            </a>
+
+            <!-- RESUME -->
+            <a href="resume.html" class="portal-card card-3">
+                <div class="icon-box"><i class="fas fa-file-alt"></i></div>
+                <h2>Professional Resume</h2>
+                <p>Digital interactive resume featuring technical skills, experience, and professional summary.</p>
+                <div class="enter-btn">View Resume <i class="fas fa-arrow-right"></i></div>
             </a>
         </div>
 
