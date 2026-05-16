@@ -261,6 +261,15 @@ body {
     .header-right p {
         justify-content: flex-end !important;
     }
+    .resume-section {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 25px;
+    }
+    .experience-item, .education-item {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
     .no-print {
         display: none !important;
     }
