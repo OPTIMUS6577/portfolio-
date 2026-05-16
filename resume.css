@@ -235,6 +235,8 @@ body {
 @media print {
     body {
         background: #fff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
     .resume-wrapper {
         padding: 0;
@@ -245,6 +247,19 @@ body {
         margin: 0;
         width: 100%;
         max-width: 100%;
+        min-height: auto;
+    }
+    .resume-header {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+    }
+    .header-right {
+        text-align: right !important;
+    }
+    .header-right p {
+        justify-content: flex-end !important;
     }
     .no-print {
         display: none !important;
